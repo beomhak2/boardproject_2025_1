@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.page.board1.dao.Board1Dao;
-import com.project.page.board1.model.Board1;
+import com.project.page.model.Board;
 
 @Service
 public class Board1ServiceImpl implements Board1Service {
@@ -15,28 +15,17 @@ public class Board1ServiceImpl implements Board1Service {
 	Board1Dao dao;
 	
 	@Override
-	public List<Board1> list() {
+	public List<Board> list() {
 		return dao.list();
 	}
 
 	@Override
-	public void add(Board1 item) {
+	public void add(Board item) {
 		dao.add(item);
 	}
 
 	@Override
-	public Board1 item(Long bookId) {
-		return dao.item(bookId);
+	public Board item(int boardId) {
+		return dao.item(boardId);
 	}
-
-	@Override
-	public void update(Board1 item) {
-		dao.update(item);
-	}
-
-	@Override
-	public void delete(Long bookId) {
-		dao.delete(bookId);
-	}
-
 }
