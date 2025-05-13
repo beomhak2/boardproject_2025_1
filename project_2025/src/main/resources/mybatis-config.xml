@@ -2,10 +2,14 @@
 <!DOCTYPE configuration PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
 <configuration>
 	<typeAliases>
-		<typeAlias type="com.project.page.board1.model.Board1" alias="Board1" />
+		<typeAlias type="com.project.page.model.Board" alias="Board" />
+		<typeAlias type="com.project.page.model.Post" alias="Post" />
 	</typeAliases>
 	<mappers>
 		<mapper resource="mybatis/board1.xml" />
+		<mapper resource="mybatis/board2.xml" />
+		<mapper resource="mybatis/board3.xml" />
+		<mapper resource="mybatis/board4.xml" />
 	</mappers>
 
 </configuration>
