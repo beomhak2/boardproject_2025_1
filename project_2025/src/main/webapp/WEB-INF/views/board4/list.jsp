@@ -19,6 +19,8 @@
 	
 	
 	
+	
+	
 	<div class="container">
 	<div id="article-header" class="py-5 text-center">
       <h1>맛집 게시판</h1>
