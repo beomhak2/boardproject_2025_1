@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+aaaaaaaaaaa
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>일상공유 커뮤니티</title>
@@ -13,7 +14,6 @@
 	<link href="/resources/static/css/header.css" rel="stylesheet"> 
 </head>
 <body>
-ddddd
 	<header class="p-3 text-bg-dark">
 		<jsp:include page="../includes/header.jsp" />
 	</header>
@@ -64,27 +64,18 @@ ddddd
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr>
-	      <th scope="row">1</th>
-	      <td>Mark</td>
-	      <td>Otto</td>
-	      <td>@mdo</td>
-	      <td>21</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">2</th>
-	      <td>Jacob</td>
-	      <td>Thornton</td>
-	      <td>@fat</td>
-	      <td>30</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">3</th>
-	      <td>John</td>
-	      <td>Doe</td>
-	      <td>@social</td>
-	      <td>1</td>
-	    </tr>
+		<c:if test="${list.size() < 1}">
+			<tr><td colspan="5">검색 된 게시물이 없습니다</td></tr>
+		</c:if>
+		<c:forEach var="item" items="${list}">
+			<tr>
+				<td>${item.postId}</td>
+				<td>${item.title}</td>
+				<td>${item.postContent}</td>
+				<td>${item.userId}</td>
+				<td>${item.viewCnt}</td>
+			</tr>
+		</c:forEach>
 	  </tbody>
 	</table>
 	<nav aria-label="Page navigation example">
