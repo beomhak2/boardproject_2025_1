@@ -8,7 +8,7 @@
 aaaaaaaaaaaaaaa
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>일상공유 커뮤니티</title>
+    <title>일상공유 커뮤니티0</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 	<link href="/resources/static/css/search_bar.css" rel="stylesheet">
 	<link href="/resources/static/css/header.css" rel="stylesheet"> 
