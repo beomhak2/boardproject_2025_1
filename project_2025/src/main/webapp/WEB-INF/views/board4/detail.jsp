@@ -31,7 +31,6 @@
           <p><span id="hashtag" class="badge text-bg-secondary mx-1"><a class="text-reset">#java</a></span></p>
         </aside>
       </section>
-
       <article id="article-content" class="col-md-9 col-lg-8">
         <pre>본문</pre>
       </article>
@@ -133,7 +132,6 @@
       </nav>
     </div>
   </div>
-	
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>

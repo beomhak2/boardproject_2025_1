@@ -17,6 +17,8 @@
 		<jsp:include page="../includes/header.jsp" />
 	</header>
 	
+	
+	
 	<div class="container">
 	<div id="article-header" class="py-5 text-center">
       <h1>맛집 게시판</h1>
@@ -63,27 +65,15 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr>
-	      <th scope="row">1</th>
-	      <td>Mark</td>
-	      <td>Otto</td>
-	      <td>@mdo</td>
-	      <td>21</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">2</th>
-	      <td>Jacob</td>
-	      <td>Thornton</td>
-	      <td>@fat</td>
-	      <td>30</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">3</th>
-	      <td>John</td>
-	      <td>Doe</td>
-	      <td>@social</td>
-	      <td>1</td>
-	    </tr>
+	  	<c:forEach var="list" items="${list }">
+		    <tr>
+		      <th scope="row">${list.boardId }</th>
+		      <td>${list.title}</td>
+		      <td>${list.postContent}</td>
+		      <td>${list.userId}</td>
+		      <td>${list.viewCnt}</td>
+		    </tr>
+	  	</c:forEach>
 	  </tbody>
 	</table>
 	<nav aria-label="Page navigation example">
