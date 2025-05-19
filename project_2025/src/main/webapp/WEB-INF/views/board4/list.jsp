@@ -67,6 +67,7 @@
 	  <tbody>
 	  	<c:forEach var="list" items="${list }">
 		    <tr>
+		    
 		      <th scope="row">${list.boardId }</th>
 		      <td>${list.title}</td>
 		      <td>${list.postContent}</td>
@@ -94,6 +95,11 @@
 	  </ul>
 	</nav>
 	</div>
+	 <div class="row mb-5 justify-content-md-center">
+        <div class="col-sm-10 d-grid gap-2 d-sm-flex justify-content-sm-end">
+          <a href="/board4/add" class="btn btn-primary" >등록</a>
+        </div>
+      </div>
 	
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />
