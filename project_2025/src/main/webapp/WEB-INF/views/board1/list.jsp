@@ -19,7 +19,7 @@
 	
 	<div class="container">
 	<div id="article-header" class="py-5 text-center">
-      <h1>일상 게시판</h1>
+      <h1>일상 게시판1</h1>
     </div>
 	<div class="row">
 	    <div class="col-lg-12 card-margin">
