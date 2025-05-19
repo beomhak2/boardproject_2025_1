@@ -5,7 +5,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-aaaaaaaaa
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>일상공유 커뮤니티</title>
