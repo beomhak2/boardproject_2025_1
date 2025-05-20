@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.project.page.board1.service.Board1Service;
 import com.project.page.model.Board;
-import com.project.page.model.Post;
+import com.project.page.model.Post; 
 
 @Controller
 @RequestMapping("/board1")//board1�씠�씪�뒗 二쇱냼濡� �뱾�뼱�솕�쓣�븣�쓽 泥섎━
@@ -25,13 +25,13 @@ public class Board1Controller {
 	public String list(Model model) {
 		List<Post> list = service.list();
 		
-		model.addAttribute("list", list);
+		model.addAttribute("list", list); 
 		
 		return "board1/list";	// �뿉 �엳�뒗 list�씪�뒗 紐낆묶�쓽 jsp濡� 諛섑솚
 	}
 	
 	@GetMapping("/add")
-	String add() {
+	String add() { 
 		return "board1/add";
 	}
 	

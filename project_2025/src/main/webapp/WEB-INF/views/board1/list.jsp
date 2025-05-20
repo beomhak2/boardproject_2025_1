@@ -61,7 +61,7 @@
 	      <th scope="col">작성자</th>
 	      <th scope="col">조회수</th>
 	    </tr>
-	  </thead>
+	  </thead> 
 	  <tbody>
 	  	
 	  	<c:forEach var="item" items="${list}">

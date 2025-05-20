@@ -42,8 +42,8 @@
         </div>
       </div>
     </form>
-  </div>
-	
+  </div> 
+	 
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>

@@ -16,4 +16,4 @@ public interface Board1Dao {
 	void insert(String string, Post item);
 
 
-}
+}  

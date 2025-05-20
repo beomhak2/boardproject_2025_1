@@ -10,7 +10,7 @@ public interface Board1Service {
 	List<Post> list();
 
 	void add(Post item);
-
-	Post item(int postId);
+ 
+	Post item(int postId);  
 
 }

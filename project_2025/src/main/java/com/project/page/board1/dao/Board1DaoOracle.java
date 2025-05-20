@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.project.page.model.Board;
 import com.project.page.model.Post;
 
-@Repository
+@Repository 
 public class Board1DaoOracle implements Board1Dao{
 
 	@Autowired
@@ -31,4 +31,6 @@ public class Board1DaoOracle implements Board1Dao{
 	public Post item(int postId) {
 		return sql.selectOne("board1.item", postId);
 	}
+
+
 }

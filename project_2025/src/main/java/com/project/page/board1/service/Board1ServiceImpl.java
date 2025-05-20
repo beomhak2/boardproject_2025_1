@@ -19,9 +19,9 @@ public class Board1ServiceImpl implements Board1Service {
 	public List<Post> list() {
 		return dao.list();
 	}
-
+ 
 	@Override
-	public void add(Post item) {
+	public void add(Post item) { 
 		dao.add(item);
 	}
 
