@@ -63,27 +63,17 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr>
-	      <th scope="row">1</th>
-	      <td>Mark</td>
-	      <td>Otto</td>
-	      <td>@mdo</td>
-	      <td>21</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">2</th>
-	      <td>Jacob</td>
-	      <td>Thornton</td>
-	      <td>@fat</td>
-	      <td>30</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">3</th>
-	      <td>John</td>
-	      <td>Doe</td>
-	      <td>@social</td>
-	      <td>1</td>
-	    </tr>
+	  	
+	  	<c:forEach var="item" items="${list}">
+		    <tr>
+		      <th scope="row">${item.post_id}</th>
+		      <td>${item.title}</td>
+		      <td>${item.content}</td>
+		      <td>${item.user_id}</td>
+		      <td>${item.view_cnt}</td>
+		    </tr>
+	    </c:forEach>
+	    
 	  </tbody>
 	</table>
 	<nav aria-label="Page navigation example">

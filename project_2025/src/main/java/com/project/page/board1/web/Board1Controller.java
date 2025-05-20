@@ -12,28 +12,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.project.page.board1.service.Board1Service;
 import com.project.page.model.Board;
+import com.project.page.model.Post;
 
 @Controller
-@RequestMapping("/board1")//board1이라는 주소로 들어왔을때의 처리
+@RequestMapping("/board1")//board1�씠�씪�뒗 二쇱냼濡� �뱾�뼱�솕�쓣�븣�쓽 泥섎━
 public class Board1Controller {
 	
 	@Autowired
 	Board1Service service;
 	
-	@GetMapping("/list")	//어떠한 주소로 들어왔을때 무엇을 처리 할 것인가?
-	String list(Model model) {
-		List<Board> list = service.list();
+	@GetMapping("/list")	//�뼱�뼚�븳 二쇱냼濡� �뱾�뼱�솕�쓣�븣 臾댁뾿�쓣 泥섎━ �븷 寃껋씤媛�?
+	public String list(Model model) {
+		List<Post> list = service.list();
 		
 		model.addAttribute("list", list);
 		
-		model.addAttribute("msg" ,"list");
-		
-		return "board1/list";	// 에 있는 list라는 명칭의 jsp로 반환
-	}
-	
-	@GetMapping("/detail")
-	String detail() {
-		return "board1/detail";
+		return "board1/list";	// �뿉 �엳�뒗 list�씪�뒗 紐낆묶�쓽 jsp濡� 諛섑솚
 	}
 	
 	@GetMapping("/add")
@@ -41,12 +35,15 @@ public class Board1Controller {
 		return "board1/add";
 	}
 	
-	@PostMapping("/add")
-	String add(Board item) {
-		
+	@GetMapping("/add")
+	String add(Post item) {
 		service.add(item);
-		
 		return "redirect:list";
 	}
+
 	
+	@GetMapping("/detail")
+	String detail() {
+		return "board1/detail";
+	}
 }
