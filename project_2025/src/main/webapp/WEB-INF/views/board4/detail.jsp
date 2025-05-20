@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fn" %>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,28 +19,30 @@
 	
 	<div id="article-main" class="container">
     <div id="article-header" class="py-5 text-center">
-      <h1>첫번째 글</h1>
+      <h1>${vo.title }</h1>
     </div>
 
     <div class="row g-5">
       <section class="col-md-3 col-lg-4 order-md-last">
         <aside>
-          <p><span id="nickname">Uno</span></p>
-          <p><a id="email" href="mailto:djkehh@gmail.com">uno@mail.com</a></p>
-          <p><time id="created-at" datetime="2022-01-01T00:00:00">2022-01-01</time></p>
+          <p><span id="nickname">${vo.userId} </span></p>
+          <p><a id="email" href="mailto:${vo.member.email }">${vo.member.email }</a></p>
+          <fmt:formatDate  value="${vo.regDt}" var="regDateValue" pattern="yyyy-MM-dd"/>
+          <p><time id="created-at" >${regDateValue }</time></p>
           <p><span id="hashtag" class="badge text-bg-secondary mx-1"><a class="text-reset">#java</a></span></p>
         </aside>
       </section>
       <article id="article-content" class="col-md-9 col-lg-8">
-        <pre>본문</pre>
+        <pre>${vo.postContent}</pre>
       </article>
     </div>
 
     <div class="row g-5" id="article-buttons">
       <form id="delete-article-form">
         <div class="pb-5 d-grid gap-2 d-md-block">
-          <a class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
-          <button class="btn btn-danger me-md-2" type="submit">삭제</button>
+          <a class="btn btn-success me-md-2" role="button" id="update-article" href="/board4/update?postId=${vo.postId }">수정</a>
+          <a class="btn btn-danger me-md-2" href="/board4/delete?postId=${vo.postId }">삭제</a>
+          <a class="btn btn-primary" role="button" id="update-article" href="/board4/list">목록</a>
         </div>
       </form>
     </div>
