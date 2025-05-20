@@ -3,6 +3,7 @@ package com.project.page.model;
 import java.util.Date;
 
 public class Post {
+	private int rnum;
 	private int postId;
 	private String title;
 	private String postContent;
@@ -12,7 +13,14 @@ public class Post {
 	private Date mdfDt;
 	private int boardId;
 	private String userId;
+	private Member member;
 	
+	public int getRnum() {
+		return rnum;
+	}
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
+	}
 	public int getPostId() {
 		return postId;
 	}
@@ -67,5 +75,12 @@ public class Post {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+	public Member getMember() {
+		return member;
+	}
+	public void setMember(Member member) {
+		this.member = member;
+	}
+	
 	 
 }
