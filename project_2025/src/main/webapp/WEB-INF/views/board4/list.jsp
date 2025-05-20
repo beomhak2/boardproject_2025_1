@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fn" %>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,7 +14,6 @@
 	<link href="/resources/static/css/header.css" rel="stylesheet"> 
 </head>
 <body>
-
 	<header class="p-3 text-bg-dark">
 		<jsp:include page="../includes/header.jsp" />
 	</header>
@@ -65,14 +65,15 @@
 	  </thead>
 	  <tbody>
 	  	<c:forEach var="list" items="${list }">
-		    <tr>
-		    
-		      <th scope="row">${list.boardId }</th>
-		      <td>${list.title}</td>
-		      <td>${list.postContent}</td>
-		      <td>${list.userId}</td>
-		      <td>${list.viewCnt}</td>
-		    </tr>
+	  		<c:if test="${fn:trim(list.delYn) eq 'N' }">
+			    <tr>
+			      <th scope="row">${list.rnum }</th>
+			      <td><a href="/board4/detail?postId=${list.postId}">${list.title}</a></td>
+			      <td>${list.postContent}</td>
+			      <td>${list.userId}</td>
+			      <td>${list.viewCnt}</td>
+			    </tr>
+		    </c:if>
 	  	</c:forEach>
 	  </tbody>
 	</table>

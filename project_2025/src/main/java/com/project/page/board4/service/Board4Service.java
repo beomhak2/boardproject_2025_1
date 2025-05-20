@@ -1,16 +1,27 @@
 package com.project.page.board4.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.project.page.model.Board;
+import com.project.page.model.Post;
 
 public interface Board4Service {
 
-	List<Board> list();
+	List<Post> list(Post item);
 
-	void add(Board item);
+	void add(Post item);
 
 	Board item(int boardId);
+
+	Post detail(String postId);
+
+	void update(Post post);
+
+	void viewCntUp(String postId);
+
+	void delete(String postId);
+
 
 
 }

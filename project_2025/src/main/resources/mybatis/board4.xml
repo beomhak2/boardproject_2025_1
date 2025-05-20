@@ -1,7 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="board4">
-	<select id= "list" resultType="Board">
-		SELECT * FROM board
+
+	<resultMap id="memberVO" type="com.project.page.model.Member"  >
+			<result property="userId" column="USER_ID"/>
+		    <result property="pwd" column="PWD"/>
+		    <result property="name" column="NAME"/>
+		    <result property="email" column="EMAIL"/>
+		    <result property="phone" column="PHONE"/>
+		    <result property="regDt" column="REG_DT"/>
+		    <result property="mdfDt" column="MDF_DT"/>
+	</resultMap>
+	
+	<resultMap id="postVO" type="Post" >
+			<result property="rnum" column="RNUM"/>
+			<result property="postId" column="POST_ID"/>
+		    <result property="title" column="TITLE"/>
+		    <result property="postContent" column="POST_CONTENT"/>
+		    <result property="viewCnt" column="VIEW_CNT"/>
+		    <result property="delYn" column="DEL_YN"/>
+		    <result property="regDt" column="REG_DT"/>
+		    <result property="mdfDt" column="MDF_DT"/>
+		    <result property="boardId" column="BOARD_ID"/>
+		    <result property="userId" column="USER_ID"/>
+		    <collection property="member" resultMap="memberVO"/>
+	</resultMap>
+	
+	
+	<select id= "list" resultMap="postVO">
+		select * from 
+		(select ROWNUM rnum, t1.* from
+		   (SELECT *
+			FROM post
+		         WHERE BOARD_ID = 4
+		ORDER BY REG_DT asc) t1 )
+		ORDER BY rnum desc
 	</select>
+	<select id= "searchList" resultType="Post">
+		SELECT * FROM post
+		         WHERE BOARD_ID = 4
+	</select>
+	
+	<select id= "detail" resultMap="postVO">
+		SELECT * FROM post
+		         WHERE board_id = 4
+		           AND post_id = #{postId}
+	</select>
+	
+	<insert id="insert" parameterType="Post">
+		INSERT INTO POST 
+		(   POST_ID
+			,TITLE
+			,POST_CONTENT
+			,DEL_YN
+			,REG_DT
+			,MDF_DT
+			,BOARD_ID
+			,USER_ID)
+		VALUES
+		(
+			post_seq.nextval
+			,#{title}
+			,#{postContent}
+			,'N'
+			,sysdate
+			,sysdate
+			,#{boardId}
+			,'limbh')	
+	</insert>
+	<update id="update" parameterType="Post">
+		UPDATE POST SET TITLE = #{title}
+						,POST_CONTENT = #{postContent}
+						,MDF_DT = sysdate
+			 WHERE BOARD_ID = 4
+			   AND POST_ID = #{postId}		
+	</update>
+	
+	<update id="viewCntUp" parameterType="String">
+		UPDATE POST SET 
+					VIEW_CNT = nvl(VIEW_CNT , 0) + 1
+			 WHERE BOARD_ID = 4
+			   AND POST_ID = #{postId}		
+	</update>
+	
+	<update id="delete" parameterType="String">
+		UPDATE POST SET 
+					DEL_YN = 'Y'
+			 WHERE BOARD_ID = 4
+			   AND POST_ID = #{postId}		
+	</update>
 </mapper>

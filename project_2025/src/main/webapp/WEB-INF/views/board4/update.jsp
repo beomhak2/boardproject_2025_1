@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fn" %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,26 +20,28 @@
 	
 	<div class="container">
 	<div id="article-form-header" class="py-5 text-center">
-      <h1>게시글 작성</h1>
+      <h1>게시글 수정</h1>
     </div>
     
-    <form id="article-form" name="post" method="post" action="/board4/add">
+    <form id="article-form" name="post" method="post" action="/board4/update">
       <input type="hidden" name="boardId" value="4">
+      <input type="hidden" name="postId" value="${vo.postId}">
+      
       <div class="row mb-3 justify-content-md-center">
         <label for="title" class="col-sm-2 col-lg-1 col-form-label text-sm-end">제목</label>
         <div class="col-sm-8 col-lg-9">
-          <input type="text" class="form-control" id="title" name="title" required>
+          <input type="text" class="form-control" id="title" name="title" value="${vo.title }" required >
         </div>
       </div>
       <div class="row mb-3 justify-content-md-center">
         <label for="content" class="col-sm-2 col-lg-1 col-form-label text-sm-end">본문</label>
         <div class="col-sm-8 col-lg-9">
-          <textarea class="form-control" id="postContent" name="postContent" rows="5" required></textarea>
+          <textarea class="form-control" id="postContent" name="postContent" rows="5"  required>${vo.postContent }</textarea>
         </div>
       </div>
       <div class="row mb-5 justify-content-md-center">
         <div class="col-sm-10 d-grid gap-2 d-sm-flex justify-content-sm-end">
-          <button type="button" class="btn btn-primary" id="submit-button">저장</button>
+          <button type="button" class="btn btn-primary" id="submit-button">수정</button>
           <a class="btn btn-secondary" id="cancel-button" href="/board4/list">취소</a>
         </div>
       </div>
