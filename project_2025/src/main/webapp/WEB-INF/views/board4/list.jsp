@@ -13,7 +13,6 @@
 	<link href="/resources/static/css/header.css" rel="stylesheet"> 
 </head>
 <body>
-
 	<header class="p-3 text-bg-dark">
 		<jsp:include page="../includes/header.jsp" />
 	</header>
