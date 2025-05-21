@@ -51,7 +51,7 @@
 	            </div>
 	        </div>
 	    </div>
-	</div>zcrahf
+	</div>
 	<table class="table search-body">
 	  <thead>
 	    <tr>
@@ -64,13 +64,13 @@
 	  </thead> 
 	  <tbody>
 	  	
-	  	<c:forEach var="item" items="${list}">
+	  	<c:forEach var="item" items="${selectPostList}">
 		    <tr>
-		      <th scope="row">${item.post_id}</th>
+		      <th scope="row">${item.postId}</th>
 		      <td>${item.title}</td>
-		      <td>${item.content}</td>
-		      <td>${item.user_id}</td>
-		      <td>${item.view_cnt}</td>
+		      <td>${item.postContent}</td>
+		      <td>${item.userId}</td>
+		      <td>${item.viewCnt}</td>
 		    </tr>
 	    </c:forEach>
 	    
@@ -98,6 +98,6 @@
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>	
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 </body>
 </html>

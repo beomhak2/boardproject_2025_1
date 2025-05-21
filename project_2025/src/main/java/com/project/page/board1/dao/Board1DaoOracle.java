@@ -13,23 +13,16 @@ import com.project.page.model.Post;
 public class Board1DaoOracle implements Board1Dao{
 
 	@Autowired
-	SqlSession sql;
+	private SqlSession sql;
 	
 	@Override
 	public List<Post> list() {
-		List<Post> list = sql.selectList("board1.list");
-		
-		return list;
+		return sql.selectList("board1.selectPostList");
 	}
 
 	@Override
-	public void add(Post item) {
-		sql.insert("board1.add", item);
-	}
-
-	@Override
-	public Post item(int postId) {
-		return sql.selectOne("board1.item", postId);
+	public void add(Post post) {
+		sql.insert("board1.insert", post);
 	}
 
 

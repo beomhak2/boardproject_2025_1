@@ -1,30 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="board1">
-	
-	<select id= "list" resultType="Post">
-		SELECT p.post_id, p.title, p.content, u.user_id, p.view_cnt
-		FROM post p left join user u on p.user_id = u.user_id
-	</select>
-	
-	<!-- 스퀸스를 사용하여 다음 ID 가져오기 -->
-	<select id="getNextPostId" resultType="long">
-		select post_seq.nextval form dual
-	</select>
-	
-	<insert id="add">
-		insert into post(
-			post_id, title, content
-		) values (
-			post_seq.nextval,
-			#{title},
-			#{content},
-		)
-	</insert>
-	
-	<select id="item" resultType="Post">
-		select * from post
-		where post_id=#{post_id};
-	</select>
-	
+
+  <resultMap id="memberVO" type="com.project.page.model.Member">
+    <result property="userId" column="USER_ID"/>
+    <result property="pwd" column="PWD"/>
+    <result property="name" column="NAME"/>
+    <result property="email" column="EMAIL"/>
+    <result property="phone" column="PHONE"/>
+    <result property="regDt" column="REG_DT"/>
+    <result property="mdfDt" column="MDF_DT"/>
+  </resultMap>
+
+  <resultMap id="postResultMap" type="Post">
+    <result property="rnum" column="RNUM"/>
+    <result property="postId" column="POST_ID"/>
+    <result property="title" column="TITLE"/>
+    <result property="postContent" column="POST_CONTENT"/>
+    <result property="viewCnt" column="VIEW_CNT"/>
+    <result property="delYn" column="DEL_YN"/>
+    <result property="regDt" column="REG_DT"/>
+    <result property="mdfDt" column="MDF_DT"/>
+    <result property="boardId" column="BOARD_ID"/>
+    <result property="userId" column="USER_ID"/>
+    <collection property="member" resultMap="memberVO"/>
+  </resultMap>
+
+  <select id="selectPostList" resultMap="postResultMap">
+      SELECT 
+	    p.*, 
+	    m.USER_ID AS m_USER_ID,
+	    m.PWD AS m_PWD,
+	    m.NAME AS m_NAME,
+	    m.EMAIL AS m_EMAIL,
+	    m.PHONE AS m_PHONE,
+	    m.REG_DT AS m_REG_DT,
+	    m.MDF_DT AS m_MDF_DT
+	  FROM post p
+	  JOIN member m ON p.user_id = m.user_id
+	  WHERE p.del_yn = 'N'
+	  ORDER BY p.reg_dt DESC
+  </select>
+
+  <select id="getNextPostId" resultType="long">
+    SELECT post_seq.nextval FROM dual
+  </select>
+
+  <insert id="insert" parameterType="Post">
+    INSERT INTO post (
+      post_id, title, post_content, view_cnt, del_yn, reg_dt, mdf_dt, board_id, user_id
+    ) VALUES (
+      post_seq.nextval,
+      #{title},
+      #{postContent},
+      #{viewCnt},
+      'N',
+      SYSDATE,
+      SYSDATE,
+      #{boardId},
+      'user'
+    )
+  </insert>
+
 </mapper>

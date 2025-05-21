@@ -9,8 +9,6 @@ public interface Board1Service {
 
 	List<Post> list();
 
-	void add(Post item);
+	void add(Post post);
  
-	Post item(int postId);  
-
 }

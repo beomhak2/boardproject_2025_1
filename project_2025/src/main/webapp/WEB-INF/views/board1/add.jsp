@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fn" %>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,23 +22,23 @@
       <h1>게시글 작성</h1>
     </div>
     
-    <form id="article-form", method="post">
+    <form id="article-form" method="post" action="/board1/list.jsp">
       <div class="row mb-3 justify-content-md-center">
         <label for="title" class="col-sm-2 col-lg-1 col-form-label text-sm-end">제목</label>
         <div class="col-sm-8 col-lg-9">
-          <input type="text" class="form-control" id="title" name="title" required>
+          <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요" required/>
         </div>
       </div>
       <div class="row mb-3 justify-content-md-center">
         <label for="content" class="col-sm-2 col-lg-1 col-form-label text-sm-end">본문</label>
         <div class="col-sm-8 col-lg-9">
-          <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+          <textarea class="form-control" id="content" name="content" rows="5" placeholder="내용을 입력하세요" required></textarea>
         </div>
       </div>
       <div class="row mb-5 justify-content-md-center">
         <div class="col-sm-10 d-grid gap-2 d-sm-flex justify-content-sm-end">
-          <button type="submit" class="btn btn-primary" id="add">저장</button>
-          <a href="list"><button type="button" class="btn btn-secondary" id="cancel-button">취소</button></a>
+          <button type="submit" class="btn btn-primary" id="submit-button">저장</button>
+          <button type="button" class="btn btn-secondary" id="cancel-button">취소</button>
         </div>
       </div>
     </form>
@@ -47,6 +47,29 @@
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>	
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#submit-button').click(function(){
+		let title = $('#title').val();
+		let content = $('#content').val();
+		
+		if (title==''){
+			alert("제목을 입력하세요.");
+			return;
+		}
+		if (content==''){
+			alert("본문을 입력하세요.");
+			return;
+		}
+		$('#article-form').submit();
+	});
+	
+	$('#cancel-button').click(function(){
+		window.location.href = '/board1/list';
+	});
+
+});
+</script>	
 </body>
 </html>
