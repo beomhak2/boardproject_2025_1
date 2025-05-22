@@ -9,8 +9,8 @@ public interface Board1Dao {
 
 	List<Post> list();
 
-	void add(Post post);
- 
+	void insertPost(Post post);
+
 
 }  
  

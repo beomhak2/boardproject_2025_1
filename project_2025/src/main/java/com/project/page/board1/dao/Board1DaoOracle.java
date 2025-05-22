@@ -21,8 +21,9 @@ public class Board1DaoOracle implements Board1Dao{
 	}
 
 	@Override
-	public void add(Post post) {
-		sql.insert("board1.insert", post);
+	public void insertPost(Post post) {
+		sql.insert("board1.insertPost", post);
 	}
+
 
 }

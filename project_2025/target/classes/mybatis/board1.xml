@@ -5,64 +5,50 @@
 
 <mapper namespace="board1">
 
-  <resultMap id="memberVO" type="com.project.page.model.Member">
-    <result property="userId" column="USER_ID"/>
-    <result property="pwd" column="PWD"/>
-    <result property="name" column="NAME"/>
-    <result property="email" column="EMAIL"/>
-    <result property="phone" column="PHONE"/>
-    <result property="regDt" column="REG_DT"/>
-    <result property="mdfDt" column="MDF_DT"/>
-  </resultMap>
-
-  <resultMap id="postResultMap" type="Post">
-    <result property="rnum" column="RNUM"/>
-    <result property="postId" column="POST_ID"/>
-    <result property="title" column="TITLE"/>
-    <result property="postContent" column="POST_CONTENT"/>
-    <result property="viewCnt" column="VIEW_CNT"/>
-    <result property="delYn" column="DEL_YN"/>
-    <result property="regDt" column="REG_DT"/>
-    <result property="mdfDt" column="MDF_DT"/>
-    <result property="boardId" column="BOARD_ID"/>
-    <result property="userId" column="USER_ID"/>
-    <collection property="member" resultMap="memberVO"/>
-  </resultMap>
-
-  <select id="selectPostList" resultMap="postResultMap">
-      SELECT 
-	    p.*, 
-	    m.USER_ID AS m_USER_ID,
-	    m.PWD AS m_PWD,
-	    m.NAME AS m_NAME,
-	    m.EMAIL AS m_EMAIL,
-	    m.PHONE AS m_PHONE,
-	    m.REG_DT AS m_REG_DT,
-	    m.MDF_DT AS m_MDF_DT
-	  FROM post p
-	  JOIN member m ON p.user_id = m.user_id
-	  WHERE p.del_yn = 'N'
-	  ORDER BY p.reg_dt DESC
-  </select>
-
-  <select id="getNextPostId" resultType="long">
-    SELECT post_seq.nextval FROM dual
-  </select>
-
-  <insert id="insert" parameterType="Post">
-    INSERT INTO post (
-      post_id, title, post_content, view_cnt, del_yn, reg_dt, mdf_dt, board_id, user_id
-    ) VALUES (
-      post_seq.nextval,
-      #{title},
-      #{postContent},
-      #{viewCnt},
-      'N',
-      SYSDATE,
-      SYSDATE,
-      #{boardId},
-      'user'
-    )
-  </insert>
+	<resultMap id="memberVO" type="com.project.page.model.Member">
+		<result property="userId" column="USER_ID"/>
+		<result property="pwd" column="PWD"/>
+		<result property="name" column="NAME"/>
+		<result property="email" column="EMAIL"/>
+		<result property="phone" column="PHONE"/>
+		<result property="regDt" column="REG_DT"/>
+		<result property="mdfDt" column="MDF_DT"/>
+	</resultMap>
+	
+	<resultMap id="postResultMap" type="Post">
+		<result property="rnum" column="RNUM"/>
+		<result property="postId" column="POST_ID"/>
+		<result property="title" column="TITLE"/>
+		<result property="postContent" column="POST_CONTENT"/>
+		<result property="viewCnt" column="VIEW_CNT"/>
+		<result property="delYn" column="DEL_YN"/>
+		<result property="regDt" column="REG_DT"/>
+		<result property="mdfDt" column="MDF_DT"/>
+		<result property="boardId" column="BOARD_ID"/>
+		<result property="userId" column="USER_ID"/>
+		<collection property="member" resultMap="memberVO"/>
+	</resultMap>
+	
+	<select id="selectPostList" resultMap="postResultMap">
+		SELECT * from (
+   			SELECT ROWNUM rnum, T1. * FROM (
+   				SELECT *
+   				FROM POST
+  				WHERE BOARD_ID = 1 and user_id = #{userId}
+				ORDER BY REG_DT ASC) 
+			T1 )
+		ORDER BY rnum DESC )
+	</select>
+	
+	<insert id="insertPost" parameterType="Post">
+		<selectKey keyProperty="postId" resultType="int" order="BEFORE">
+			SELECT seq_post_id.nextval FROM dual
+		</selectKey>
+		INSERT INTO "BOARDPROJECT_2025"."POST"  (
+			post_id, title, post_content, view_cnt, del_yn, board_id
+		) VALUES (
+			#{postId}, #{title}, #{postContent}, 0, 'N', 1
+		)
+	</insert>
 
 </mapper>

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fn" %>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,8 +25,8 @@
     <div class="row g-5">
       <section class="col-md-3 col-lg-4 order-md-last">
         <aside>
-          <p><span id="nickname">Uno</span></p>
-          <p><a id="email" href="mailto:djkehh@gmail.com">uno@mail.com</a></p>
+          <p><span id="nickname">${userId}</span></p>
+          <p><a id="email" href="mailto:${email}">uno@mail.com</a></p>
           <p><time id="created-at" datetime="2022-01-01T00:00:00">2022-01-01</time></p>
           <p><span id="hashtag" class="badge text-bg-secondary mx-1"><a class="text-reset">#java</a></span></p>
         </aside>

@@ -21,9 +21,9 @@ public class Board1ServiceImpl implements Board1Service {
 	}
  
 	@Override
-	public void add(Post post) { 
-		dao.add(post);
+	public void writePost(Post post) { 
+		post.setViewCnt(0);
+		dao.insertPost(post);
 	}
-	
-	
+
 }
