@@ -2,16 +2,19 @@ package com.project.page.board2.service;
 
 import java.util.List;
 
-import com.project.page.board1.model.Board1;
 import com.project.page.model.Board;
+import com.project.page.model.Post;
 
 public interface Board2Service {
 
-	List<Board> list();
+	List<Post> list();
 
-	void add(Board item);
+	void add(Post item);
 
-	Board item(int boardId);
+	Post item(int postId);
 
+	void update(Post item);
+
+	void delete(int postId);
 
 }

@@ -19,29 +19,29 @@
 	
 	<div id="article-main" class="container">
     <div id="article-header" class="py-5 text-center">
-      <h1>첫번째 글</h1>
+      <h1>${item.title}</h1>
     </div>
 
     <div class="row g-5">
       <section class="col-md-3 col-lg-4 order-md-last">
         <aside>
-          <p><span id="nickname">Uno</span></p>
-          <p><a id="email" href="mailto:djkehh@gmail.com">uno@mail.com</a></p>
+          <p><span id="nickname">${item.userId}</span></p>
+          <p><a id="email" href="mailto:${item.member.email}">${item.member.email}</a></p>
           <p><time id="created-at" datetime="2022-01-01T00:00:00">2022-01-01</time></p>
           <p><span id="hashtag" class="badge text-bg-secondary mx-1"><a class="text-reset">#java</a></span></p>
         </aside>
       </section>
 
       <article id="article-content" class="col-md-9 col-lg-8">
-        <pre>본문</pre>
+        <pre>${item.postContent}</pre>
       </article>
     </div>
 
     <div class="row g-5" id="article-buttons">
       <form id="delete-article-form">
         <div class="pb-5 d-grid gap-2 d-md-block">
-          <a class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
-          <button class="btn btn-danger me-md-2" type="submit">삭제</button>
+          <a href="update/${item.postId}" class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
+          <a href="delete/${item.postId}"><button class="btn btn-danger me-md-2" type="button">삭제</button></a>
         </div>
       </form>
     </div>

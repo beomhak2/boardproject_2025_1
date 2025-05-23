@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.page.board2.dao.Board2Dao;
 import com.project.page.model.Board;
+import com.project.page.model.Post;
 
 @Service
 public class Board2ServiceImpl implements Board2Service {
@@ -15,17 +16,28 @@ public class Board2ServiceImpl implements Board2Service {
 	Board2Dao dao;
 	
 	@Override
-	public List<Board> list() {
+	public List<Post> list() {
 		return dao.list();
 	}
 
 	@Override
-	public void add(Board item) {
+	public void add(Post item) {
 		dao.add(item);
 	}
 
 	@Override
-	public Board item(int boardId) {
-		return dao.item(boardId);
+	public Post item(int postId) {
+		return dao.item(postId);
 	}
+
+	@Override
+	public void update(Post item) {
+		dao.update(item);
+	}
+
+	@Override
+	public void delete(int postId) {
+		dao.delete(postId);
+	}
+
 }

@@ -26,19 +26,19 @@
       <div class="row mb-3 justify-content-md-center">
         <label for="title" class="col-sm-2 col-lg-1 col-form-label text-sm-end">제목</label>
         <div class="col-sm-8 col-lg-9">
-          <input type="text" class="form-control" id="title" name="title" required>
+          <input type="text" class="form-control" id="title" name="title" value="${item.title}" required>
         </div>
       </div>
       <div class="row mb-3 justify-content-md-center">
         <label for="content" class="col-sm-2 col-lg-1 col-form-label text-sm-end">본문</label>
         <div class="col-sm-8 col-lg-9">
-          <textarea class="form-control" id="content" name="postContent" rows="5" required></textarea>
+          <textarea class="form-control" id="content" name="postContent" rows="5" required>${item.postContent}</textarea>
         </div>
       </div>
       <div class="row mb-5 justify-content-md-center">
         <div class="col-sm-10 d-grid gap-2 d-sm-flex justify-content-sm-end">
           <button type="submit" class="btn btn-primary" id="submit-button">저장</button>
-          <a href="list"><button type="button" class="btn btn-secondary" id="cancel-button">취소</button></a>        
+          <a href="../../list"><button type="button" class="btn btn-secondary" id="cancel-button">취소</button></a>        
         </div>
       </div>
     </form>
