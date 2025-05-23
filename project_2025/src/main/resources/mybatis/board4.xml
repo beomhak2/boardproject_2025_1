@@ -42,9 +42,12 @@
 	</select>
 	
 	<select id= "detail" resultMap="postVO">
-		SELECT * FROM post
-		         WHERE board_id = 4
-		           AND post_id = #{postId}
+		SELECT p.*,m.email 
+		  FROM post p
+		   INNER JOIN member m
+		           ON p.user_id = m.user_id
+		         WHERE p.board_id = 4
+		           AND p.post_id = #{postId}
 	</select>
 	
 	<insert id="insert" parameterType="Post">
