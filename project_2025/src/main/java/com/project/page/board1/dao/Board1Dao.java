@@ -3,13 +3,14 @@ package com.project.page.board1.dao;
 import java.util.List;
 
 import com.project.page.model.Board;
+import com.project.page.model.Post;
 
 public interface Board1Dao {
 
-	List<Board> list();
+	List<Post> list();
 
-	void add(Board item);
+	void insertPost(Post post);
 
-	Board item(int boardId);
 
-}
+}  
+ 

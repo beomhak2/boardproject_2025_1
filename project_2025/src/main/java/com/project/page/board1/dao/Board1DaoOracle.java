@@ -6,29 +6,24 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.project.page.board1.model.Board1;
 import com.project.page.model.Board;
+import com.project.page.model.Post;
 
-@Repository
+@Repository 
 public class Board1DaoOracle implements Board1Dao{
 
 	@Autowired
-	SqlSession sql;
+	private SqlSession sql;
 	
 	@Override
-	public List<Board> list() {
-		List<Board> list = sql.selectList("board1.list");
-		
-		return list;
+	public List<Post> list() {
+		return sql.selectList("board1.selectPostList");
 	}
 
 	@Override
-	public void add(Board item) {
-		
+	public void insertPost(Post post) {
+		sql.insert("board1.insertPost", post);
 	}
 
-	@Override
-	public Board item(int boardId) {
-		return null;
-	}
+
 }

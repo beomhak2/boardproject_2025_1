@@ -2,16 +2,15 @@ package com.project.page.board1.service;
 
 import java.util.List;
 
-import com.project.page.board1.model.Board1;
+import org.springframework.ui.Model;
+
 import com.project.page.model.Board;
+import com.project.page.model.Post;
 
 public interface Board1Service {
 
-	List<Board> list();
-
-	void add(Board item);
-
-	Board item(int boardId);
-
-
+	List<Post> list();
+  
+	void writePost(Post post);
+ 
 }
