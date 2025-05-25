@@ -22,7 +22,7 @@
       <h1>게시글 작성</h1>
     </div>
     
-    <form id="article-form">
+    <form id="article-form" method="post" action="/board3/add">
       <div class="row mb-3 justify-content-md-center">
         <label for="title" class="col-sm-2 col-lg-1 col-form-label text-sm-end">제목</label>
         <div class="col-sm-8 col-lg-9">
@@ -30,15 +30,15 @@
         </div>
       </div>
       <div class="row mb-3 justify-content-md-center">
-        <label for="content" class="col-sm-2 col-lg-1 col-form-label text-sm-end">본문</label>
+        <label for="postContent" class="col-sm-2 col-lg-1 col-form-label text-sm-end">본문</label>
         <div class="col-sm-8 col-lg-9">
-          <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+          <textarea class="form-control" id="postContent" name="postContent" rows="5" required></textarea>
         </div>
       </div>
       <div class="row mb-5 justify-content-md-center">
         <div class="col-sm-10 d-grid gap-2 d-sm-flex justify-content-sm-end">
           <button type="submit" class="btn btn-primary" id="submit-button">저장</button>
-          <button type="button" class="btn btn-secondary" id="cancel-button">취소</button>
+          <a href="list"><button type="button" class="btn btn-secondary" id="cancel-button">취소</button></a>
         </div>
       </div>
     </form>

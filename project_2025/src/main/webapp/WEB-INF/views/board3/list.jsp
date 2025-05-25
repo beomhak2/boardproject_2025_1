@@ -19,7 +19,7 @@
 	
 	<div class="container">
 	<div id="article-header" class="py-5 text-center">
-      <h1>운동 게시판3</h1>
+      <h1>운동 게시판</h1>
     </div>
 	<div class="row">
 	    <div class="col-lg-12 card-margin">
@@ -63,29 +63,33 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr>
-	      <th scope="row">1</th>
-	      <td>Mark</td>
-	      <td>Otto</td>
-	      <td>@mdo</td>
-	      <td>21</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">2</th>
-	      <td>Jacob</td>
-	      <td>Thornton</td>
-	      <td>@fat</td>
-	      <td>30</td>
-	    </tr>
-	    <tr>
-	      <th scope="row">3</th>
-	      <td>John</td>
-	      <td>Doe</td>
-	      <td>@social</td>
-	      <td>1</td>
-	    </tr>
+	  	<c:if test = "${list.size() < 1 }">
+	  		<tr>
+	  			<td colspan = "5">게시물이 없습니다</td>
+	  		</tr>
+	  	</c:if>
+	  	<c:forEach var="item" items="${list}">
+	  		<tr>
+	  			<td>${item.postId}</td>
+	  			<td>${item.title}</td>
+
+	  			<td>
+	  				<a href = "detail/${item.postId}">
+	  					${item.postContent}
+	  				</a>
+	  			</td>
+	  			<td>${item.userId}</td>
+	  			<td>${item.viewCnt}</td>
+	   		</tr>
+	  	</c:forEach>
 	  </tbody>
 	</table>
+	<div>
+		<div>
+			<a href = "add">등록</a>
+		</div>
+	</div>
+	
 	<nav aria-label="Page navigation example">
 	  <ul class="pagination justify-content-center">
 	    <li class="page-item">
@@ -104,6 +108,7 @@
 	  </ul>
 	</nav>
 	</div>
+	
 	
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />

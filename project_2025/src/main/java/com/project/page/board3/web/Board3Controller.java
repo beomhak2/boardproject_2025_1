@@ -6,46 +6,76 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.project.page.board3.service.Board3Service;
-import com.project.page.model.Board;
+
+import com.project.page.model.Post;
 
 @Controller
-@RequestMapping("/board3")//board3이라는 주소로 들어왔을때의 처리
+@RequestMapping("/board3")//board3�씠�씪�뒗 二쇱냼濡� �뱾�뼱�솕�쓣�븣�쓽 泥섎━
 public class Board3Controller {
+	final String path = "board3/"; 
 	
 	@Autowired
 	Board3Service service;
 	
-	@GetMapping("/list")	//어떠한 주소로 들어왔을때 무엇을 처리 할 것인가?
-	String list(Model model) {
-		List<Board> list = service.list();
+	@GetMapping("/list")	//�뼱�뼚�븳 二쇱냼濡� �뱾�뼱�솕�쓣�븣 臾댁뾿�쓣 泥섎━ �븷 寃껋씤媛�?
+	String list(Post post, Model model) {
+		List<Post> list = service.list(post);
 		
 		model.addAttribute("list", list);
 		
-		model.addAttribute("msg" ,"list");
-		
-		return "board3/list";	// 에 있는 list라는 명칭의 jsp로 반환
+		return path + "list";	// �뿉 �엳�뒗 list�씪�뒗 紐낆묶�쓽 jsp濡� 諛섑솚
 	}
 	
-	@GetMapping("/detail")
-	String detail() {
-		return "board3/detail";
+	@GetMapping("/detail/{postid}")
+	String detail(@PathVariable int postid, Model model) {
+	    Post item = service.item(postid);
+	    
+	    System.out.println("item: " + item); 
+	    model.addAttribute("item", item);
+	    
+	    return path + "detail";
 	}
 	
 	@GetMapping("/add")
 	String add() {
-		return "board3/add";
+		return path + "add";
 	}
 	
 	@PostMapping("/add")
-	String add(Board item) {
+	String add(Post item) {
 		
 		service.add(item);
 		
 		return "redirect:list";
 	}
 	
+	@GetMapping("/update/{postid}")
+	String update(@PathVariable int postid, Model model) {
+		Post item =service.item(postid);
+		
+		model.addAttribute("item",item);
+		
+		return "board3/update";
+	}
+	
+	@PostMapping("/update/{postid}")
+	String update(@PathVariable int postid, Post item) {
+		item.setPostId(postid);
+		
+		service.update(item);
+		
+		return "redirect:../list";
+	}
+	
+	@GetMapping("/delete/{postId}")
+	String delete(@PathVariable int postId) {
+		service.delete(postId);
+		return "redirect:../list";
+	}
 }
+	
