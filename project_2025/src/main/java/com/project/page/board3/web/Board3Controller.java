@@ -54,18 +54,18 @@ public class Board3Controller {
 		return "redirect:list";
 	}
 	
-	@GetMapping("/update/{postid}")
-	String update(@PathVariable int postid, Model model) {
-		Post item =service.item(postid);
+	@GetMapping("/update/{postId}")
+	String update(@PathVariable int postId, Model model) {
+		Post item =service.item(postId);
 		
 		model.addAttribute("item",item);
 		
 		return "board3/update";
 	}
 	
-	@PostMapping("/update/{postid}")
-	String update(@PathVariable int postid, Post item) {
-		item.setPostId(postid);
+	@PostMapping("/update/{postId}")
+	String update(@PathVariable int postId, Post item) {
+		item.setPostId(postId);
 		
 		service.update(item);
 		

@@ -40,7 +40,7 @@
     <div class="row g-5" id="article-buttons">
       <form id="delete-article-form">
         <div class="pb-5 d-grid gap-2 d-md-block">
-          <a href="update/${item.postId}" class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
+          <a href="/board3/update/${item.postId}" class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
           <a href="/board3/delete/${item.postId}"><button class="btn btn-danger me-md-2" type="button">삭제</button></a>
         </div>
       </form>

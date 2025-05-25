@@ -33,7 +33,7 @@
 	
 	<insert id = "add" parameterType="Post">
 		INSERT INTO POST(POST_ID, TITLE, POST_CONTENT, USER_ID, REG_DT, BOARD_ID)
-		VALUES(BOARD_SEQ.NEXTVAL, #{title}, #{postContent}, '김갑환2', SYSDATE, 1)
+		VALUES(POST_SEQ.NEXTVAL, #{title}, #{postContent}, '김갑환2', SYSDATE, 1)
 	</insert>
 	
 	<select id="item" resultMap="postVO">
