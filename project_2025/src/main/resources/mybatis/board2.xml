@@ -27,28 +27,55 @@
 
 	<select id= "list" resultMap="postVO">
 		SELECT * FROM post
-		ORDER BY POST_ID DESC
+		WHERE BOARD_ID = 2
+		ORDER BY REG_DT DESC
 	</select>
 	
 	<insert id="add" parameterType="Post">
-		INSERT INTO post (POST_ID, TITLE, POST_CONTENT, REG_DT, BOARD_ID, USER_ID)
-		VALUES (BOARD_SEQ.NEXTVAL, #{title}, #{postContent}, SYSDATE, 2, 'def456')
+		INSERT INTO post (
+			POST_ID
+			, TITLE
+			, POST_CONTENT
+			, DEL_YN
+			, REG_DT
+			, MDF_DT
+			, BOARD_ID
+			, USER_ID
+		)
+		VALUES (
+			BOARD_SEQ.NEXTVAL
+			, #{title}
+			, #{postContent}
+			, 'N'
+			, SYSDATE
+			, SYSDATE
+			, 2
+			, 'def456'
+		)
 	</insert>
 	
 	<select id="item" resultMap="postVO">
-		SELECT * FROM post
-		WHERE POST_ID = #{postId}
+		SELECT p.*, m.email
+		FROM post p
+			INNER JOIN member m
+			ON p.USER_ID = m.USER_ID
+		WHERE P.POST_ID = #{postId}
+			AND P.BOARD_ID = 2
 	</select>
 	
 	<update id="update" parameterType="Post">
 		UPDATE post
-		SET TITLE = #{title}, POST_CONTENT = #{postContent}, MDF_DT = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+		SET TITLE = #{title}
+			, POST_CONTENT = #{postContent}
+			, MDF_DT = SYSDATE
 		WHERE POST_ID = #{postId}
+			AND BOARD_ID = 2
 	</update>
 	
 	<delete id="delete" parameterType="Post">
 		DELETE FROM post
 		WHERE POST_ID = #{postId}
+			AND BOARD_ID = 2
 	</delete>
 
 </mapper>
