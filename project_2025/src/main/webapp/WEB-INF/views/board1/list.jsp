@@ -70,7 +70,8 @@
 		    <tr>
 		      <th scope="row">${item.postId}</th>
 		      <td>${item.title}</td>
-		      <td>${item.postContent}</td>
+		      <td><c:url value='/board1/detail/${item.postId}' var='detailUrl'/>
+		      	<a href="${detailUrl}">${item.postContent}</a></td>
 		      <td>${item.userId}</td>
 		      <td>${item.viewCnt}</td>
 		    </tr>

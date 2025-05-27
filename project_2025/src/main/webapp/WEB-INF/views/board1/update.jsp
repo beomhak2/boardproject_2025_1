@@ -20,26 +20,29 @@
 	
 	<div class="container">
 	<div id="article-form-header" class="py-5 text-center">
-      <h1>게시글 작성</h1>
+      <h1>게시글 수정</h1>
     </div>
     
-    <form id="article-form" method="post" action="/board1/add">
+    <form id="article-form" method="post" action="/board1/update/${post.postId}">
+    	<input type="hidden" name="${postId}" id="${postId}" value="${post.postId}">
+    	<input type="hidden" name="${boardId}" id="${boardId}" value="${post.boardId}">
+    
       <div class="row mb-3 justify-content-md-center">
         <label for="title" class="col-sm-2 col-lg-1 col-form-label text-sm-end">제목</label>
         <div class="col-sm-8 col-lg-9">
-          <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요" required/>
+          <input type="text" class="form-control" id="title" name="title" value="post.title" required/>
         </div>
       </div>
       <div class="row mb-3 justify-content-md-center">
         <label for="content" class="col-sm-2 col-lg-1 col-form-label text-sm-end">본문</label>
         <div class="col-sm-8 col-lg-9">
-          <textarea class="form-control" id="postContent" name="postContent" rows="5" placeholder="내용을 입력하세요" required></textarea>
+          <textarea class="form-control" id="postContent" name="postContent" rows="5" required>${post.postContent}</textarea>
         </div>
       </div>
       <div class="row mb-5 justify-content-md-center">
         <div class="col-sm-10 d-grid gap-2 d-sm-flex justify-content-sm-end">
-          <button type="submit" class="btn btn-primary" id="submit-button" >저장</button>
-          <button type="button" class="btn btn-secondary" id="cancel-button" onclick="location.href='<c:url value = '/'/>'">취소</button>
+          <button type="submit" class="btn btn-primary" id="submit-button" >수정</button>
+          <button type="button" class="btn btn-secondary" id="cancel-button" onclick="location.href='<c:url value = '../'/>'">취소</button>
         </div>
       </div>
     </form>

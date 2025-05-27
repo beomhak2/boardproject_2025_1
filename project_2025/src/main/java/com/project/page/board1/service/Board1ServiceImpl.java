@@ -22,8 +22,27 @@ public class Board1ServiceImpl implements Board1Service {
  
 	@Override
 	public void writePost(Post post) { 
-		post.setViewCnt(0);
 		dao.insertPost(post);
+	}
+
+	@Override
+	public int updatePost(Post post) {
+		return dao.updatePost(post);
+	}
+
+	@Override
+	public Post getPostById(int postId) {
+		return dao.selectPostById(postId);
+	}
+
+	@Override
+	public void deletePost(int postId) {
+		dao.deletePost(postId);
+	}
+
+	@Override
+	public void increaseViewCount(int postId) {
+		dao.increaseViewCount(postId);
 	}
 
 }

@@ -30,25 +30,44 @@
 	</resultMap>
 	
 	<select id="selectPostList" resultMap="postResultMap">
-		SELECT * from (
-   			SELECT ROWNUM rnum, T1. * FROM (
-   				SELECT *
-   				FROM POST
-  				WHERE BOARD_ID = 1 and user_id = #{userId}
-				ORDER BY REG_DT ASC) 
-			T1 )
-		ORDER BY rnum DESC )
+		SELECT * FROM post
+		WHERE BOARD_ID = 1
+		ORDER BY POST_ID DESC
 	</select>
 	
 	<insert id="insertPost" parameterType="Post">
 		<selectKey keyProperty="postId" resultType="int" order="BEFORE">
-			SELECT seq_post_id.nextval FROM dual
+			SELECT seq_post_id.NEXTVAL FROM dual
 		</selectKey>
-		INSERT INTO "BOARDPROJECT_2025"."POST"  (
-			post_id, title, post_content, view_cnt, del_yn, board_id
+		INSERT INTO POST  (
+			POST_ID, TITLE, POST_CONTENT, BOARD_ID, USER_ID
 		) VALUES (
-			#{postId}, #{title}, #{postContent}, 0, 'N', 1
+			#{postId}, #{title}, #{postContent}, 1, 'USER'
 		)
 	</insert>
+	
+	<select id="selectPostById" resultMap="postResultMap" resultType="int">
+		SELECT p.*, m.USER_ID, m.EMAIL 
+		FROM POST p
+		LEFT JOIN MEMBER m on p.user_id = m.user_id 
+		WHERE POST_ID = #{postId}
+		AND BOARD_ID = 1
+	</select>
+	
+	<update id="increaseViewCount" parameterType="int">
+		UPDATE POST 
+		SET VIEW_CNT = VIEW_CNT + 1 
+		WHERE POST_ID = #{postId} and BOARD_ID = 1
+	</update>
+	
+	<update id="updatePost" parameterType="Post">
+		UPDATE POST 
+		SET TITLE = #{title}, POST_CONTENT = #{postContent}, MDF_DT = SYSDATE
+		WHERE POST_ID = #{postId} and BOARD_ID = 1
+	</update>
 
+	<delete id="deletePost" parameterType="int" >
+		DELETE FROM POST WHERE POST_ID = #{postId} and BOARD_ID = 1
+	</delete>
+	
 </mapper>

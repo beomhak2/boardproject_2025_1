@@ -11,6 +11,14 @@ public interface Board1Dao {
 
 	void insertPost(Post post);
 
+	int updatePost(Post post);
+
+	Post selectPostById(int postId);
+
+	void deletePost(int postId);
+
+	void increaseViewCount(int postId);
+
 
 }  
  

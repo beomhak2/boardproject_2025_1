@@ -25,5 +25,23 @@ public class Board1DaoOracle implements Board1Dao{
 		sql.insert("board1.insertPost", post);
 	}
 
+	@Override
+	public int updatePost(Post post) {
+		return sql.update("board1.updatePost", post);
+	}
 
+	@Override
+	public Post selectPostById(int postId) {
+		return sql.selectOne("board1.selectPostById", postId);
+	}
+
+	@Override
+	public void deletePost(int postId) {
+		sql.delete("board1.deletePost", postId);
+	}
+
+	@Override
+	public void increaseViewCount(int postId) {
+		sql.update("board1.increaseViewCount", postId);
+	}
 }
