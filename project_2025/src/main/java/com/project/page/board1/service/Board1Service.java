@@ -20,5 +20,5 @@ public interface Board1Service {
 	void deletePost(int postId);
 	//죄회수 증가
 	void increaseViewCount(int postId);
-
+ 
 }

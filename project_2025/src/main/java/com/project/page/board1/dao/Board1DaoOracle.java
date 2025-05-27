@@ -44,5 +44,6 @@ public class Board1DaoOracle implements Board1Dao{
 	public void increaseViewCount(int postId) {
 		sql.update("board1.increaseViewCount", postId);
 		
+		
 	}
 }

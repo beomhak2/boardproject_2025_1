@@ -93,4 +93,5 @@ public class Board1Controller {
 		service.deletePost(postId);
 		return "redirect:/board1/list";
 	}
+	
 }

@@ -43,5 +43,6 @@ public class Board1ServiceImpl implements Board1Service {
 	@Override
 	public void increaseViewCount(int postId) {
 		dao.increaseViewCount(postId);
+		
 	}
 }
