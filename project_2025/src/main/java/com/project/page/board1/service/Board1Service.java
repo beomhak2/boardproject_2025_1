@@ -21,5 +21,4 @@ public interface Board1Service {
 	//죄회수 증가
 	void increaseViewCount(int postId);
 
-	
 }

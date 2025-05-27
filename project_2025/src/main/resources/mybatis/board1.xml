@@ -70,4 +70,5 @@
 		DELETE FROM POST WHERE POST_ID = #{postId} and BOARD_ID = 1
 	</delete>
 	
+	
 </mapper>

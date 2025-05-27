@@ -42,7 +42,7 @@
     </div>
 
     <div class="row g-5" id="article-buttons">
-      <form id="delete-article-form" action="<c:url value='/board1/delete/${postId}' />" method="post">
+      <form id="delete-article-form" action ="<c:url value='/board1/delete/${postId}' />" method="post">
         <div class="pb-5 d-grid gap-2 d-md-block">
           <c:url var = "editUrl" value="/board1/update/${postId}"/>
           	<a href="${editUrl}" class="btn btn-success me-md-2" role="button" id="update-article">수정</a>

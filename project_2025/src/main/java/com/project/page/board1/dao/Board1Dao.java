@@ -19,6 +19,5 @@ public interface Board1Dao {
 
 	void increaseViewCount(int postId);
 
-
 }  
- 
+   

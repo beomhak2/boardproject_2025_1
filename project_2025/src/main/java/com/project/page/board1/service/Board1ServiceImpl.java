@@ -44,5 +44,4 @@ public class Board1ServiceImpl implements Board1Service {
 	public void increaseViewCount(int postId) {
 		dao.increaseViewCount(postId);
 	}
-
 }

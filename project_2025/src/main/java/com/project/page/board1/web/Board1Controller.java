@@ -63,7 +63,6 @@ public class Board1Controller {
 		return path + "detail";
 	}
 	
-	
 	@GetMapping("/update/{postId:\\d+}")
 	public String updateGet(@PathVariable int postId, Model model) {
 		
