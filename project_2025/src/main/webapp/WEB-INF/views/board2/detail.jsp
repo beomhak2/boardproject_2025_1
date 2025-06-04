@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fn" %>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>  
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,7 +27,7 @@
         <aside>
           <p><span id="nickname">${item.userId}</span></p>
           <p><a id="email" href="mailto:${item.member.email}">${item.member.email}</a></p>
-          <p><time id="created-at" datetime="2022-01-01T00:00:00">2022-01-01</time></p>
+          <p><time id="created-at" ><fmt:formatDate value="${item.regDt}" pattern="yyyy-MM-dd"/></time></p>
           <p><span id="hashtag" class="badge text-bg-secondary mx-1"><a class="text-reset">#java</a></span></p>
         </aside>
       </section>
