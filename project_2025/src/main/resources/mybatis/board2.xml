@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="board2">
-	<resultMap id="memberVO" type="com.project.page.model.Member"  >
+	<resultMap id="memberVO" type="com.project.page.board2.model.Member"  >
 			<result property="userId" column="USER_ID"/>
 		    <result property="pwd" column="PWD"/>
 		    <result property="name" column="NAME"/>
@@ -11,7 +11,7 @@
 		    <result property="mdfDt" column="MDF_DT"/>
 	</resultMap>
 	
-	<resultMap id="postVO" type="com.project.page.model.Post" >
+	<resultMap id="postVO" type="com.project.page.board2.model.Post" >
 		<result property="rnum" column="RNUM"/>
 		<result property="postId" column="POST_ID"/>
 	    <result property="title" column="TITLE"/>
@@ -24,14 +24,26 @@
 	    <result property="userId" column="USER_ID"/>
 	    <collection property="member" resultMap="memberVO"/>
 	</resultMap>
+	
+	<select id="total" resultType="Integer">
+		SELECT COUNT(*) FROM post
+	</select>
 
 	<select id= "list" resultMap="postVO">
-		SELECT * FROM post
-		WHERE BOARD_ID = 2
-		ORDER BY REG_DT DESC
+		SELECT * FROM (
+			SELECT ROWNUM rnum, p.*
+			FROM (
+				SELECT *
+				FROM post
+				WHERE BOARD_ID = 2
+				ORDER BY REG_DT
+			) p
+		)
+		WHERE rnum BETWEEN (#{page} - 1) * #{perPage} + 1 AND (#{page} * #{perPage})
+		ORDER BY rnum DESC
 	</select>
 	
-	<insert id="add" parameterType="Post">
+	<insert id="add" parameterType="com.project.page.board2.model.Post">
 		INSERT INTO post (
 			POST_ID
 			, TITLE
@@ -63,7 +75,7 @@
 			AND P.BOARD_ID = 2
 	</select>
 	
-	<update id="update" parameterType="Post">
+	<update id="update" parameterType="com.project.page.board2.model.Post">
 		UPDATE post
 		SET TITLE = #{title}
 			, POST_CONTENT = #{postContent}
@@ -72,7 +84,7 @@
 			AND BOARD_ID = 2
 	</update>
 	
-	<delete id="delete" parameterType="Post">
+	<delete id="delete" parameterType="com.project.page.board2.model.Post">
 		DELETE FROM post
 		WHERE POST_ID = #{postId}
 			AND BOARD_ID = 2

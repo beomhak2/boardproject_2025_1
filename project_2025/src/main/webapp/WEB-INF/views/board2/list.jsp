@@ -69,10 +69,10 @@
 			<c:forEach var="item" items="${list}">
 				<tr>
 					<td>${item.postId}</td>
-					<td>${item.title}</td>
 					<td>
-						<a href="detail/${item.postId}">${item.postContent}</a>
+						<a href="detail/${item.postId}">${item.title}</a>
 					</td>
+					<td>${item.postContent}</td>
 					<td>${item.userId}</td>
 					<td>${item.viewCnt}</td>
 				</tr>
@@ -86,9 +86,11 @@
 		        <span aria-hidden="true">&laquo;</span>
 		      </a>
 		    </li>
+		    <li class="page-item"><a class="page-link" href="?page=1">처음</a></li>
+		    <li class="page-item"><a class="page-link" href="?page=">이전</a></li>
 		    <li class="page-item"><a class="page-link" href="#">1</a></li>
-		    <li class="page-item"><a class="page-link" href="#">2</a></li>
-		    <li class="page-item"><a class="page-link" href="#">3</a></li>
+		    <li class="page-item"><a class="page-link" href="?page=">다음</a></li>
+		    <li class="page-item"><a class="page-link" href="?page=${pager.last}">마지막</a></li>
 		    <li class="page-item">
 		      <a class="page-link" href="#" aria-label="Next">
 		        <span aria-hidden="true">&raquo;</span>

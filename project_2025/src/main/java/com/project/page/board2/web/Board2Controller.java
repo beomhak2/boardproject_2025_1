@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.project.page.board2.model.Pager;
+import com.project.page.board2.model.Post;
 import com.project.page.board2.service.Board2Service;
 import com.project.page.model.Board;
-import com.project.page.model.Post;
 
 @Controller
 @RequestMapping("/board2")//board2이라는 주소로 들어왔을때의 처리
@@ -22,8 +23,8 @@ public class Board2Controller {
 	Board2Service service;
 	
 	@GetMapping("/list")	//어떠한 주소로 들어왔을때 무엇을 처리 할 것인가?
-	String list(Model model) {
-		List<Post> list = service.list();
+	String list(Model model, Pager pager) {
+		List<Post> list = service.list(pager);
 		
 		model.addAttribute("list", list);
 		

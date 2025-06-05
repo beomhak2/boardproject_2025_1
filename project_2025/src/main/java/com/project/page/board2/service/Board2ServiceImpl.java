@@ -6,8 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.page.board2.dao.Board2Dao;
+import com.project.page.board2.model.Pager;
+import com.project.page.board2.model.Post;
 import com.project.page.model.Board;
-import com.project.page.model.Post;
 
 @Service
 public class Board2ServiceImpl implements Board2Service {
@@ -16,8 +17,12 @@ public class Board2ServiceImpl implements Board2Service {
 	Board2Dao dao;
 	
 	@Override
-	public List<Post> list() {
-		return dao.list();
+	public List<Post> list(Pager pager) {
+		int total = dao.total(pager);
+		
+		pager.setTotal(total);
+		
+		return dao.list(pager);
 	}
 
 	@Override
@@ -39,5 +44,5 @@ public class Board2ServiceImpl implements Board2Service {
 	public void delete(int postId) {
 		dao.delete(postId);
 	}
-
+	
 }

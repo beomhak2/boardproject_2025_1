@@ -6,8 +6,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.project.page.board2.model.Pager;
+import com.project.page.board2.model.Post;
 import com.project.page.model.Board;
-import com.project.page.model.Post;
 
 @Repository
 public class Board2DaoOracle implements Board2Dao{
@@ -16,10 +17,8 @@ public class Board2DaoOracle implements Board2Dao{
 	SqlSession sql;
 	
 	@Override
-	public List<Post> list() {
-		List<Post> list = sql.selectList("board2.list");
-		
-		return list;
+	public List<Post> list(Pager pager) {
+		return sql.selectList("board2.list", pager);
 	}
 
 	@Override
@@ -40,6 +39,11 @@ public class Board2DaoOracle implements Board2Dao{
 	@Override
 	public void delete(int postId) {
 		sql.delete("board2.delete", postId);
+	}
+
+	@Override
+	public int total(Pager pager) {
+		return sql.selectOne("board2.total", pager);
 	}
 
 }

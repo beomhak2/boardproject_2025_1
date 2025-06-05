@@ -42,6 +42,7 @@
         <div class="pb-5 d-grid gap-2 d-md-block">
           <a href="update/${item.postId}" class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
           <a href="delete/${item.postId}"><button class="btn btn-danger me-md-2" type="button">삭제</button></a>
+          <a href="../list"><button class="btn btn-primary" type="button">목록</button></a>
         </div>
       </form>
     </div>
