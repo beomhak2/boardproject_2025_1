@@ -23,3 +23,34 @@
         </div>
       </div>
     </div>
+<script>
+  const links = document.querySelectorAll("a.nav-link");
+  const currentPath = window.location.pathname;
+
+  // 자동으로 현재 페이지에 해당하는 메뉴에 text-secondary 적용
+  let matched = false;
+  links.forEach(link => {
+    if (link.getAttribute("href") === currentPath) {
+      link.classList.remove("text-white");
+      link.classList.add("text-secondary");
+      matched = true;
+    } else {
+      link.classList.remove("text-secondary");
+      link.classList.add("text-white");
+    }
+  });
+
+  // 클릭 시에도 텍스트 스타일 변경
+  links.forEach(link => {
+    link.addEventListener("click", function () {
+      links.forEach(l => {
+        l.classList.remove("text-secondary");
+        l.classList.add("text-white");
+      });
+
+      this.classList.remove("text-white");
+      this.classList.add("text-secondary");
+    });
+  });
+  
+</script>
