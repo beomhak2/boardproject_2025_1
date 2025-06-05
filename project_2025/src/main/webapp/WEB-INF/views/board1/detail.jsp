@@ -12,6 +12,7 @@
 	<link href="/resources/static/css/search_bar.css" rel="stylesheet">
 	<link href="/resources/static/css/header.css" rel="stylesheet"> 
 </head>
+
 <body>
 	<header class="p-3 text-bg-dark">
 		<jsp:include page="../includes/header.jsp" />
@@ -47,6 +48,7 @@
           <c:url var = "editUrl" value="/board1/update/${postId}"/>
           	<a href="${editUrl}" class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
           <button class="btn btn-danger me-md-2" type="submit" onclick="return confirm('삭제하시겠습니까?')" >삭제</button>
+          <a href="/board1/list" class="btn btn-success me-md-2" role="button" id="update-article">목록</a>
         </div>
       </form>
     </div>
