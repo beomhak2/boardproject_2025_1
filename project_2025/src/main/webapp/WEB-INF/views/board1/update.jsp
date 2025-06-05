@@ -17,7 +17,6 @@
 	<header class="p-3 text-bg-dark">
 		<jsp:include page="../includes/header.jsp" />
 	</header>
-	
 	<div class="container">
 	<div id="article-form-header" class="py-5 text-center">
       <h1>게시글 수정</h1>
@@ -30,7 +29,7 @@
       <div class="row mb-3 justify-content-md-center">
         <label for="title" class="col-sm-2 col-lg-1 col-form-label text-sm-end">제목</label>
         <div class="col-sm-8 col-lg-9">
-          <input type="text" class="form-control" id="title" name="title" value="post.title" required/>
+          <input type="text" class="form-control" id="title" name="title" value="${post.title}" required/>
         </div>
       </div>
       <div class="row mb-3 justify-content-md-center">
@@ -51,7 +50,7 @@
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"/>
 <script type="text/javascript">
 
 $(document).ready(function(){
