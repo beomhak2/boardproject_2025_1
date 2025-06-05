@@ -5,6 +5,7 @@
 
 <mapper namespace="board1">
 
+	<!-- 유저 정보 -->
 	<resultMap id="memberVO" type="com.project.page.model.Member">
 		<result property="userId" column="USER_ID"/>
 		<result property="pwd" column="PWD"/>
@@ -15,6 +16,7 @@
 		<result property="mdfDt" column="MDF_DT"/>
 	</resultMap>
 	
+	<!-- 게시판 정보 -->
 	<resultMap id="postResultMap" type="Post">
 		<result property="rnum" column="RNUM"/>
 		<result property="postId" column="POST_ID"/>
@@ -29,12 +31,49 @@
 		<collection property="member" resultMap="memberVO"/>
 	</resultMap>
 	
-	<select id="selectPostList" resultMap="postResultMap">
-		SELECT * FROM post
-		WHERE BOARD_ID = 1
-		ORDER BY POST_ID DESC
+	<!-- 검색 기능 -->
+	<sql id="search">
+		SELECT * FROM POST
+		<where>
+			<if test="keyword != null and keyword != ''">
+				<choose>
+					<when test="search == 1">
+						(
+							title LIKE '%' || #{keyword} || '%'
+							OR USER_ID LIKE '%' || #{keyword} || '%'
+						)
+					</when>
+					<when test="search == 2">
+						title LIKE '%' || #{keyword} || '%'
+					</when>
+					<when test="search == 3">
+						USER_ID LIKE '%' || #{keyword} || '%'
+					</when>
+					<otherwise>
+						1=1
+					</otherwise>
+				</choose>
+				AND
+			</if>
+			DEL_YN = 'N'
+		</where>
+		order by REG_DT DESC
+	</sql>
+
+	<!-- 게시판의 게수 -->
+	<select id="selectPostCount" resultType="Integer">
+		SELECT COUNT(*) FROM (<include refid="search"/>) T1
 	</select>
 	
+	<!-- 게시판 목록 -->
+	<select id="selectPostList" resultMap="postResultMap">
+	    SELECT * FROM 
+	    (SELECT T1.*, ROWNUM rnum FROM 
+	    (<include refid="search"/>) T1)
+        WHERE rnum BETWEEN ((#{page} - 1) * #{perPage}) +1   AND (#{page} * #{perPage})
+	</select>
+
+	<!-- 게시판 입력 -->
 	<insert id="insertPost" parameterType="Post">
 		<selectKey keyProperty="postId" resultType="int" order="BEFORE">
 			SELECT seq_post_id.NEXTVAL FROM dual
@@ -46,6 +85,7 @@
 		)
 	</insert>
 	
+	<!-- 게시판 postId 찾기 -->
 	<select id="selectPostById" resultMap="postResultMap" resultType="int">
 		SELECT p.*, m.USER_ID, m.EMAIL 
 		FROM POST p
@@ -54,20 +94,25 @@
 		AND BOARD_ID = 1
 	</select>
 	
+	<!-- 게시판 조회수 -->
 	<update id="increaseViewCount" parameterType="int">
 		UPDATE POST 
 		SET VIEW_CNT = VIEW_CNT + 1 
 		WHERE POST_ID = #{postId} and BOARD_ID = 1
 	</update>
 	
+	<!-- 게시판 수정 -->
 	<update id="updatePost" parameterType="Post">
 		UPDATE POST 
 		SET TITLE = #{title}, POST_CONTENT = #{postContent}, MDF_DT = SYSDATE
 		WHERE POST_ID = #{postId} and BOARD_ID = 1
 	</update>
 
-	<delete id="deletePost" parameterType="int" >
-		DELETE FROM POST WHERE POST_ID = #{postId} and BOARD_ID = 1
-	</delete>
+	<!-- 게시판 삭제 및 보관 -->
+	<update id="deletePostY" parameterType="int" >
+		UPDATE POST 
+		SET DEL_YN = 'Y'
+		WHERE POST_ID = #{postId} and BOARD_ID = 1
+	</update>
 	
 </mapper>
