@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
 <!DOCTYPE html>
-<html>
+<html>  
 <head>
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,7 +39,7 @@
       <div class="row mb-5 justify-content-md-center">
         <div class="col-sm-10 d-grid gap-2 d-sm-flex justify-content-sm-end">
           <button type="submit" class="btn btn-primary" id="submit-button" >저장</button>
-          <button type="button" class="btn btn-secondary" id="cancel-button" onclick="location.href='<c:url value = '/'/>'">취소</button>
+          <button type="button" class="btn btn-secondary" id="cancel-button" onclick="location.href='<c:url value = '/board1/list'/>'">취소</button>
         </div>
       </div>
     </form>
@@ -48,6 +48,7 @@
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>
+	
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 <script type="text/javascript">
 $(document).ready(function(){
