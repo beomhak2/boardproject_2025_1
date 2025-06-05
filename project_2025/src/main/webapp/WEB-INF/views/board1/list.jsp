@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,25 +22,25 @@
 	
 	<div class="container">
 	<div id="article-header" class="py-5 text-center">
-      <h1>일상 게시판1</h1>
+		<h1>일상 게시판1</h1>
     </div>
 	<div class="row">
 	    <div class="col-lg-12 card-margin">
 	        <div class="card search-form">
 	            <div class="card-body p-0">
-	                <form id="search-form">
+	                <form id="search-form" method="get">
 	                    <div class="row">
 	                        <div class="col-12">
 	                            <div class="row no-gutters">
 	                                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-	                                    <select class="form-control" id="exampleFormControlSelect1">
-	                                        <option>제목</option>
-	                                        <option>내용</option>
-	                                        <option>작성자</option>
+	                                    <select class="form-control" id="exampleFormControlSelect1" name="search">
+	                                    	<option value="1">전체</option>
+	                                        <option value="2">제목</option>
+	                                        <option value="3">작성자</option>
 	                                    </select>
 	                                </div>
 	                                <div class="col-lg-8 col-md-6 col-sm-12 p-0">
-	                                    <input type="text" placeholder="검색" class="form-control" id="search" name="search">
+	                                    <input type="text" placeholder="검색" class="form-control" id="search" name="keyword">
 	                                </div>
 	                                <div class="col-lg-1 col-md-3 col-sm-12 p-0">
 	                                    <button type="submit" class="btn btn-base">
@@ -55,25 +56,35 @@
 	    </div>
 	</div>
 	<table class="table search-body">
-	  <thead>
-	    <tr>
-	      <th scope="col">#</th>
-	      <th scope="col">제목</th>
-	      <th scope="col">내용</th>
-	      <th scope="col">작성자</th>
-	      <th scope="col">조회수</th>
-	    </tr>
-	  </thead> 
-	  <tbody>
-	  	
-	  	<c:forEach var="item" items="${list}">
+		<thead>
+	    	<tr>
+				<th scope="col">#</th>
+				<th scope="col">제목</th>
+				<th scope="col">작성자</th>
+				<th scope="col">날짜</th>
+				<th scope="col">조회수</th>
+	    	</tr>
+		</thead> 
+	<tbody>
+		<c:forEach var="item" items="${list}">
 		    <tr>
-		      <th scope="row">${item.postId}</th>
-		      <td>${item.title}</td>
-		      <td><c:url value='/board1/detail/${item.postId}' var='detailUrl'/>
-		      	<a href="${detailUrl}">${item.postContent}</a></td>
-		      <td>${item.userId}</td>
-		      <td>${item.viewCnt}</td>
+				<th scope="row">${item.rnum}</th>
+				<td>
+					<c:choose>
+				        <c:when test="${fn:length(item.title) > 30}">
+				            <a href="<c:url value='/board1/detail/${item.postId}'/>">
+				                <c:out value="${fn:substring(item.title, 0, 30)}..." />
+				            </a>
+				        </c:when>
+				        <c:otherwise>
+				            <c:url value='/board1/detail/${item.postId}' var='detailUrl'/>
+		      				<a href="${detailUrl}">${item.title}</a>
+				        </c:otherwise>
+				    </c:choose>
+	      		</td>
+		        <td>${item.userId}</td>
+		        <td><fmt:formatDate value="${item.regDt}" pattern="yyyy-MM-dd"/></td>
+		        <td>${item.viewCnt}</td>
 		    </tr>
 	    </c:forEach>
 	    
@@ -82,15 +93,15 @@
 	<nav aria-label="Page navigation example">
 	  <ul class="pagination justify-content-center">
 	    <li class="page-item">
-	      <a class="page-link" href="#" aria-label="Previous">
+	      <a class="page-link" href="list?page=${pager.prev}${pager.query}" aria-label="Previous">
 	        <span aria-hidden="true">&laquo;</span>
 	      </a>
 	    </li>
-	    <li class="page-item"><a class="page-link" href="#">1</a></li>
-	    <li class="page-item"><a class="page-link" href="#">2</a></li>
-	    <li class="page-item"><a class="page-link" href="#">3</a></li>
+	    <c:forEach var="page" items="${pager.list}">
+	    	<li class="page-item"><a class="page-link" href="list?page=${page}${pager.query}">${page}</a></li>
+	    </c:forEach>
 	    <li class="page-item">
-	      <a class="page-link" href="#" aria-label="Next">
+	      <a class="page-link" href="list?page=${pager.next}${pager.query}" aria-label="Next">
 	        <span aria-hidden="true">&raquo;</span>
 	      </a>
 	    </li>
@@ -106,6 +117,17 @@
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous">
+	$(document).ready(function() {
+		$('#search').keydown(function(ev){
+			if(ev.key === "Enter") {
+				ev.preventDefault();
+				
+				$('#keyword').submit();
+			}
+		});
+	});
+	
+</script>
 </body>
 </html>
