@@ -17,5 +17,7 @@ public interface Board3Service {
 
 	void delete(int postId);
 
+	void viewCnt(int postId);
+
 
 }

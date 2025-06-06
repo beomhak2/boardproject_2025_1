@@ -42,4 +42,9 @@ public class Board3DaoOracle implements Board3Dao{
 	public void delete(int postId) {
 		sql.delete("board3.delete",postId);
 	}
+
+	@Override
+	public void viewCnt(int postId) {
+		sql.update("board3.viewCnt", postId);
+	}
 }

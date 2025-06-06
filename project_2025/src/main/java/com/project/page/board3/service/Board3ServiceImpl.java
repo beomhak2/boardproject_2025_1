@@ -40,4 +40,9 @@ public class Board3ServiceImpl implements Board3Service {
 		dao.delete(postId);
 	}
 
+	@Override
+	public void viewCnt(int postId) {
+		dao.viewCnt(postId);
+	}
+
 }

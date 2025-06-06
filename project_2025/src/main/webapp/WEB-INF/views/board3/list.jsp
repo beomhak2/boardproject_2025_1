@@ -10,7 +10,24 @@
     <title>일상공유 커뮤니티</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 	<link href="/resources/static/css/search_bar.css" rel="stylesheet">
-	<link href="/resources/static/css/header.css" rel="stylesheet"> 
+	<link href="/resources/static/css/header.css" rel="stylesheet">
+	<style>
+    .hover-row {
+    transition: all 0.2s ease;
+  }
+
+	<%--
+	hover 했을때 강조 추가 
+	색도 진하게하고싶었으나 적용안됨
+	
+	--%>
+  .hover-row:hover {
+    background-color: #cccccc;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transform: scale(1.01);
+    cursor: pointer;
+  }
+  </style>
 </head>
 <body>
 	<header class="p-3 text-bg-dark">
@@ -69,15 +86,12 @@
 	  		</tr>
 	  	</c:if>
 	  	<c:forEach var="item" items="${list}">
-	  		<tr>
-	  			<td>${item.postId}</td>
+	  		<%-- hover 기능 적용 --%>
+	  		<tr class="hover-row" onclick = "location.href='detail/${item.postId}'" style="cursor:pointer;">
+	  		<%-- 게시판 번호 1번부터 나오게 수정 --%>
+	  			<td>${item.rnum}</td>
 	  			<td>${item.title}</td>
-
-	  			<td>
-	  				<a href = "detail/${item.postId}">
-	  					${item.postContent}
-	  				</a>
-	  			</td>
+	  			<td>${item.postContent}</td>
 	  			<td>${item.userId}</td>
 	  			<td>${item.viewCnt}</td>
 	   		</tr>

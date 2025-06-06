@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fn" %>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>  
+   
 <!DOCTYPE html>
 <html>
 <head>
+	<p>regDt raw: ${item.regDt}</p>
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>일상공유 커뮤니티</title>
@@ -27,7 +29,10 @@
         <aside>
           <p><span id="nickname">${item.userId}</span></p>
           <p><a id="email" href="mailto:${item.member.email}">${item.member.email}</a></p>
-          <p><time id="created-at" datetime="2022-01-01T00:00:00">2022-01-01</time></p>
+          <p>
+          	<time id="created-at" datetime="${item.regDt}">
+  					<fmt:formatDate value="${item.regDt}" pattern="yyyy-MM-dd HH:mm:ss"/>
+			</time></p>
           <p><span id="hashtag" class="badge text-bg-secondary mx-1"><a class="text-reset">#java</a></span></p>
         </aside>
       </section>
@@ -67,7 +72,11 @@
               <div class="row">
                 <div class="col-md-10 col-lg-9">
                   <strong>Uno</strong>
-                  <small><time>2022-01-01</time></small>
+                  <small>
+                  		<time id="created-at" datetime="${item.regDt}">
+  							<fmt:formatDate value="${item.regDt}" pattern="yyyy-MM-dd HH:mm:ss"/>
+						</time>
+					</small>
                   <p class="mb-1">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
                     Lorem ipsum dolor sit amet

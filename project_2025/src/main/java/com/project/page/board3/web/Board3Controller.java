@@ -31,11 +31,11 @@ public class Board3Controller {
 		return path + "list";	// �뿉 �엳�뒗 list�씪�뒗 紐낆묶�쓽 jsp濡� 諛섑솚
 	}
 	
-	@GetMapping("/detail/{postid}")
-	String detail(@PathVariable int postid, Model model) {
-	    Post item = service.item(postid);
-	    
-	    System.out.println("item: " + item); 
+	@GetMapping("/detail/{postId}")
+	String detail(@PathVariable int postId, Model model) {
+		service.viewCnt(postId);
+	    Post item = service.item(postId);
+
 	    model.addAttribute("item", item);
 	    
 	    return path + "detail";

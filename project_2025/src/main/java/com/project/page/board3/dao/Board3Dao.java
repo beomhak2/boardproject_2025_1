@@ -17,5 +17,7 @@ public interface Board3Dao {
 
 	void delete(int postId);
 
+	void viewCnt(int postId);
+
 
 }

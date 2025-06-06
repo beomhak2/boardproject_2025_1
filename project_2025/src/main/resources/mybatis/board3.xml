@@ -26,19 +26,29 @@
 	</resultMap>
 
 	<select id= "list" resultMap="postVO">
-		select *
-		from POST
-		
+	SELECT * FROM(
+		SELECT 
+			ROWNUM rnum,
+		 	num3.* 
+		 		FROM(
+					SELECT *
+  					FROM POST
+  					WHERE BOARD_ID = 3
+  					ORDER BY REG_DT asc
+  				)num3
+  		)
+  		ORDER BY rnum desc
+  		
 	</select>
 	
 	<insert id = "add" parameterType="Post">
 		INSERT INTO POST(POST_ID, TITLE, POST_CONTENT, USER_ID, REG_DT, BOARD_ID)
-		VALUES(POST_SEQ.NEXTVAL, #{title}, #{postContent}, '김갑환2', SYSDATE, 1)
+		VALUES(POST_SEQ.NEXTVAL, #{title}, #{postContent}, '김갑환2', SYSDATE, 3)
 	</insert>
 	
 	<select id="item" resultMap="postVO">
 		SELECT * FROM POST
-		WHERE POST_ID = #{postId}
+		WHERE POST_ID = #{postId} AND BOARD_ID = 3
 	</select>
 	
 	<update id = "update" parameterType="Post">
@@ -51,5 +61,12 @@
 		DELETE FROM POST
 		WHERE POST_ID=#{postId}
 	</delete>
+	
+	<!-- 조회수 추가 -->
+	<update id="viewCnt" parameterType="int">
+		UPDATE POST
+		SET view_cnt = view_cnt + 1
+		WHERE post_id = #{postId}
+	</update>
 	
 </mapper>
