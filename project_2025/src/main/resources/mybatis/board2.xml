@@ -25,19 +25,35 @@
 	    <collection property="member" resultMap="memberVO"/>
 	</resultMap>
 	
+	<resultMap id="replyVO" type="com.project.page.board2.model.Reply">
+		<result property="replyId" column="REPLY_ID"/>
+		<result property="replyContent" column="REPLY_CONTENT"/>
+		<result property="regDt" column="REG_DT"/>
+		<result property="mdfDt" column="MDF_DT"/>
+		<result property="replyClass" column="REPLY_CLASS"/>
+		<result property="replyGroup" column="REPLY_GROUP"/>
+		<result property="replyOrder" column="REPLY_ORDER"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="postId" column="POST_ID"/>
+	</resultMap>
+	
 	<sql id="search">
 		SELECT * FROM post
 		<where>
 			BOARD_ID = 2
 				AND DEL_YN = 'N'
-			<if test="search == 1 and keyword != null and keyword != ''">
-				AND TITLE LIKE CONCAT(CONCAT('%', #{keyword}), '%')
-			</if>
-			<if test="search == 2 and keyword != null and keyword != ''">
-				AND POST_CONTENT LIKE CONCAT(CONCAT('%', #{keyword}), '%')
-			</if>
-			<if test="search == 3 and keyword != null and keyword != ''">
-				AND USER_ID LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+			<if test="keyword != null and keyword != ''">
+				<choose>
+					<when test="search == 1">
+						AND TITLE LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+					</when>
+					<when test="search == 2">
+						AND POST_CONTENT LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+					</when>
+					<when test="search == 3">
+						AND USER_ID LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+					</when>
+				</choose>
 			</if>
 		</where>
 	</sql>

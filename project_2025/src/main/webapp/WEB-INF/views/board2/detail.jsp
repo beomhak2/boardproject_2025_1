@@ -11,12 +11,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 	<link href="/resources/static/css/search_bar.css" rel="stylesheet">
 	<link href="/resources/static/css/header.css" rel="stylesheet"> 
+	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 </head>
 <body>
 	<header class="p-3 text-bg-dark">
 		<jsp:include page="../includes/header.jsp" />
 	</header>
-	
 	<div id="article-main" class="container">
     <div id="article-header" class="py-5 text-center">
       <h1>${item.title}</h1>
@@ -41,7 +41,7 @@
       <form id="delete-article-form">
         <div class="pb-5 d-grid gap-2 d-md-block">
           <a href="update/${item.postId}" class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
-          <a href="delete/${item.postId}"><button class="btn btn-danger me-md-2" type="button">삭제</button></a>
+          <a href="delete/${item.postId}"><button class="btn btn-danger me-md-2" type="button" id="btn-del">삭제</button></a>
           <a href="../list?page=${param.page}"><button class="btn btn-primary" type="button">목록</button></a>
         </div>
       </form>
@@ -139,5 +139,14 @@
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>	
+<script>
+$(function(){
+	$("#btn-del").click(function(){
+		if (!confirm("삭제하시겠습니까?")) {
+			return false;
+		}
+	});
+});
+</script>
 </body>
 </html>
