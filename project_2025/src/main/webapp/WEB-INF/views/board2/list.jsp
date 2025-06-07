@@ -30,14 +30,14 @@
 		                        <div class="col-12">
 		                            <div class="row no-gutters">
 		                                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-		                                    <select class="form-control" id="exampleFormControlSelect1">
-		                                        <option>제목</option>
-		                                        <option>내용</option>
-		                                        <option>작성자</option>
+		                                    <select class="form-control" id="exampleFormControlSelect1" name="search">
+		                                        <option value="1">제목</option>
+		                                        <option value="2">내용</option>
+		                                        <option value="3">작성자</option>
 		                                    </select>
 		                                </div>
 		                                <div class="col-lg-8 col-md-6 col-sm-12 p-0">
-		                                    <input type="text" placeholder="검색" class="form-control" id="search" name="search">
+		                                    <input type="text" placeholder="검색" class="form-control" id="keyword" name="keyword"">
 		                                </div>
 		                                <div class="col-lg-1 col-md-3 col-sm-12 p-0">
 		                                    <button type="submit" class="btn btn-base">
@@ -70,7 +70,7 @@
 				<tr>
 					<td>${item.postId}</td>
 					<td>
-						<a href="detail/${item.postId}">${item.title}</a>
+						<a href="detail/${item.postId}?page=${pager.page}">${item.title}</a>
 					</td>
 					<td>${item.postContent}</td>
 					<td>${item.userId}</td>
@@ -82,17 +82,17 @@
 		<nav aria-label="Page navigation example">
 		  <ul class="pagination justify-content-center">
 		    <li class="page-item">
-		      <a class="page-link" href="#" aria-label="Previous">
+		      <a class="page-link" href="?page=1${pager.query}" aria-label="Previous">
 		        <span aria-hidden="true">&laquo;</span>
 		      </a>
 		    </li>
-		    <li class="page-item"><a class="page-link" href="?page=1">처음</a></li>
-		    <li class="page-item"><a class="page-link" href="?page=">이전</a></li>
-		    <li class="page-item"><a class="page-link" href="#">1</a></li>
-		    <li class="page-item"><a class="page-link" href="?page=">다음</a></li>
-		    <li class="page-item"><a class="page-link" href="?page=${pager.last}">마지막</a></li>
+		    <li class="page-item"><a class="page-link" href="?page=${pager.prev}${pager.query}">Prev</a></li>
+		    <c:forEach var="page" items="${pager.list}">
+		    	 <li class="page-item"><a class="page-link" href="?page=${page}${pager.query}">${page}</a></li>
+		    </c:forEach>
+		    <li class="page-item"><a class="page-link" href="?page=${pager.query}${pager.next}">Next</a></li>
 		    <li class="page-item">
-		      <a class="page-link" href="#" aria-label="Next">
+		      <a class="page-link" href="?page=${pager.last}${pager.query}" aria-label="Next">
 		        <span aria-hidden="true">&raquo;</span>
 		      </a>
 		    </li>

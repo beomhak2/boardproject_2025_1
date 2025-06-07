@@ -14,10 +14,11 @@ public interface Board2Dao {
 
 	Post item(int postId);
 
+	void updateViewCnt(int postId);
+	
 	void update(Post item);
 
 	void delete(int postId);
 
 	int total(Pager pager);
-
 }

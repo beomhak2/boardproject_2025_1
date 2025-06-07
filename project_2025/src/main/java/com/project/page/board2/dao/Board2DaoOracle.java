@@ -32,18 +32,22 @@ public class Board2DaoOracle implements Board2Dao{
 	}
 
 	@Override
+	public void updateViewCnt(int postId) {
+		sql.update("board2.updateViewCnt", postId);
+	}
+	
+	@Override
 	public void update(Post item) {
 		sql.update("board2.update", item);
 	}
 
 	@Override
 	public void delete(int postId) {
-		sql.delete("board2.delete", postId);
+		sql.update("board2.delete", postId);
 	}
 
 	@Override
 	public int total(Pager pager) {
 		return sql.selectOne("board2.total", pager);
 	}
-
 }

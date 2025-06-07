@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,19 +17,19 @@ import com.project.page.board2.service.Board2Service;
 import com.project.page.model.Board;
 
 @Controller
-@RequestMapping("/board2")//board2이라는 주소로 들어왔을때의 처리
+@RequestMapping("/board2")
 public class Board2Controller {
 	
 	@Autowired
 	Board2Service service;
 	
-	@GetMapping("/list")	//어떠한 주소로 들어왔을때 무엇을 처리 할 것인가?
-	String list(Model model, Pager pager) {
+	@GetMapping("/list")
+	String list(Pager pager, Model model) {
 		List<Post> list = service.list(pager);
 		
 		model.addAttribute("list", list);
 		
-		return "board2/list";	// 에 있는 list라는 명칭의 jsp로 반환
+		return "board2/list";
 	}
 	
 	@GetMapping("/add")
@@ -45,10 +46,11 @@ public class Board2Controller {
 	}
 	
 	@GetMapping("/detail/{postId}")
-	String detail(@PathVariable int postId, Model model) {
+	String detail(@PathVariable int postId, int page, Model model) {
 		Post item = service.item(postId);
 		
 		model.addAttribute("item", item);
+		model.addAttribute("page", page);
 		
 		return "board2/detail";
 	}

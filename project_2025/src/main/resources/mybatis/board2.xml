@@ -25,22 +25,37 @@
 	    <collection property="member" resultMap="memberVO"/>
 	</resultMap>
 	
+	<sql id="search">
+		SELECT * FROM post
+		<where>
+			BOARD_ID = 2
+				AND DEL_YN = 'N'
+			<if test="search == 1 and keyword != null and keyword != ''">
+				AND TITLE LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+			</if>
+			<if test="search == 2 and keyword != null and keyword != ''">
+				AND POST_CONTENT LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+			</if>
+			<if test="search == 3 and keyword != null and keyword != ''">
+				AND USER_ID LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+			</if>
+		</where>
+	</sql>
+	
 	<select id="total" resultType="Integer">
-		SELECT COUNT(*) FROM post
+		SELECT COUNT(*)
+		FROM (<include refid="search"></include>) P1
 	</select>
 
 	<select id= "list" resultMap="postVO">
 		SELECT * FROM (
-			SELECT ROWNUM rnum, p.*
+			SELECT ROWNUM rnum, P.*
 			FROM (
-				SELECT *
-				FROM post
-				WHERE BOARD_ID = 2
-				ORDER BY REG_DT
-			) p
+				<include refid="search"></include>
+				ORDER BY REG_DT DESC
+			) P
 		)
 		WHERE rnum BETWEEN (#{page} - 1) * #{perPage} + 1 AND (#{page} * #{perPage})
-		ORDER BY rnum DESC
 	</select>
 	
 	<insert id="add" parameterType="com.project.page.board2.model.Post">
@@ -48,6 +63,7 @@
 			POST_ID
 			, TITLE
 			, POST_CONTENT
+			, VIEW_CNT
 			, DEL_YN
 			, REG_DT
 			, MDF_DT
@@ -58,36 +74,45 @@
 			BOARD_SEQ.NEXTVAL
 			, #{title}
 			, #{postContent}
+			, 0
 			, 'N'
 			, SYSDATE
 			, SYSDATE
 			, 2
-			, 'def456'
+			, 'abc1'
 		)
 	</insert>
 	
 	<select id="item" resultMap="postVO">
-		SELECT p.*, m.email
-		FROM post p
-			INNER JOIN member m
-			ON p.USER_ID = m.USER_ID
+		SELECT P.*, m.email
+		FROM post P
+			INNER JOIN member M ON
+				P.USER_ID = M.USER_ID
 		WHERE P.POST_ID = #{postId}
 			AND P.BOARD_ID = 2
 	</select>
 	
+	<update id="updateViewCnt" parameterType="com.project.page.board2.model.Post">
+		UPDATE post SET
+			VIEW_CNT = NVL(VIEW_CNT, 0) + 1
+		WHERE POST_ID = #{postId}
+			AND BOARD_ID = 2 
+	</update>
+	
 	<update id="update" parameterType="com.project.page.board2.model.Post">
-		UPDATE post
-		SET TITLE = #{title}
+		UPDATE post SET
+			TITLE = #{title}
 			, POST_CONTENT = #{postContent}
 			, MDF_DT = SYSDATE
 		WHERE POST_ID = #{postId}
 			AND BOARD_ID = 2
 	</update>
 	
-	<delete id="delete" parameterType="com.project.page.board2.model.Post">
-		DELETE FROM post
+	<update id="delete" parameterType="com.project.page.board2.model.Post">
+		UPDATE post SET
+			DEL_YN = 'Y'
 		WHERE POST_ID = #{postId}
 			AND BOARD_ID = 2
-	</delete>
+	</update>
 
 </mapper>

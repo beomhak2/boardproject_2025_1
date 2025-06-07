@@ -32,6 +32,8 @@ public class Board2ServiceImpl implements Board2Service {
 
 	@Override
 	public Post item(int postId) {
+		dao.updateViewCnt(postId);
+		
 		return dao.item(postId);
 	}
 
