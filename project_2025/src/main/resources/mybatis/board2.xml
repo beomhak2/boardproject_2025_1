@@ -132,13 +132,13 @@
 	</update>
 	
 	<!-- 댓글 조회 -->
-	<select id="replyList" resultMap="replyVO">
+	<select id="selectReplyList" parameterType="int" resultMap="replyVO">
 		SELECT * FROM reply
 		WHERE POST_ID = #{postId}
 	</select>
 	
 	<!-- 댓글 등록 -->
-	<!-- <insert id="replyInsert" parameterType="com.project.page.board2.model.Reply">
+	<insert id="replyInsert" parameterType="com.project.page.board2.model.Reply">
 	 INSERT INTO reply (
 	 	REPLY_ID
 	 	, REPLY_CONTENT
@@ -161,6 +161,6 @@
 	 	, 'abc1'
 	 	, #{postId}
 	 )
-	</insert> -->
+	</insert>
 
 </mapper>

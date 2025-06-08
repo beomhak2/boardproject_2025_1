@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.project.page.board2.model.Pager;
 import com.project.page.board2.model.Post;
+import com.project.page.board2.model.Reply;
 import com.project.page.model.Board;
 
 @Repository
@@ -50,4 +51,5 @@ public class Board2DaoOracle implements Board2Dao{
 	public int total(Pager pager) {
 		return sql.selectOne("board2.total", pager);
 	}
+
 }

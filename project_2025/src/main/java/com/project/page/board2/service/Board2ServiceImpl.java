@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.project.page.board2.dao.Board2Dao;
 import com.project.page.board2.model.Pager;
 import com.project.page.board2.model.Post;
+import com.project.page.board2.model.Reply;
 import com.project.page.model.Board;
 
 @Service
@@ -46,5 +47,5 @@ public class Board2ServiceImpl implements Board2Service {
 	public void delete(int postId) {
 		dao.delete(postId);
 	}
-	
+
 }

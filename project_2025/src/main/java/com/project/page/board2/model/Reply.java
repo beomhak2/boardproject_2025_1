@@ -2,6 +2,8 @@ package com.project.page.board2.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /*
 	CREATE TABLE reply (
 		reply_id	number(10)		NOT NULL,
@@ -19,14 +21,18 @@ import java.util.Date;
 public class Reply {
 	private int replyId;
 	private String replyContent;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private Date regDt;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private Date mdfDt;
+	
 	private int replyClass;
 	private int replyGroup;
 	private int replyOrder;
 	private String userId;
 	private int postId;
-	
 	public int getReplyId() {
 		return replyId;
 	}
@@ -81,4 +87,5 @@ public class Reply {
 	public void setPostId(int postId) {
 		this.postId = postId;
 	}
+	
 }

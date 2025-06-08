@@ -13,17 +13,11 @@ public class Board2ReplyDaoImpl implements Board2ReplyDao {
 
 	@Autowired
 	SqlSession sql;
-	
+
 	//´ñ±Û Á¶È¸
 	@Override
-	public List<Reply> list(Reply reply) {
-		return sql.selectList("board2.replyList", reply);
+	public List<Reply> selectReplyList(int postId) {
+		return sql.selectList("board2.selectReplyList", postId);
 	}
-
-	//´ñ±Û µî·Ï
-//	@Override
-//	public void insert(Reply reply) {
-//		sql.insert("board2.replyInsert", reply);
-//	}
-
+	
 }

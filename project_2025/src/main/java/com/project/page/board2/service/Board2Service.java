@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.project.page.board2.model.Pager;
 import com.project.page.board2.model.Post;
+import com.project.page.board2.model.Reply;
 import com.project.page.model.Board;
 
 public interface Board2Service {

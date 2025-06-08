@@ -1,27 +1,30 @@
 package com.project.page.board2.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.project.page.board2.model.Reply;
 import com.project.page.board2.service.Board2ReplyService;
 
-@Controller
+@RestController
 @RequestMapping("/reply")
 public class Board2ReplyController {
 
 	@Autowired
 	Board2ReplyService service;
 	
-	//´ñ±Û µî·Ï
-//	@PostMapping("/insert")
-//	String insert(Reply reply, @RequestParam("page") int page) {
-//		
-//		service.insert(reply);
-//		
-//		return "redirect:/board2/detail/" + reply.getPostId() + "?page=" + page;
-//	}
+	@GetMapping("/selectReplyList")
+	public ResponseEntity<List<Reply>> selectReplyList(@RequestParam int postId) {
+        List<Reply> replies = service.selectReplyList(postId);
+        return ResponseEntity.ok().body(replies);
+    }
+	
 }
