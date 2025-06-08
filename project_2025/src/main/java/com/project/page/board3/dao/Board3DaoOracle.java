@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.project.page.board3.pager.Pager;
 import com.project.page.model.Board;
 import com.project.page.model.Post;
 
@@ -16,8 +17,8 @@ public class Board3DaoOracle implements Board3Dao{
 	SqlSession sql;
 	
 	@Override
-	public List<Post> list(Post item) {
-		List<Post> list = sql.selectList("board3.list", item);
+	public List<Post> list(Pager pager) {
+		List<Post> list = sql.selectList("board3.list", pager);
 		
 		return list;
 	}
@@ -47,4 +48,11 @@ public class Board3DaoOracle implements Board3Dao{
 	public void viewCnt(int postId) {
 		sql.update("board3.viewCnt", postId);
 	}
+
+	@Override
+	public int total(Pager pager) {
+		return sql.selectOne("board3.total", pager);
+	}
+
+
 }

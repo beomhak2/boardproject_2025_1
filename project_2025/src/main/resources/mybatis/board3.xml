@@ -24,26 +24,49 @@
 		<result property="userId" column="USER_ID"/>
 		<collection property="member" resultMap="memberVO"/>
 	</resultMap>
-
-	<select id= "list" resultMap="postVO">
-	SELECT * FROM(
-		SELECT 
-			ROWNUM rnum,
-		 	num3.* 
-		 		FROM(
-					SELECT *
-  					FROM POST
-  					WHERE BOARD_ID = 3
-  					ORDER BY REG_DT asc
-  				)num3
-  		)
-  		ORDER BY rnum desc
-  		
+	<!-- 검색 조건 추가 -->
+	<sql id = "search">
+		SELECT * FROM POST
+		
+		<where>
+			BOARD_ID = 3
+		<if test="keyword != null and keyword != ''">
+			<choose>
+			<when test="search == 1">
+				AND title = #{keyword}
+			</when>
+			
+			<when test="search == 2">
+				AND POST_CONTENT LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+			</when>
+			
+			<when test="search == 3">
+				AND USER_ID LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+			</when>
+			</choose>
+			</if>
+		</where>
+	</sql>
+	
+	<select id="total" resultType="Integer">
+		SELECT COUNT(*) FROM (<include refid="search"></include>)
+	</select>
+	<!-- 리스트 목록에서 검색가능하게 추가 -->
+	<select id="list" resultMap="postVO">
+  		SELECT * 
+  		FROM (
+			SELECT B3.*, ROWNUM rnum 
+			FROM (
+				<include refid="search"></include>
+				ORDER BY REG_DT DESC
+			) B3
+		)
+		WHERE rnum BETWEEN (#{page} - 1) * #{perPage} + 1 AND (#{page} * #{perPage})
 	</select>
 	
 	<insert id = "add" parameterType="Post">
-		INSERT INTO POST(POST_ID, TITLE, POST_CONTENT, USER_ID, REG_DT, BOARD_ID)
-		VALUES(POST_SEQ.NEXTVAL, #{title}, #{postContent}, '김갑환2', SYSDATE, 3)
+		INSERT INTO POST(POST_ID, TITLE, POST_CONTENT, USER_ID, REG_DT, BOARD_ID, VIEW_CNT)
+		VALUES(POST_SEQ.NEXTVAL, #{title}, #{postContent}, '김갑환2', SYSDATE, 3, 0)
 	</insert>
 	
 	<select id="item" resultMap="postVO">
@@ -66,7 +89,7 @@
 	<update id="viewCnt" parameterType="int">
 		UPDATE POST
 		SET view_cnt = view_cnt + 1
-		WHERE post_id = #{postId}
+		WHERE post_id = #{postId} AND BOARD_ID = 3
 	</update>
 	
 </mapper>

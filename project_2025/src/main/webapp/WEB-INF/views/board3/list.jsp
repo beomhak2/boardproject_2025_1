@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fn" %>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
 <!DOCTYPE html>
 <html>
 <head>
+<p>prev: ${pager.prev}</p>
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>일상공유 커뮤니티</title>
@@ -47,14 +48,14 @@
 	                        <div class="col-12">
 	                            <div class="row no-gutters">
 	                                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-	                                    <select class="form-control" id="exampleFormControlSelect1">
-	                                        <option>제목</option>
-	                                        <option>내용</option>
-	                                        <option>작성자</option>
+	                                    <select class="form-control" id="exampleFormControlSelect1" name="search">
+	                                        <option value="1">제목</option>
+	                                        <option value="2">내용</option>
+	                                        <option value="3">작성자</option>
 	                                    </select>
 	                                </div>
 	                                <div class="col-lg-8 col-md-6 col-sm-12 p-0">
-	                                    <input type="text" placeholder="검색" class="form-control" id="search" name="search">
+	                                    <input type="text" placeholder="검색" class="form-control" id="search" name="keyword">
 	                                </div>
 	                                <div class="col-lg-1 col-md-3 col-sm-12 p-0">
 	                                    <button type="submit" class="btn btn-base">
@@ -103,19 +104,21 @@
 			<a href = "add">등록</a>
 		</div>
 	</div>
-	
+	<%-- 페이지네이션 기능 추가 --%>
 	<nav aria-label="Page navigation example">
 	  <ul class="pagination justify-content-center">
 	    <li class="page-item">
-	      <a class="page-link" href="#" aria-label="Previous">
+	      <a class="page-link" href="?page=1${pager.query}" aria-label="Previous">
 	        <span aria-hidden="true">&laquo;</span>
 	      </a>
 	    </li>
-	    <li class="page-item"><a class="page-link" href="#">1</a></li>
-	    <li class="page-item"><a class="page-link" href="#">2</a></li>
-	    <li class="page-item"><a class="page-link" href="#">3</a></li>
+	    <li class="page-item"><a class="page-link" href="?page=${pager.prev}${pager.query}">&lt;</a></li>
+	    <c:forEach var = "page" items="${pager.list}">
+	    	<li class="page-item"><a class="page-link" href="?page=${page}${pager.query}">${page}</a></li>
+	    </c:forEach>
+	    <li class="page-item"><a class="page-link" href="?page=${pager.next}${pager.query}">&gt;</a></li>
 	    <li class="page-item">
-	      <a class="page-link" href="#" aria-label="Next">
+	      <a class="page-link" href="?page=${pager.last}${pager.query}" aria-label="Next">
 	        <span aria-hidden="true">&raquo;</span>
 	      </a>
 	    </li>

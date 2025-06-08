@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.project.page.board3.pager.Pager;
 import com.project.page.board3.service.Board3Service;
 
 import com.project.page.model.Post;
@@ -21,12 +23,15 @@ public class Board3Controller {
 	
 	@Autowired
 	Board3Service service;
-	
+	// Pager 매개변수 추가
 	@GetMapping("/list")	//�뼱�뼚�븳 二쇱냼濡� �뱾�뼱�솕�쓣�븣 臾댁뾿�쓣 泥섎━ �븷 寃껋씤媛�?
-	String list(Post post, Model model) {
-		List<Post> list = service.list(post);
+	String list(Post post, Model model, @ModelAttribute Pager pager) {
+		System.out.println("search: " + pager.getSearch());
+	    System.out.println("keyword: " + pager.getKeyword());
+		List<Post> list = service.list(pager);
 		
 		model.addAttribute("list", list);
+		model.addAttribute("pager", pager);
 		
 		return path + "list";	// �뿉 �엳�뒗 list�씪�뒗 紐낆묶�쓽 jsp濡� 諛섑솚
 	}
