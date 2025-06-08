@@ -42,16 +42,16 @@
 		<where>
 			BOARD_ID = 2
 				AND DEL_YN = 'N'
-			<if test="keyword != null and keyword != ''">
+			<if test="search != null and search != ''">
 				<choose>
-					<when test="search == 1">
-						AND TITLE LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+					<when test="condition == 1">
+						AND TITLE LIKE CONCAT(CONCAT('%', #{search}), '%')
 					</when>
-					<when test="search == 2">
-						AND POST_CONTENT LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+					<when test="condition == 2">
+						AND POST_CONTENT LIKE CONCAT(CONCAT('%', #{search}), '%')
 					</when>
-					<when test="search == 3">
-						AND USER_ID LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+					<when test="condition == 3">
+						AND USER_ID LIKE CONCAT(CONCAT('%', #{search}), '%')
 					</when>
 				</choose>
 			</if>
@@ -130,5 +130,37 @@
 		WHERE POST_ID = #{postId}
 			AND BOARD_ID = 2
 	</update>
+	
+	<!-- 댓글 조회 -->
+	<select id="replyList" resultMap="replyVO">
+		SELECT * FROM reply
+		WHERE POST_ID = #{postId}
+	</select>
+	
+	<!-- 댓글 등록 -->
+	<!-- <insert id="replyInsert" parameterType="com.project.page.board2.model.Reply">
+	 INSERT INTO reply (
+	 	REPLY_ID
+	 	, REPLY_CONTENT
+	 	, REG_DT
+	 	, MDF_DT
+	 	, REPLY_CLASS
+	 	, REPLY_GROUP
+	 	, REPLY_ORDER
+	 	, USER_ID
+	 	, POST_ID
+	 )
+	 VALUES (
+	 	REPLY_SEQ.NEXTVAL
+	 	, #{replyContent}
+	 	, SYSDATE
+	 	, SYSDATE
+	 	, 1
+	 	, 1
+	 	, 1
+	 	, 'abc1'
+	 	, #{postId}
+	 )
+	</insert> -->
 
 </mapper>

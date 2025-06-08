@@ -30,14 +30,14 @@
 		                        <div class="col-12">
 		                            <div class="row no-gutters">
 		                                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-		                                    <select class="form-control" id="exampleFormControlSelect1" name="search">
-		                                        <option value="1">제목</option>
-		                                        <option value="2">내용</option>
-		                                        <option value="3">작성자</option>
+		                                    <select class="form-control" id="exampleFormControlSelect1" name="condition">
+		                                        <option value="1" <c:if test="${pager.condition eq '1'}">selected="selected"</c:if>>제목</option>
+		                                        <option value="2" <c:if test="${pager.condition eq '2'}">selected="selected"</c:if>>내용</option>
+		                                        <option value="3" <c:if test="${pager.condition eq '3'}">selected="selected"</c:if>>작성자</option>
 		                                    </select>
 		                                </div>
 		                                <div class="col-lg-8 col-md-6 col-sm-12 p-0">
-		                                    <input type="text" placeholder="검색" class="form-control" id="keyword" name="keyword"">
+		                                    <input type="text" placeholder="검색" class="form-control" id="search" name="search" value="${pager.search}">
 		                                </div>
 		                                <div class="col-lg-1 col-md-3 col-sm-12 p-0">
 		                                    <button type="submit" class="btn btn-base">
@@ -57,8 +57,8 @@
 		    <tr>
 		      <th scope="col">#</th>
 		      <th scope="col">제목</th>
-		      <th scope="col">내용</th>
 		      <th scope="col">작성자</th>
+		      <th scope="col">작성일</th>
 		      <th scope="col">조회수</th>
 		    </tr>
 		  </thead>
@@ -72,8 +72,8 @@
 					<td>
 						<a href="detail/${item.postId}?page=${pager.page}">${item.title}</a>
 					</td>
-					<td>${item.postContent}</td>
 					<td>${item.userId}</td>
+					<td><fmt:formatDate value="${item.regDt}" pattern="yyyy-MM-dd"/></td>
 					<td>${item.viewCnt}</td>
 				</tr>
 			</c:forEach>

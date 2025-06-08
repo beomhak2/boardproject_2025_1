@@ -2,6 +2,20 @@ package com.project.page.board2.model;
 
 import java.util.Date;
 
+/*
+	CREATE TABLE reply (
+		reply_id	number(10)		NOT NULL,
+		reply_content	varchar2(1000)		NOT NULL,
+		reg_dt		date		NOT NULL,
+		mdf_dt	date		NULL,
+		reply_class	number(10)		NULL,
+		reply_group	number(10)		NULL,
+		reply_order	number(10)		NULL,
+		user_id	varchar2(30)		NOT NULL,
+		post_id	number(10)		NOT NULL
+	);
+ */
+
 public class Reply {
 	private int replyId;
 	private String replyContent;

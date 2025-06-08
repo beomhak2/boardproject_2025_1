@@ -47,13 +47,16 @@
       </form>
     </div>
 
+	<!-- 댓글 시작 -->
     <div class="row g-5">
       <section>
         <form class="row g-3 comment-form">
-          <input type="hidden" class="article-id">
+			<input type="hidden" name="postId" value="${item.postId}">
+			<input type="hidden" name="userId" value="${item.userId}">
+			<input type="hidden" name="page" value="${param.page}">
           <div class="col-md-9 col-lg-8">
             <label for="comment-textbox" hidden>댓글</label>
-            <textarea class="form-control comment-textbox" id="comment-textbox" placeholder="댓글 쓰기.." rows="3" required></textarea>
+            <textarea class="form-control comment-textbox" id="comment-textbox" name="replyContent" placeholder="댓글 쓰기.." rows="3" required></textarea>
           </div>
           <div class="col-md-3 col-lg-4">
             <label for="comment-submit" hidden>댓글 쓰기</label>
@@ -62,60 +65,39 @@
         </form>
 
         <ul id="article-comments" class="row col-md-10 col-lg-8 pt-3">
-          <li class="parent-comment">
-            <form class="comment-delete-form">
-              <input type="hidden" class="article-id">
-              <div class="row">
-                <div class="col-md-10 col-lg-9">
-                  <strong>Uno</strong>
-                  <small><time>2022-01-01</time></small>
-                  <p class="mb-1">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
-                    Lorem ipsum dolor sit amet
-                  </p>
-                </div>
-                <div class="col-2 mb-3 align-self-center">
-                  <button type="submit" class="btn btn-outline-danger">삭제</button>
-                </div>
-              </div>
-            </form>
-
-            <ul class="row me-0">
-              <li class="child-comment">
-                <form class="comment-delete-form">
-                  <input type="hidden" class="article-id">
-                  <div class="row">
-                    <div class="col-md-10 col-lg-9">
-                      <strong>Uno</strong>
-                      <small><time>2022-01-01</time></small>
-                      <p class="mb-1">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
-                        Lorem ipsum dolor sit amet
-                      </p>
-                    </div>
-                    <div class="col-2 mb-3 align-self-center">
-                      <button type="submit" class="btn btn-outline-danger">삭제</button>
-                    </div>
+       	  <c:forEach var="reply" items="${replyList}">
+            <li class="parent-comment">
+              <form class="comment-delete-form">
+                <input type="hidden" class="article-id">
+                <div class="row">
+                  <div class="col-md-10 col-lg-9">
+                    <strong>${reply.userId}</strong>
+                    <small><time><fmt:formatDate value="${reply.regDt}" pattern="yyyy-MM-dd"/></time></small>
+                    <p class="mb-1">${reply.replyContent}</p>
                   </div>
-                </form>
-              </li>
-            </ul>
+                  <div class="col-2 mb-3 align-self-center">
+                    <button type="submit" class="btn btn-outline-danger">삭제</button>
+                  </div>
+                </div>
+              </form>
 
-            <div class="row">
-              <details class="col-md-10 col-lg-9 mb-4">
-                <summary>댓글 달기</summary>
-                <form class="comment-form">
-                  <input type="hidden" class="article-id">
-                  <input type="hidden" class="parent-comment-id">
-                  <textarea class="form-control comment-textbox" placeholder="댓글 쓰기.." rows="2" required></textarea>
-                  <button class="form-control btn btn-primary mt-2" type="submit">쓰기</button>
-                </form>
-              </details>
-            </div>
-          </li>
+              <div class="row">
+                <details class="col-md-10 col-lg-9 mb-4">
+                  <summary>댓글 달기</summary>
+                  <form class="comment-form">
+                    <input type="hidden" class="article-id">
+                    <input type="hidden" class="parent-comment-id">
+                    <textarea class="form-control comment-textbox" placeholder="댓글 쓰기.." rows="2" required></textarea>
+                    <button class="form-control btn btn-primary mt-2" type="submit">쓰기</button>
+                  </form>
+                </details>
+              </div>
+            </li>
+          </c:forEach>
         </ul>
       </section>
     </div>
+    <!-- 댓글 끝 -->
 
     <div class="row g-5">
       <nav id="pagination" aria-label="Page navigation">

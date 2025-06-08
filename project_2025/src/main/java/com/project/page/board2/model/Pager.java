@@ -9,57 +9,46 @@ public class Pager {
 	private float total;
 	private int perGroup = 5;
 	
-	private int search;
-	private String keyword;
+	private int condition;
+	private String search;
 
 	public int getPage() {
 		return page;
 	}
-
 	public void setPage(int page) {
 		this.page = page;
 	}
-
 	public int getPerPage() {
 		return perPage;
 	}
-
 	public void setPerPage(int perPage) {
 		this.perPage = perPage;
 	}
-
 	public float getTotal() {
 		return total;
 	}
-
 	public void setTotal(float total) {
 		this.total = total;
-	}
-	
+	}	
 	public int getPerGroup() {
 		return perGroup;
 	}
-	
 	public void setPerGroup(int perGroup) {
 		this.perGroup = perGroup;
 	}
-	
-	public int getSearch() {
+	public int getCondition() {
+		return condition;
+	}
+	public void setCondition(int condition) {
+		this.condition = condition;
+	}
+	public String getSearch() {
 		return search;
 	}
-	
-	public void setSearch(int search) {
+	public void setSearch(String search) {
 		this.search = search;
 	}
-	
-	public String getKeyword() {
-		return keyword;
-	}
-	
-	public void setKeyword(String keyword) {
-		this.keyword = keyword;
-	}
-	
+
 	public int getLast() {
 		return (int) Math.ceil(total / perPage);
 	}
@@ -95,8 +84,8 @@ public class Pager {
 	public String getQuery() {
 		String query = "";
 		
-		if (search >= 1 && search <= 3 && keyword != null && !keyword.isEmpty()) {
-			query += "&search=" + search + "&keyword=" + keyword;
+		if (condition >= 1 && condition <= 3 && search != null && !search.isEmpty()) {
+			query += "&condition=" + condition + "&search=" + search;
 		}
 		return query;
 	}
