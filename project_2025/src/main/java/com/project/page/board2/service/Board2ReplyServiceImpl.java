@@ -14,7 +14,7 @@ public class Board2ReplyServiceImpl implements Board2ReplyService {
 	@Autowired
 	Board2ReplyDao dao;
 
-	//´ñ±Û Á¶È¸
+	//ëŒ“ê¸€ ì¡°íšŒ
 	@Override
 	public List<Reply> selectReplyList(int postId) {
 		return dao.selectReplyList(postId);

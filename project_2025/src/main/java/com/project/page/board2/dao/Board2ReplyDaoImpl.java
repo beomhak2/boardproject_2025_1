@@ -14,7 +14,7 @@ public class Board2ReplyDaoImpl implements Board2ReplyDao {
 	@Autowired
 	SqlSession sql;
 
-	//´ñ±Û Á¶È¸
+	//ëŒ“ê¸€ ì¡°íšŒ
 	@Override
 	public List<Reply> selectReplyList(int postId) {
 		return sql.selectList("board2.selectReplyList", postId);

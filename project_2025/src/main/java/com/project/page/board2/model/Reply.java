@@ -22,6 +22,7 @@ public class Reply {
 	private int replyId;
 	private String replyContent;
 	
+	//jsp가 아닌 VO에서 직접 날짜 형식 변환
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private Date regDt;
 	

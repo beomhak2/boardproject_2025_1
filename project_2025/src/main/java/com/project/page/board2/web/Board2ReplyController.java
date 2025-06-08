@@ -21,6 +21,11 @@ public class Board2ReplyController {
 	@Autowired
 	Board2ReplyService service;
 	
+	/**
+	 * ajax 비동기 댓글 조회
+	 * @param postId
+	 * @return 댓글 조회
+	 */
 	@GetMapping("/selectReplyList")
 	public ResponseEntity<List<Reply>> selectReplyList(@RequestParam int postId) {
         List<Reply> replies = service.selectReplyList(postId);
