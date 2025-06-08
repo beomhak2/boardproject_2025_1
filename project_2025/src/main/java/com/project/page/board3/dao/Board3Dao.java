@@ -10,7 +10,6 @@ public interface Board3Dao {
 
 	Post item(int postId);
 
-
 	void add(Post item);
 
 	void update(Post item);

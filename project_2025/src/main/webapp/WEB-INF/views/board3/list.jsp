@@ -75,7 +75,7 @@
 	    <tr>
 	      <th scope="col">#</th>
 	      <th scope="col">제목</th>
-	      <th scope="col">내용</th>
+	      <th scope="col">작성일</th>
 	      <th scope="col">작성자</th>
 	      <th scope="col">조회수</th>
 	    </tr>
@@ -92,7 +92,7 @@
 	  		<%-- 게시판 번호 1번부터 나오게 수정 --%>
 	  			<td>${item.rnum}</td>
 	  			<td>${item.title}</td>
-	  			<td>${item.postContent}</td>
+	  			<td><fmt:formatDate value="${item.regDt}" pattern="yyyy-MM-dd"/></td>
 	  			<td>${item.userId}</td>
 	  			<td>${item.viewCnt}</td>
 	   		</tr>

@@ -85,11 +85,13 @@
 		WHERE POST_ID=#{postId}
 	</delete>
 	
-	<!-- 조회수 추가 -->
+	<!-- 조회수 추가
+	board 조건 제외 (조회수가안오름) 
+	-->
 	<update id="viewCnt" parameterType="int">
 		UPDATE POST
 		SET view_cnt = view_cnt + 1
-		WHERE post_id = #{postId} AND BOARD_ID = 3
+		WHERE post_id = #{postId}
 	</update>
 	
 </mapper>
