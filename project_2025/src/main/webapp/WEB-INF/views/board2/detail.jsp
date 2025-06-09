@@ -42,7 +42,7 @@
         <div class="pb-5 d-grid gap-2 d-md-block">
           <a href="update/${item.postId}" class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
           <a href="delete/${item.postId}"><button class="btn btn-danger me-md-2" type="button" id="btn-del">삭제</button></a>
-          <a href="../list?page=${param.page}"><button class="btn btn-primary" type="button">목록</button></a>
+          <button class="btn btn-primary" type="button" onclick="history.back();">목록</button>
         </div>
       </form>
     </div>
@@ -52,7 +52,7 @@
       <section>
         <form class="row g-3 comment-form">
 			<input type="hidden" name="postId" value="${item.postId}">
-			<input type="hidden" name="page" value="${param.page}">
+			<input type="hidden" name="userId" value="${item.userId}">
           <div class="col-md-9 col-lg-8">
             <label for="comment-textbox" hidden>댓글</label>
             <textarea class="form-control comment-textbox" id="comment-textbox" name="replyContent" placeholder="댓글 쓰기.." rows="3" required></textarea>
@@ -152,6 +152,41 @@ function selectReplyList() {
 
 $(function() {
   selectReplyList();
+});
+
+//댓글 등록
+$(".comment-form").on("submit", function(e){
+	e.preventDefault();
+	
+	let replyContent = $("#comment-textbox").val();
+	if (!replyContent.trim()){
+		alert("댓글 내용을 입력하세요.");
+		return;
+	}
+	
+	let formData = {
+			postId: $("input[name='postId']").val(),
+			userId: $("input[name='userId']").val(),
+			replyContent: replyContent
+		};
+	
+	$.ajax({
+		url: contextPath + "/reply/insertReply",
+		type: "POST",
+		contentType: "application/json; charset=UTF-8",
+		data: JSON.stringify(formData),
+		success: function(result){
+			if (result === "success") {
+				$("#comment-textbox").val("");
+				selectReplyList();
+			} else {
+				alert("댓글 등록 실패");
+			}
+		},
+		error: function(){
+			alert("서버 오류로 댓글 등록 실패");
+		}
+	});
 });
 
 </script>

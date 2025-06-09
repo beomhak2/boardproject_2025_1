@@ -19,5 +19,11 @@ public class Board2ReplyServiceImpl implements Board2ReplyService {
 	public List<Reply> selectReplyList(int postId) {
 		return dao.selectReplyList(postId);
 	}
-	
+
+	//댓글 등록
+	@Override
+	public void insertReply(Reply reply) {
+		dao.insertReply(reply);
+	}
+
 }

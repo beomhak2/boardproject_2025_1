@@ -9,4 +9,7 @@ public interface Board2ReplyService {
 	//댓글 조회
 	List<Reply> selectReplyList(int postId);
 
+	//댓글 등록
+	void insertReply(Reply reply);
+
 }

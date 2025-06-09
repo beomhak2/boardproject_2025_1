@@ -19,5 +19,14 @@ public class Board2ReplyDaoImpl implements Board2ReplyDao {
 	public List<Reply> selectReplyList(int postId) {
 		return sql.selectList("board2.selectReplyList", postId);
 	}
-	
+
+	//댓글 등록
+	@Override
+	public void insertReply(Reply reply) {
+		if (reply == null || reply.getPostId() == 0 || reply.getReplyContent() == null) {
+	        throw new IllegalArgumentException("댓글 데이터 누락");
+	    }
+		sql.insert("board2.insertReply", reply);
+	}
+
 }

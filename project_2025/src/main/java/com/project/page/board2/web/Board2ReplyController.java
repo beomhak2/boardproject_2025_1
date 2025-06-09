@@ -3,10 +3,12 @@ package com.project.page.board2.web;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +24,7 @@ public class Board2ReplyController {
 	Board2ReplyService service;
 	
 	/**
-	 * ajax 비동기 댓글 조회
+	 * ajax 댓글 조회
 	 * @param postId
 	 * @return 댓글 조회
 	 */
@@ -31,5 +33,16 @@ public class Board2ReplyController {
         List<Reply> replies = service.selectReplyList(postId);
         return ResponseEntity.ok().body(replies);
     }
+	
+	@PostMapping("/insertReply")
+	public ResponseEntity<String> insertReply(@RequestBody Reply reply) {
+	    try {
+	        service.insertReply(reply);
+	        return ResponseEntity.ok("success");
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 예외 로그 출력
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+	    }
+	}
 	
 }

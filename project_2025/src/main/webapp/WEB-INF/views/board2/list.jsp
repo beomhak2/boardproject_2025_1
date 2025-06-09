@@ -68,9 +68,9 @@
 			</c:if>
 			<c:forEach var="item" items="${list}">
 				<tr>
-					<td>${item.postId}</td>
+					<td>${item.rnum}</td>
 					<td>
-						<a href="detail/${item.postId}?page=${pager.page}">${item.title}</a>
+						<a href="detail/${item.postId}">${item.title}</a>
 					</td>
 					<td>${item.userId}</td>
 					<td><fmt:formatDate value="${item.regDt}" pattern="yyyy-MM-dd"/></td>
@@ -101,6 +101,8 @@
 		<div>
 			<div>
 				<a href="add"><button type="button" class="btn btn-primary">등록</button></a>
+				<a href="dummy">대량등록</a>
+				<a href="init">초기화</a>
 			</div>
 		</div>
 	</div>

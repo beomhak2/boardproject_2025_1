@@ -95,7 +95,7 @@
 			, SYSDATE
 			, SYSDATE
 			, 2
-			, 'abc1'
+			, 'abc123'
 		)
 	</insert>
 	
@@ -135,10 +135,11 @@
 	<select id="selectReplyList" parameterType="int" resultMap="replyVO">
 		SELECT * FROM reply
 		WHERE POST_ID = #{postId}
+		ORDER BY REG_DT DESC
 	</select>
 	
 	<!-- 댓글 등록 -->
-	<insert id="replyInsert" parameterType="com.project.page.board2.model.Reply">
+	<insert id="insertReply" parameterType="com.project.page.board2.model.Reply">
 	 INSERT INTO reply (
 	 	REPLY_ID
 	 	, REPLY_CONTENT
@@ -155,10 +156,10 @@
 	 	, #{replyContent}
 	 	, SYSDATE
 	 	, SYSDATE
-	 	, 1
-	 	, 1
-	 	, 1
-	 	, 'abc1'
+	 	, 0
+	 	, 0
+	 	, 0
+	 	, 'abc123'
 	 	, #{postId}
 	 )
 	</insert>

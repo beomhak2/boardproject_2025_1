@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.page.board2.model.Pager;
 import com.project.page.board2.model.Post;
-import com.project.page.board2.model.Reply;
-import com.project.page.board2.service.Board2ReplyService;
 import com.project.page.board2.service.Board2Service;
 
 @Controller
@@ -23,6 +21,20 @@ public class Board2Controller {
 	
 	@Autowired
 	Board2Service service;
+	
+	@GetMapping("/dummy")
+	String dummy() {
+		service.dummy();
+		
+		return "redirect:list";
+	}
+	
+	@GetMapping("/init")
+	String init() {
+		service.init();
+		
+		return "redirect:list";
+	}
 	
 	@GetMapping("/list")
 	String list(Pager pager, Model model) {
@@ -47,7 +59,7 @@ public class Board2Controller {
 	}
 	
 	@GetMapping("/detail/{postId}")
-	String detail(@PathVariable int postId, @RequestParam(defaultValue = "1") int page, Model model) {
+	String detail(@PathVariable int postId, Model model) {
 		Post item = service.item(postId);
 		
 		model.addAttribute("item", item);
