@@ -1,6 +1,7 @@
 package com.project.page.board3.pager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 //검색 기능
@@ -89,5 +90,9 @@ public class Pager {
 		}
 		return query;
 	}
+	
+	
+	
+	
 }
 

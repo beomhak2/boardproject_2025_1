@@ -33,7 +33,7 @@
 		<if test="keyword != null and keyword != ''">
 			<choose>
 			<when test="search == 1">
-				AND title = #{keyword}
+				AND TITLE LIKE CONCAT(CONCAT('%', #{keyword}) , '%')
 			</when>
 			
 			<when test="search == 2">
@@ -58,10 +58,16 @@
 			SELECT B3.*, ROWNUM rnum 
 			FROM (
 				<include refid="search"></include>
-				ORDER BY REG_DT DESC
+				ORDER BY REG_DT asc
 			) B3
 		)
-		WHERE rnum BETWEEN (#{page} - 1) * #{perPage} + 1 AND (#{page} * #{perPage})
+		WHERE rnum BETWEEN
+    		(#{total} - (#{page} * #{perPage})) +1
+   		 AND
+    		(#{total} - (((#{page} - 1) * #{perPage}) + 1))+1
+		AND BOARD_ID = 3
+ORDER BY rnum DESC
+
 	</select>
 	
 	<insert id = "add" parameterType="Post">
@@ -90,7 +96,7 @@
 	-->
 	<update id="viewCnt" parameterType="int">
 		UPDATE POST
-		SET view_cnt = view_cnt + 1
+		SET view_cnt = NVL(view_cnt,0) + 1
 		WHERE post_id = #{postId}
 	</update>
 	

@@ -6,7 +6,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<p>regDt raw: ${item.regDt}</p>
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>일상공유 커뮤니티</title>
@@ -15,6 +14,7 @@
 	<link href="/resources/static/css/header.css" rel="stylesheet"> 
 </head>
 <body>
+
 	<header class="p-3 text-bg-dark">
 		<jsp:include page="../includes/header.jsp" />
 	</header>
@@ -47,10 +47,11 @@
         <div class="pb-5 d-grid gap-2 d-md-block">
           <a href="/board3/update/${item.postId}" class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
           <a href="/board3/delete/${item.postId}"><button class="btn btn-danger me-md-2" type="button">삭제</button></a>
+          <%-- http://localhost:9090/board3/list?search=1&keyword=next 주소가 이런식으로 나오기때문에 list 페이지에서 값을 넘기고 여기서 받는형식으로 구상중 검색기록은 어쩌지..?--%>
+          <a href="/board3/list?page=${page != null ? page : 1}" class="btn btn-success me-md-2" role="button" id="update-article">목록</a>
         </div>
       </form>
     </div>
-
     <div class="row g-5">
       <section>
         <form class="row g-3 comment-form">

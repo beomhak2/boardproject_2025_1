@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.page.board3.pager.Pager;
 import com.project.page.board3.service.Board3Service;
@@ -26,8 +27,7 @@ public class Board3Controller {
 	// Pager 매개변수 추가
 	@GetMapping("/list")	//�뼱�뼚�븳 二쇱냼濡� �뱾�뼱�솕�쓣�븣 臾댁뾿�쓣 泥섎━ �븷 寃껋씤媛�?
 	String list(Post post, Model model, @ModelAttribute Pager pager) {
-		System.out.println("search: " + pager.getSearch());
-	    System.out.println("keyword: " + pager.getKeyword());
+
 		List<Post> list = service.list(pager);
 		
 		model.addAttribute("list", list);
@@ -37,11 +37,12 @@ public class Board3Controller {
 	}
 	
 	@GetMapping("/detail/{postId}")
-	String detail(@PathVariable int postId, Model model) {
+	String detail(@PathVariable int postId, Model model, @RequestParam(defaultValue ="1")int page){
 		service.viewCnt(postId);
 	    Post item = service.item(postId);
 
 	    model.addAttribute("item", item);
+	    model.addAttribute("page", page);
 	    
 	    return path + "detail";
 	}

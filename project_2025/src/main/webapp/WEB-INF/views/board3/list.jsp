@@ -5,7 +5,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<p>prev: ${pager.prev}</p>
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>일상공유 커뮤니티</title>
@@ -20,7 +19,6 @@
 	<%--
 	hover 했을때 강조 추가 
 	색도 진하게하고싶었으나 적용안됨
-	
 	--%>
   .hover-row:hover {
     background-color: #cccccc;
@@ -49,13 +47,25 @@
 	                            <div class="row no-gutters">
 	                                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
 	                                    <select class="form-control" id="exampleFormControlSelect1" name="search">
-	                                        <option value="1">제목</option>
-	                                        <option value="2">내용</option>
-	                                        <option value="3">작성자</option>
+	                                        <option value="1" 
+	                                        	<c:if test="${param.search=='1'}">
+	                                        		selected
+	                                        	</c:if>>제목
+	                                        </option>
+	                                        <option value="2"
+	                                        	<c:if test="${param.search=='2'}">
+	                                        		selected
+	                                        	</c:if>>내용
+	                                        </option>
+	                                        <option value="3"
+	                                        	<c:if test="${param.search=='3'}">
+	                                        		selected
+	                                        	</c:if>>작성자
+	                                        </option>
 	                                    </select>
 	                                </div>
 	                                <div class="col-lg-8 col-md-6 col-sm-12 p-0">
-	                                    <input type="text" placeholder="검색" class="form-control" id="search" name="keyword">
+	                                    <input type="text" placeholder="검색" class="form-control" id="search" name="keyword" value="${param.keyword}">
 	                                </div>
 	                                <div class="col-lg-1 col-md-3 col-sm-12 p-0">
 	                                    <button type="submit" class="btn btn-base">
@@ -88,8 +98,8 @@
 	  	</c:if>
 	  	<c:forEach var="item" items="${list}">
 	  		<%-- hover 기능 적용 --%>
-	  		<tr class="hover-row" onclick = "location.href='detail/${item.postId}'" style="cursor:pointer;">
-	  		<%-- 게시판 번호 1번부터 나오게 수정 --%>
+	  		<tr class="hover-row" onclick = "location.href='detail/${item.postId}?page=${pager.page}'" style="cursor:pointer;">
+
 	  			<td>${item.rnum}</td>
 	  			<td>${item.title}</td>
 	  			<td><fmt:formatDate value="${item.regDt}" pattern="yyyy-MM-dd"/></td>
