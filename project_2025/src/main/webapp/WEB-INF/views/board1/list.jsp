@@ -22,7 +22,7 @@
 	
 	<div class="container">
 	<div id="article-header" class="py-5 text-center">
-		<h1>일상 게시판1</h1>
+		<h1>일상 게시판</h1>
     </div>
 	<div class="row">
 	    <div class="col-lg-12 card-margin">
@@ -40,7 +40,7 @@
 	                                    </select>
 	                                </div>
 	                                <div class="col-lg-8 col-md-6 col-sm-12 p-0">
-	                                    <input type="text" placeholder="검색" class="form-control" id="search" name="keyword">
+	                                    <input type="text" placeholder="검색" class="form-control" id="search" name="keyword"  value="${pager.keyword}">
 	                                </div>
 	                                <div class="col-lg-1 col-md-3 col-sm-12 p-0">
 	                                    <button type="submit" class="btn btn-base">
@@ -77,7 +77,7 @@
 				            </a>
 				        </c:when>
 				        <c:otherwise>
-				            <c:url value='/board1/detail/${item.postId}' var='detailUrl'/>
+				            <c:url value='/board1/detail/${item.postId}${pager.query}' var='detailUrl'/>
 		      				<a href="${detailUrl}">${item.title}</a>
 				        </c:otherwise>
 				    </c:choose>

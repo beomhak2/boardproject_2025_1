@@ -83,14 +83,15 @@ public class Board1Controller {
 	@GetMapping("/detail/{postId}")
  	public String detail(@PathVariable int postId, Model model) {
 		
-		service.increaseViewCount(postId);	// 조회수 증가
 		Post post = service.getPostById(postId);	//게시글 조회
+		
+		service.increaseViewCount(postId);	// 조회수 증가
 		
 	    model.addAttribute("post", post);
 		
 		return path + "detail";
 	}
-	
+
 	/**
 	 * 수정 페이지로 이동 postId:\\d+ : 숫자만 가능
 	 * 2025.06.05

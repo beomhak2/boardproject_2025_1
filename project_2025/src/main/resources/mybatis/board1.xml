@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="board1">
-
+	
 	<!-- 유저 정보 -->
 	<resultMap id="memberVO" type="com.project.page.model.Member">
 		<result property="userId" column="USER_ID"/>
@@ -31,6 +31,22 @@
 		<collection property="member" resultMap="memberVO"/>
 	</resultMap>
 	
+	<!-- 댓글 정보 -->
+	<resultMap id="detailVO" type="com.project.page.board1.model.Reply">
+		<result property="replyId" column="REPLY_ID"/>
+		<result property="replyContent" column="REPLY_CONTENT"/>
+		<result property="regDt" column="REG_DT"/>
+		<result property="mdfDt" column="MDF_DT"/>
+		<result property="replyClass" column="REPLY_CLASS"/>
+		<result property="replyGroup" column="REPLY_GROUP"/>
+		<result property="replyOrder" column="REPLY_ORDER"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="postId" column="POST_ID"/>
+		<result property="parentReplyId" column="PARENT_REPLY_ID"/>
+		<collection property="postMap" resultMap="postResultMap"/>
+		<collection property="member" resultMap="memberVO"/>
+	</resultMap>
+	
 	<!-- 검색 기능 -->
 	<sql id="search">
 		SELECT * FROM POST
@@ -49,9 +65,6 @@
 					<when test="search == 3">
 						USER_ID LIKE '%' || #{keyword} || '%'
 					</when>
-					<otherwise>
-						1=1
-					</otherwise>
 				</choose>
 				AND
 			</if>
@@ -70,7 +83,8 @@
 	    SELECT * FROM 
 	    (SELECT T1.*, ROWNUM rnum FROM 
 	    (<include refid="search"/>) T1)
-        WHERE rnum BETWEEN ((#{page} - 1) * #{perPage}) +1   AND (#{page} * #{perPage})
+        WHERE rnum BETWEEN ((#{page} - 1) * #{perPage}) +1   AND (#{page} * #{perPage}) AND BOARD_ID = 1
+        ORDER BY rnum DESC
 	</select>
 
 	<!-- 게시판 입력 -->
@@ -115,4 +129,31 @@
 		WHERE POST_ID = #{postId} and BOARD_ID = 1
 	</update>
 	
+	<!-- 댓글 달기 -->
+	<insert id="replyInsert" parameterType="com.project.page.board1.model.Reply">
+		<selectKey keyProperty="replyId" resultType="int" order="BEFORE">
+			SELECT reply_seq.NEXTVAL FROM dual
+		</selectKey>
+		INSERT INTO reply(
+			REPLY_ID, REPLY_CONTENT, REPLY_CLASS, REPLY_GROUP, REPLY_ORDER, USER_ID
+		)VALUES(
+			#{replyId}, #{replyContent}, #{replyClass}, #{replyGroup}, #{replyOrder}, 'USER' 
+		)	
+	</insert>
+	
+	<!-- 댓글 보기 -->
+	<select id="replySelect" resultType="int" resultMap="detailVO">
+		SELECT
+			LEVEL AS replyClass, R.*
+		FROM (
+			SELECT * FROM REPLY R LEFT JOIN POST P ON(R.POST_ID = P.POST_ID) LEFT JOIN MEMBER M ON(R.USER_ID = M.USER_ID) AND P.DEL_YN = 'N'
+		) R
+		start with parent_reply_id IS NULL
+		CONNECT BY PRIOR reply_id = parent_reply_id
+		ORDER SIBLINGS BY reply_group, reply_order
+	</select>
+	
+    <select id="getNextGroupId" resultType="int">
+        SELECT IFNULL(MAX(reply_group), 0) + 1 FROM reply
+    </select>
 </mapper>

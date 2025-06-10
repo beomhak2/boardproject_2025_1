@@ -85,7 +85,11 @@ public class Pager {
 		String query = "";
 		
 		if (search >= 1 && search <= 3 && keyword != null && !keyword.isEmpty()) {
-			query = "&search=" + search + "&keyword=" + keyword;
+			query = "?page=" + page + "&search=" + search + "&keyword=" + keyword;
+		}else if(page == 0) {
+			query =  "&search=" + search + "&keyword=" + keyword;
+		}else {
+			return "";
 		}
 		
 		return query;
