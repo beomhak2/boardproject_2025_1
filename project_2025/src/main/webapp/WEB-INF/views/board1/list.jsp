@@ -33,14 +33,14 @@
 	                        <div class="col-12">
 	                            <div class="row no-gutters">
 	                                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-	                                    <select class="form-control" id="exampleFormControlSelect1" name="search">
+	                                    <select class="form-control" name="search">
 	                                    	<option value="1">전체</option>
 	                                        <option value="2">제목</option>
 	                                        <option value="3">작성자</option>
 	                                    </select>
 	                                </div>
 	                                <div class="col-lg-8 col-md-6 col-sm-12 p-0">
-	                                    <input type="text" placeholder="검색" class="form-control" id="search" name="keyword"  value="${pager.keyword}">
+	                                    <input type="text" placeholder="검색" class="form-control" id="search" name="keyword"  value="${fn:escapeXml(pager.keyword)}">
 	                                </div>
 	                                <div class="col-lg-1 col-md-3 col-sm-12 p-0">
 	                                    <button type="submit" class="btn btn-base">
@@ -77,8 +77,9 @@
 				            </a>
 				        </c:when>
 				        <c:otherwise>
-				            <c:url value='/board1/detail/${item.postId}${pager.query}' var='detailUrl'/>
-		      				<a href="${detailUrl}">${item.title}</a>
+		      				<a href="<c:url value='/board1/detail/${item.postId}${pager.getQueryString()}'/>">
+		      					<c:out value="${item.title}"/>
+		      				</a>
 				        </c:otherwise>
 				    </c:choose>
 	      		</td>
@@ -92,16 +93,30 @@
 	</table>
 	<nav aria-label="Page navigation example">
 	  <ul class="pagination justify-content-center">
-	    <li class="page-item">
-	      <a class="page-link" href="list?page=${pager.prev}${pager.query}" aria-label="Previous">
+	    <li class="page-item ${pager.page == 1 ? 'disabled' : ''}">
+	      <a class="page-link" href="list?page=1${pager.getQueryString()}" aria-label="First">
 	        <span aria-hidden="true">&laquo;</span>
 	      </a>
 	    </li>
+	    <li class="page-item ${pager.page == 1 ? 'disabled' : ''}">
+	      <a class="page-link" href="list?page=${pager.getPrev()}${pager.getQueryString()}" aria-label="Previous">
+	        <span aria-hidden="true">prev</span>
+	      </a>
+	    </li>
 	    <c:forEach var="page" items="${pager.list}">
-	    	<li class="page-item"><a class="page-link" href="list?page=${page}${pager.query}">${page}</a></li>
+	    	<li class="page-item ${pager.page == page ? 'active' : ''}">
+	    		<a class="page-link" href="list?page=${page}${pager.getQueryString()}">
+	    			${page}
+    			</a>
+   			</li>
 	    </c:forEach>
-	    <li class="page-item">
-	      <a class="page-link" href="list?page=${pager.next}${pager.query}" aria-label="Next">
+	    <li class="page-item ${pager.page == pager.list ? 'disabled' : ''}">
+	      <a class="page-link" href="list?page=${pager.getNext()}${pager.getQueryString()}" aria-label="Next">
+	        <span aria-hidden="true">next</span>
+	      </a>
+	    </li>
+	    <li class="page-item ${pager.page == pager.list ? 'disabled' : ''}">
+	      <a class="page-link" href="list?page=${pager.getLast()}${pager.getQueryString()}" aria-label="Last">
 	        <span aria-hidden="true">&raquo;</span>
 	      </a>
 	    </li>

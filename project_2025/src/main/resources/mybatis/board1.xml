@@ -51,7 +51,9 @@
 	<sql id="search">
 		SELECT * FROM POST
 		<where>
+			board_id = 1
 			<if test="keyword != null and keyword != ''">
+				AND
 				<choose>
 					<when test="search == 1">
 						(
@@ -66,9 +68,10 @@
 						USER_ID LIKE '%' || #{keyword} || '%'
 					</when>
 				</choose>
-				AND
 			</if>
-			DEL_YN = 'N'
+			<if test="true">
+			 	AND DEL_YN = 'N'
+			</if>
 		</where>
 		order by REG_DT DESC
 	</sql>
@@ -80,10 +83,13 @@
 	
 	<!-- 게시판 목록 -->
 	<select id="selectPostList" resultMap="postResultMap">
-	    SELECT * FROM 
-	    (SELECT T1.*, ROWNUM rnum FROM 
-	    (<include refid="search"/>) T1)
-        WHERE rnum BETWEEN ((#{page} - 1) * #{perPage}) +1   AND (#{page} * #{perPage}) AND BOARD_ID = 1
+	    SELECT * FROM (
+	    	SELECT T1.*, ROWNUM rnum FROM (
+	    		<include refid="search"/>
+    		) T1
+    		WHERE ROWNUM &lt;= #{page} * #{perPage}
+	    )
+        WHERE rnum &gt;= ((#{page} - 1) * #{perPage}) +1
         ORDER BY rnum DESC
 	</select>
 
@@ -100,7 +106,7 @@
 	</insert>
 	
 	<!-- 게시판 postId 찾기 -->
-	<select id="selectPostById" resultMap="postResultMap" resultType="int">
+	<select id="selectPostById" resultMap="postResultMap">
 		SELECT p.*, m.USER_ID, m.EMAIL 
 		FROM POST p
 		LEFT JOIN MEMBER m on p.user_id = m.user_id 
@@ -146,7 +152,10 @@
 		SELECT
 			LEVEL AS replyClass, R.*
 		FROM (
-			SELECT * FROM REPLY R LEFT JOIN POST P ON(R.POST_ID = P.POST_ID) LEFT JOIN MEMBER M ON(R.USER_ID = M.USER_ID) AND P.DEL_YN = 'N'
+			SELECT * FROM REPLY R 
+			LEFT JOIN POST P ON(R.POST_ID = P.POST_ID) 
+			LEFT JOIN MEMBER M ON(R.USER_ID = M.USER_ID) 
+			WHERE P.DEL_YN = 'N' and post_id = #{postId}
 		) R
 		start with parent_reply_id IS NULL
 		CONNECT BY PRIOR reply_id = parent_reply_id

@@ -69,7 +69,7 @@ public class Board1Controller {
 		
 		service.writePost(post);
 		
-		return "redirect:list";
+		return "redirect:/board1/list";
 	}
 	
 	/**
@@ -83,9 +83,9 @@ public class Board1Controller {
 	@GetMapping("/detail/{postId}")
  	public String detail(@PathVariable int postId, Model model) {
 		
-		Post post = service.getPostById(postId);	//게시글 조회
-		
 		service.increaseViewCount(postId);	// 조회수 증가
+		
+		Post post = service.getPostById(postId);	//게시글 조회
 		
 	    model.addAttribute("post", post);
 		

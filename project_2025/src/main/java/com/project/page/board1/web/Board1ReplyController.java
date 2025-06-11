@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ import com.project.page.board1.model.Reply;
 import com.project.page.board1.service.ReplyService;
 
 @Controller
-@RequestMapping("/reply")
+@RequestMapping("/board1/reply")
 public class Board1ReplyController {
 	
 	@Autowired
@@ -29,12 +30,11 @@ public class Board1ReplyController {
 		
 		return "reply/replyList";
 	}
-	/*
-	@PostMapping("/write")
-	@ResponseBody
-	public String replyWrite(Reply reply){
+
+	@PostMapping("/add")
+	public String replyWrite(@ModelAttribute Reply reply){
 		replyService.add(reply);
-		return "success";
+		return "redirect:/board1/reply/list/" + reply.getPostId();
 	}
-	*/
+
 }

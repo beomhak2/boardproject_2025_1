@@ -6,14 +6,15 @@ import java.util.List;
 public class Pager {
 	private int page = 1;		//	현재 페이지
 	private int perPage = 5;	//	페이지당 게시글 수
-	private float total; 			//  총 게시글 수
+	private float total = 0; 			//  총 게시글 수
 	private int perGroup = 3;
 	
-	private int search;
-	private String keyword;
+	private int search = 1;
+	private String keyword = "";
 	
 	public int getPage() { return page; }
-	public void setPage(int page) { this.page = page; }
+	public void setPage(int page) { 
+		if(page > 0) this.page = page; }
 		
 	public int getPerPage() {
 		return perPage;
@@ -38,7 +39,7 @@ public class Pager {
 	}
 
 	public void setSearch(int search) {
-		this.search = search;
+		if(search >= 1 && search <= 3) this.search = search;
 	}
 
 	public String getKeyword() {
@@ -46,35 +47,30 @@ public class Pager {
 	}
 
 	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+		this.keyword = (keyword == null) ? "" : keyword.trim();
 	}
 
 	public int getLast() {
-		return (int)Math.ceil(total / perPage);
+		return (int)Math.ceil((double)total / perPage);
 	}
 	
 	public int getNext() {
 		int next = (((page-1) / perGroup) + 1) * perGroup +1;
-		int last = getLast();
-		
-		return next >= last ? last : next;
+		return Math.min(next, getLast());
 	}
 	public int getPrev() {
 		int prev = (((page-1) / perGroup) -1) * perGroup +1;
-		return prev <= perGroup ? 1 : prev;
+		return Math.max(prev, 1);
 	}
 	
 	public List<Integer> getList() {
-		List<Integer> list = new ArrayList<Integer>();
+		List<Integer> list = new ArrayList<>();
 		
 		int startPage = (((page-1) / perGroup)) * perGroup + 1;
+		int endPage = Math.min(startPage + perGroup - 1, getLast());
 		
-		for(int i = startPage; i < startPage + perGroup && i <= getLast(); i++) {
+		for(int i = startPage; i <= endPage; i++) {
 			list.add(i);
-		}
-		
-		if(list.isEmpty()) {
-			list.add(1);
 		}
 		
 		return list;
@@ -82,16 +78,21 @@ public class Pager {
 	
 	public String getQuery() {
 		
-		String query = "";
+		StringBuilder query = new StringBuilder();
 		
-		if (search >= 1 && search <= 3 && keyword != null && !keyword.isEmpty()) {
-			query = "?page=" + page + "&search=" + search + "&keyword=" + keyword;
-		}else if(page == 0) {
-			query =  "&search=" + search + "&keyword=" + keyword;
-		}else {
-			return "";
+		boolean hasSearch = (search >= 1 && search <= 3);
+		boolean hasKeyword = (keyword != null && !keyword.trim().isEmpty());
+		
+		if (hasSearch && hasKeyword) {
+			query.append("search=").append(search);
+			query.append("&keyword=").append(keyword.trim());
 		}
 		
-		return query;
+		return query.toString();
+	}
+	
+	public String getQueryString() {
+		String query = getQuery();
+		return query.isEmpty() ? "" : "?" + query;
 	}
 }
