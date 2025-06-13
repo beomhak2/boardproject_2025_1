@@ -20,5 +20,5 @@ public interface Board2Dao {
 	void delete(int postId);
 
 	int total(Pager pager);
-	
+
 }

@@ -12,4 +12,10 @@ public interface Board2ReplyDao {
 	//댓글 등록
 	void insertReply(Reply reply);
 
+	//댓글 삭제
+	void deleteReply(int replyId);
+
+	//답글 등록
+	void insertReplyAnswer(Reply reply);
+	
 }

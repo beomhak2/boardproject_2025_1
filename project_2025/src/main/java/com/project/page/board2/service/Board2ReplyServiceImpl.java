@@ -26,4 +26,16 @@ public class Board2ReplyServiceImpl implements Board2ReplyService {
 		dao.insertReply(reply);
 	}
 
+	//댓글 삭제
+	@Override
+	public void deleteReply(int replyId) {
+		dao.deleteReply(replyId);
+	}
+
+	//답글 등록
+	@Override
+	public void insertReplyAnswer(Reply reply) {
+		dao.insertReplyAnswer(reply);
+	}
+
 }

@@ -68,10 +68,12 @@
 			SELECT ROWNUM rnum, P.*
 			FROM (
 				<include refid="search"></include>
-				ORDER BY REG_DT DESC
+				ORDER BY REG_DT
 			) P
 		)
-		WHERE rnum BETWEEN (#{page} - 1) * #{perPage} + 1 AND (#{page} * #{perPage})
+		WHERE rnum BETWEEN (#{total} - (#{page} * #{perPage})) + 1
+						AND (#{total} - ((#{page} - 1) * #{perPage} + 1)) + 1
+		ORDER BY rnum DESC
 	</select>
 	
 	<insert id="add" parameterType="com.project.page.board2.model.Post">
@@ -140,28 +142,66 @@
 	
 	<!-- 댓글 등록 -->
 	<insert id="insertReply" parameterType="com.project.page.board2.model.Reply">
-	 INSERT INTO reply (
-	 	REPLY_ID
-	 	, REPLY_CONTENT
-	 	, REG_DT
-	 	, MDF_DT
-	 	, REPLY_CLASS
-	 	, REPLY_GROUP
-	 	, REPLY_ORDER
-	 	, USER_ID
-	 	, POST_ID
-	 )
-	 VALUES (
-	 	REPLY_SEQ.NEXTVAL
-	 	, #{replyContent}
-	 	, SYSDATE
-	 	, SYSDATE
-	 	, 0
-	 	, 0
-	 	, 0
-	 	, 'abc123'
-	 	, #{postId}
-	 )
+		 INSERT INTO reply (
+		 	REPLY_ID
+		 	, REPLY_CONTENT
+		 	, REG_DT
+		 	, MDF_DT
+		 	, REPLY_CLASS
+		 	, REPLY_GROUP
+		 	, REPLY_ORDER
+		 	, USER_ID
+		 	, POST_ID
+		 )
+		 VALUES (
+		 	REPLY_SEQ.NEXTVAL
+		 	, #{replyContent}
+		 	, SYSDATE
+		 	, SYSDATE
+		 	, 0
+		 	, REPLY_SEQ.CURRVAL
+		 	, 0
+		 	, 'abc123'
+		 	, #{postId}
+		 )
 	</insert>
+	
+	<!-- 답글 등록 -->
+	<insert id="insertReplyAnswer" parameterType="com.project.page.board2.model.Reply">
+		UPDATE reply
+        SET reply_order = reply_order + 1
+        WHERE reply_group = #{replyGroup}
+          AND reply_order > #{replyOrder};
+          
+          
+		INSERT INTO reply (
+			REPLY_ID
+			, REPLY_CONTENT
+		 	, REG_DT
+		 	, MDF_DT
+		 	, REPLY_CLASS
+		 	, REPLY_GROUP
+		 	, REPLY_ORDER
+		 	, USER_ID
+		 	, POST_ID
+		 )
+		 VALUES (
+		 	REPLY_SEQ.NEXTVAL
+		 	, #{replyContent}
+		 	, SYSDATE
+		 	, SYSDATE
+		 	, 1
+		 	, #{replyGroup}
+		 	, #{replyOrder} + 1
+		 	, 'abc123'
+		 	, #{postId}
+		 )
+	</insert>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="deleteReply" parameterType="com.project.page.board2.model.Reply">
+		DELETE FROM reply
+		WHERE REPLY_ID = #{replyId}
+	</delete>
 
 </mapper>

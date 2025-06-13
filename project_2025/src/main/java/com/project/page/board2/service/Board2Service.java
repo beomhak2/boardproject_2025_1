@@ -17,8 +17,4 @@ public interface Board2Service {
 
 	void delete(int postId);
 
-	void dummy();
-
-	void init();
-
 }

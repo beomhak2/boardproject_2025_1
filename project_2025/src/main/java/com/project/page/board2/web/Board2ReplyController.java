@@ -34,6 +34,11 @@ public class Board2ReplyController {
         return ResponseEntity.ok().body(replies);
     }
 	
+	/**
+	 * ajax 댓글 등록
+	 * @param reply
+	 * @return
+	 */
 	@PostMapping("/insertReply")
 	public ResponseEntity<String> insertReply(@RequestBody Reply reply) {
 	    try {
@@ -45,4 +50,31 @@ public class Board2ReplyController {
 	    }
 	}
 	
+	/**
+	 * ajax 댓글 삭제
+	 * @param replyId
+	 * @return
+	 */
+	@PostMapping("/deleteReply")
+	public ResponseEntity<String> deleteReply(@RequestParam int replyId) {
+		try {
+			service.deleteReply(replyId);
+			return ResponseEntity.ok("success");
+		} catch (Exception e) {
+			e.printStackTrace(); // 예외 로그 출력
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+		}
+	}
+	
+	@PostMapping("/insertReplyAnswer")
+	public ResponseEntity<String> insertReplyAnswer(@RequestBody Reply reply) {
+	    try {
+	    	reply.setReplyClass(1);
+	        service.insertReplyAnswer(reply);
+	        return ResponseEntity.ok("success");
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 예외 로그 출력
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail");
+	    }
+	}
 }

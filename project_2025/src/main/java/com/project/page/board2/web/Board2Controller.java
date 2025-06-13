@@ -2,9 +2,12 @@ package com.project.page.board2.web;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,20 +24,6 @@ public class Board2Controller {
 	
 	@Autowired
 	Board2Service service;
-	
-	@GetMapping("/dummy")
-	String dummy() {
-		service.dummy();
-		
-		return "redirect:list";
-	}
-	
-	@GetMapping("/init")
-	String init() {
-		service.init();
-		
-		return "redirect:list";
-	}
 	
 	@GetMapping("/list")
 	String list(Pager pager, Model model) {

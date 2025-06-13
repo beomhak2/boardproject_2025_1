@@ -1,5 +1,7 @@
 package com.project.page.board2.service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,30 +16,7 @@ public class Board2ServiceImpl implements Board2Service {
 
 	@Autowired
 	Board2Dao dao;
-	
-	@Override
-	public void dummy() {
-		for(int postId = 18; postId < 100; postId++) {
-			Post item = new Post();
-			
-			item.setPostId(postId);
-			item.setTitle("제목 " + postId);
-			item.setPostContent("내용 " + postId);
-			item.setRegDt(null);
-			item.setBoardId(2);
-			item.setUserId("abc123");
-			
-			dao.add(item);
-		}
-	}
-	
-	@Override
-	public void init() {
-		for(int postId = 18; postId < 100; postId++) {
-			dao.delete(postId);
-		}
-	}
-	
+
 	@Override
 	public List<Post> list(Pager pager) {
 		int total = dao.total(pager);
@@ -54,6 +33,7 @@ public class Board2ServiceImpl implements Board2Service {
 
 	@Override
 	public Post item(int postId) {
+		//조회수 증가
 		dao.updateViewCnt(postId);
 		
 		return dao.item(postId);

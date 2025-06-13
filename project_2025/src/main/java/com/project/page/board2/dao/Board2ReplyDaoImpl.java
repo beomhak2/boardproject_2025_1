@@ -29,4 +29,16 @@ public class Board2ReplyDaoImpl implements Board2ReplyDao {
 		sql.insert("board2.insertReply", reply);
 	}
 
+	//댓글 삭제
+	@Override
+	public void deleteReply(int replyId) {
+		sql.delete("board2.deleteReply", replyId);
+	}
+	
+	//답글 등록
+	@Override
+	public void insertReplyAnswer(Reply reply) {
+		sql.insert("board2.insertReplyAnswer", reply);
+	}
+	
 }
