@@ -29,14 +29,15 @@
 	        <div class="card search-form">
 	            <div class="card-body p-0">
 	                <form id="search-form" method="get">
+	                	<input type="hidden" name="page" value="1">
 	                    <div class="row">
 	                        <div class="col-12">
 	                            <div class="row no-gutters">
 	                                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
 	                                    <select class="form-control" name="search">
-	                                    	<option value="1">전체</option>
-	                                        <option value="2">제목</option>
-	                                        <option value="3">작성자</option>
+	                                    	<option value="1" ${pager.search == '1' ? 'selected' : ''}>전체</option>
+	                                        <option value="2" ${pager.search == '2' ? 'selected' : ''}>제목</option>
+	                                        <option value="3" ${pager.search == '3' ? 'selected' : ''}>작성자</option>
 	                                    </select>
 	                                </div>
 	                                <div class="col-lg-8 col-md-6 col-sm-12 p-0">
@@ -72,12 +73,12 @@
 				<td>
 					<c:choose>
 				        <c:when test="${fn:length(item.title) > 30}">
-				            <a href="<c:url value='/board1/detail/${item.postId}'/>">
+				            <a href="/board1/detail/${item.postId}?${pager.getQueryString(pager.page)}">
 				                <c:out value="${fn:substring(item.title, 0, 30)}..." />
 				            </a>
 				        </c:when>
 				        <c:otherwise>
-		      				<a href="<c:url value='/board1/detail/${item.postId}${pager.getQueryString()}'/>">
+		      				<a href="/board1/detail/${item.postId}?${pager.getQueryString(pager.page)}">
 		      					<c:out value="${item.title}"/>
 		      				</a>
 				        </c:otherwise>
@@ -93,33 +94,44 @@
 	</table>
 	<nav aria-label="Page navigation example">
 	  <ul class="pagination justify-content-center">
-	    <li class="page-item ${pager.page == 1 ? 'disabled' : ''}">
-	      <a class="page-link" href="list?page=1${pager.getQueryString()}" aria-label="First">
-	        <span aria-hidden="true">&laquo;</span>
-	      </a>
-	    </li>
-	    <li class="page-item ${pager.page == 1 ? 'disabled' : ''}">
-	      <a class="page-link" href="list?page=${pager.getPrev()}${pager.getQueryString()}" aria-label="Previous">
-	        <span aria-hidden="true">prev</span>
-	      </a>
-	    </li>
-	    <c:forEach var="page" items="${pager.list}">
-	    	<li class="page-item ${pager.page == page ? 'active' : ''}">
-	    		<a class="page-link" href="list?page=${page}${pager.getQueryString()}">
-	    			${page}
-    			</a>
-   			</li>
-	    </c:forEach>
-	    <li class="page-item ${pager.page == pager.list ? 'disabled' : ''}">
-	      <a class="page-link" href="list?page=${pager.getNext()}${pager.getQueryString()}" aria-label="Next">
-	        <span aria-hidden="true">next</span>
-	      </a>
-	    </li>
-	    <li class="page-item ${pager.page == pager.list ? 'disabled' : ''}">
-	      <a class="page-link" href="list?page=${pager.getLast()}${pager.getQueryString()}" aria-label="Last">
-	        <span aria-hidden="true">&raquo;</span>
-	      </a>
-	    </li>
+
+		<!-- 처음 -->
+		<li class="page-item">
+		  <a class="page-link" href="?${pager.getQueryString(1)}" aria-label="First">
+		    <span aria-hidden="true">&laquo;</span>
+		  </a>
+		</li>
+		
+		<!-- 이전 -->
+		<li class="page-item">
+		  <a class="page-link" href="?${pager.getQueryString(pager.prev)}" aria-label="Previous">
+		    <span aria-hidden="true">prev</span>
+		  </a>
+		</li>
+		
+		<!-- 페이지 번호 -->
+		<c:forEach var="page" items="${pager.list}">
+		  <li class="page-item">
+		    <a class="page-link" href="?${pager.getQueryString(page)}">
+		      ${page}
+		    </a>
+		  </li>
+		</c:forEach>
+		
+		<!-- 다음 -->
+		<li class="page-item">
+		  <a class="page-link" href="?${pager.getQueryString(pager.next)}" aria-label="Next">
+		    <span aria-hidden="true">next</span>
+		  </a>
+		</li>
+		
+		<!-- 마지막 -->
+		<li class="page-item">
+		  <a class="page-link" href="?${pager.getQueryString(pager.last)}" aria-label="Last">
+		    <span aria-hidden="true">&raquo;</span>
+		  </a>
+		</li>
+	    
 	  </ul>
 	</nav>
 	</div>
@@ -134,13 +146,25 @@
 	</footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous">
 	$(document).ready(function() {
-		$('#search').keydown(function(ev){
+		$('#search').on('keydown', function(ev){
 			if(ev.key === "Enter") {
 				ev.preventDefault();
-				
-				$('#keyword').submit();
+				setPageToFirst();
+				$('#search-form').submit();
 			}
 		});
+		
+		$('#search-form').on('submit', function('submit', function() {
+			setPageToFirst();
+		});
+		
+		function setPageToFirst() {
+			if($('input[name="page"])').length > 0{
+				$('input[name="page"]').val(1);
+			}else{
+				$(#search-form).append('<input type ="hidden" name="page" value="1"');
+			}
+		}
 	});
 	
 </script>

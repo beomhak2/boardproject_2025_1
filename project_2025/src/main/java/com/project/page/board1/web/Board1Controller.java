@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.page.board1.model.Pager;
 import com.project.page.board1.service.Board1Service;
@@ -33,14 +34,15 @@ public class Board1Controller {
 	 * @return 게시물 목록
 	 */
 	@GetMapping("/list")	//어떠한 주소로 들어왔을때 무엇을 처리 할 것인가?
-	public String list(Model model, Pager page) {
+	public String list(@ModelAttribute Pager pager, Model model) {
 		
-		List<Post> list = service.list(page);
+		int total = service.getPostCount(pager);
+		pager.makePage(total);
+		
+		List<Post> list = service.getPostList(pager);
 				
 		model.addAttribute("list", list);
-		
-		model.addAttribute("pager", page);
-		
+		model.addAttribute("pager", pager);
 		model.addAttribute("msg", "list");
 		
 		return path + "list";	// board1에 있는 list라는 명칭의 jsp로 반환
@@ -81,13 +83,17 @@ public class Board1Controller {
 	 * @return 게시판 상세내용
 	 */
 	@GetMapping("/detail/{postId}")
- 	public String detail(@PathVariable int postId, Model model) {
+ 	public String detail(@PathVariable int postId,
+ 							@ModelAttribute Pager pager,
+ 							Model model) {
 		
 		service.increaseViewCount(postId);	// 조회수 증가
 		
 		Post post = service.getPostById(postId);	//게시글 조회
 		
 	    model.addAttribute("post", post);
+	    
+	    model.addAttribute("pager", pager);
 		
 		return path + "detail";
 	}
@@ -104,6 +110,10 @@ public class Board1Controller {
 	public String updateGet(@PathVariable int postId, Model model) {
 		
 		Post post = service.getPostById(postId);
+		
+		if(post == null) {
+			return "redirect:/board1/list";
+		}
 	
 		model.addAttribute("post", post);
 		
@@ -120,16 +130,18 @@ public class Board1Controller {
 	 * @return postId를 가지고 /board1/detail/로 이동
 	 */
 	@PostMapping("/update/{postId}")
-	public String updatePost(@PathVariable int postId, @ModelAttribute Post post, Model model) {
+	public String updatePost(@PathVariable int postId, @ModelAttribute Post post, @ModelAttribute Pager pager, Model model) {
 	    post.setPostId(postId);            // URL에서 받은 ID 세팅 (보안용)
 	    post.setMdfDt(new Date());         // 수정일 설정
 
 	    int result = service.updatePost(post);
 
 	    if(result > 0) {
-	        return "redirect:/board1/detail/" + postId;
+	        return "redirect:/board1/" + postId + "?" + pager.getQueryString(pager.getPage());
 	    } else {
 	        model.addAttribute("error", "수정에 실패했습니다.");
+	        model.addAttribute("post", post);
+	        model.addAttribute("pager", pager);
 	        return path + "update"; // 수정 폼으로 다시 이동
 	    }
 	}

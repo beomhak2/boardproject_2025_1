@@ -7,7 +7,7 @@ import com.project.page.model.Post;
 
 public interface Board1Service {
 	// 게시판 목록
-	List<Post> list(Pager pager);
+	List<Post> getPostList(Pager pager);
 	// 게시판 페이지
 	int getPostCount(Pager pager);
 	// 게시판 작성
@@ -20,4 +20,6 @@ public interface Board1Service {
 	void deletePost(int postId);
 	// 죄회수 증가
 	void increaseViewCount(int postId);
+
+	
 }

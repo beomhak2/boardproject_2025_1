@@ -23,9 +23,9 @@ public class ReplyServiceImpl implements ReplyService {
 		if(reply.getReplyOrder() == 0) {
 			long groupId = replydao.getNextGroupId();
 			reply.setReplyGroup(groupId);
-			reply.setReplyClass(0L);
+			reply.setReplyClass(0);
 		}else {
-			reply.setReplyClass(1L);
+			reply.setReplyClass(1);
 		}
 		replydao.insertReply(reply);
 	}

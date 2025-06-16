@@ -7,7 +7,7 @@ import com.project.page.model.Post;
 
 public interface Board1Dao {
 	// 게시글 목록 조회
-	List<Post> list(Pager pager);
+	List<Post> selectPostList(Pager pager);
 	// 게시글 페이지
 	int selectPostCount(Pager pager);
 	// 게시글 입력
@@ -20,5 +20,6 @@ public interface Board1Dao {
 	void deletePost(int postId);
 	// 게시글 조회수
 	void increaseViewCount(int postId);
+	
 }  
    

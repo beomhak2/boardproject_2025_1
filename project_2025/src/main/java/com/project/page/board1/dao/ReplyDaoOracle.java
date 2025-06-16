@@ -25,7 +25,7 @@ public class ReplyDaoOracle implements ReplyDao {
 	}
 
 	@Override
-	public long getNextGroupId() {
+	public int getNextGroupId() {
 		return sql.selectOne("board1.getNextGroupId");
 	}
 	

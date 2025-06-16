@@ -19,7 +19,7 @@ public class Board1DaoOracle implements Board1Dao{
 	 * 게시글 목록 조회
 	 */
 	@Override
-	public List<Post> list(Pager pager) { 
+	public List<Post> selectPostList(Pager pager) { 
 		List<Post> list = sql.selectList("board1.selectPostList", pager);
 		
 		return list;

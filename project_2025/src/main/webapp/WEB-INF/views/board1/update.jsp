@@ -23,8 +23,8 @@
     </div>
     
     <form id="article-form" method="post" action="/board1/update/${post.postId}">
-    	<input type="hidden" name="${postId}" id="${postId}" value="${post.postId}">
-    	<input type="hidden" name="${boardId}" id="${boardId}" value="${post.boardId}">
+    	<input type="hidden" name="postId" id="${postId}" value="${post.postId}">
+    	<input type="hidden" name="boardId" id="${boardId}" value="${post.boardId}">
     
       <div class="row mb-3 justify-content-md-center">
         <label for="title" class="col-sm-2 col-lg-1 col-form-label text-sm-end">제목</label>
@@ -41,7 +41,7 @@
       <div class="row mb-5 justify-content-md-center">
         <div class="col-sm-10 d-grid gap-2 d-sm-flex justify-content-sm-end">
           <button type="submit" class="btn btn-primary" id="submit-button" >수정</button>
-          <button type="button" class="btn btn-secondary" id="cancel-button" onclick="location.href='<c:url value = '../'/>'">취소</button>
+          <button type="button" class="btn btn-secondary" id="cancel-button" onclick="location.href='/board1/list?${pager.queryString}'">취소</button>
         </div>
       </div>
     </form>

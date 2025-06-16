@@ -7,7 +7,7 @@ public class Reply {
 	private String replyContent;
 	private Date regDt;
 	private Date mdfDt;
-	private Long replyClass;
+	private int replyClass;
 	private Long replyGroup;
 	private int replyOrder;
 	private String userId;
@@ -39,10 +39,10 @@ public class Reply {
 	public void setMdfDt(Date mdfDt) {
 		this.mdfDt = mdfDt;
 	}
-	public Long getReplyClass() {
+	public int getReplyClass() {
 		return replyClass;
 	}
-	public void setReplyClass(Long replyClass) {
+	public void setReplyClass(int replyClass) {
 		this.replyClass = replyClass;
 	}
 	public Long getReplyGroup() {

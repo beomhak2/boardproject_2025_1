@@ -45,20 +45,20 @@
 
 		<!-- 버튼 -->
 	    <section class="row g-5" id="article-buttons">
-	      <form id="delete-article-form" action="delete/${postId}" method="post">
+	      <form id="delete-article-form" action="delete/${post.postId}" method="post">
 	        <div class="pb-5 d-grid gap-2 d-md-block">
-	          <a href="$update/${item.postId}" class="btn btn-success me-md-2">수정</a>
+	          <a href="/board1/update/${post.postId}" class="btn btn-success me-md-2">수정</a>
 	          <button id="btn-del" class="btn btn-danger me-md-2" type="submit">삭제</button>
-	          <a href="/board1/list" role="button" class="btn btn-success me-md-2">목록</a>
+	          <a href="<c:url value='/board1/list'/>?${pager.getQueryString(pager.page)}" role="button" class="btn btn-success me-md-2">목록</a>
 	        </div>
 	      </form>
 	    </section>
-	
+
 	     <section class="row g-5">
 	     	<!-- 댓글 쓰기 및 버튼 -->
 	       <form class="row g-3" id="comment-form" method="post">
-	         <input type="hidden" name="postId" value="${item.postId}" />
-	         <input type="hidden" name="userId" value="${item.userId}" />
+	         <input type="hidden" name="postId" value="${post.postId}" />
+	         <input type="hidden" name="userId" value="${post.userId}" />
 	         
 	         <div class="col-md-9 col-lg-8">
 	           <label for="comment-textbox" class="visually-hidden">댓글</label>
@@ -109,29 +109,46 @@
 	crossorigin="anonymous"
 ></script>
 <script>
-	$(function() {
-		const contextPath = '${pageContext.request.contextPath}';
-		const postId = '${item.postId}';
+
+	const contextPath = "${pageContext.request.contextPath}";
+	const postId = "${post.postId}";
+	
+	function loadComments(){
+		$.ajax({
+			url: `${contextPath}/reply/list`,
+			type: 'GET',
+			data: { postId },
+			dataType: "html",
+			success: function(html) {
+				const $list = $("#article-comments");
+				$list.html(html.trim() ? html : "<li>댓글이 없습니다.</li>");	
+			},
+			error: function() {
+				alert("댓글 조회 실패");
+			}
+		});
+	}
+	
+	$("#comment-form").on("submit", function(e){
+		e.preventDefault();
 		
-		function loadComments(){
-			$.ajax({
-				url: contextPath + "/reply/list",
-				type: 'get',
-				data: { postId: postId },
-				dataType: "html",
-				success: function(html) {
-					$("#article-comments").html(html);
-					if(!html.trim()){
-						$("#article-comments").html("<li>댓글이 없습니다.</li>");	
-					}
-				},
-				error: function() {
-					alert("댓글 조회 실패");
-				},
-			});
-		}
+		const formData = $(this).serialize();
 		
+		$.ajax({
+			url: `${contextPath}/reply/write`,
+			type: "POST",
+			data: formData,
+			success: function() {
+				$("#comment-textbox").val("");
+				loadComments();
+			},
+			error: function () {
+				alert("댓글 작성에 실패했습니다.");
+			}
+		});
 	});
+	
+	$(document).ready(loadComments);
 </script>	
 </body>
 </html>

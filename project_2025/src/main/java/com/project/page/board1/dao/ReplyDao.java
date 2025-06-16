@@ -10,6 +10,6 @@ public interface ReplyDao {
 	
 	void insertReply(Reply reply);
 
-	long getNextGroupId();
+	int getNextGroupId();
 
 }

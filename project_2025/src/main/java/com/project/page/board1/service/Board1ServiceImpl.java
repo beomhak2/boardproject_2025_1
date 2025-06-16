@@ -19,9 +19,8 @@ public class Board1ServiceImpl implements Board1Service {
 	 * 모든 게시글 조회 및 조회수 설정
 	 */
 	@Override
-	public List<Post> list(Pager pager) {
-		pager.setTotal(dao.selectPostCount(pager));
-		return dao.list(pager);
+	public List<Post> getPostList(Pager pager) {
+		return dao.selectPostList(pager);
 	}
 	
 	/**
