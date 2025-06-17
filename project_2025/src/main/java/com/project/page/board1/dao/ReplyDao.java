@@ -10,6 +10,12 @@ public interface ReplyDao {
 	
 	void insertReply(Reply reply);
 
-	int getNextGroupId();
+	Integer getNextGroupId();
+
+	Reply selectReplyById(int replyId);
+
+	void updateReplyOrder(Integer replyGroup, Integer replyOrder);
+
+	int getMaxReplyOrderInGroupAfter(Integer replyGroup, Integer replyOrder);
 
 }

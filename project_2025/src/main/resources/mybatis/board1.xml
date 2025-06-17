@@ -35,7 +35,7 @@
 	<resultMap id="detailVO" type="com.project.page.board1.model.Reply">
 		<result property="replyId" column="REPLY_ID"/>
 		<result property="replyContent" column="REPLY_CONTENT"/>
-		<result property="regDt" column="REG_DT"/>
+		<result property="regDt" column="REG_DATE"/>
 		<result property="mdfDt" column="MDF_DT"/>
 		<result property="replyClass" column="REPLY_CLASS"/>
 		<result property="replyGroup" column="REPLY_GROUP"/>
@@ -69,14 +69,12 @@
 					</when>
 				</choose>
 			</if>
-			<if test="true">
-			 	AND DEL_YN = 'N'
-			</if>
+			AND DEL_YN = 'N'
 		</where>
 		order by REG_DT DESC
 	</sql>
 
-	<!-- 게시판의 게수 -->
+	<!-- 게시판 개수 -->
 	<select id="selectPostCount" resultType="Integer">
 		SELECT COUNT(*) FROM (<include refid="search"/>) T1
 	</select>
@@ -101,7 +99,7 @@
 		INSERT INTO POST  (
 			POST_ID, TITLE, POST_CONTENT, BOARD_ID, USER_ID
 		) VALUES (
-			#{postId}, #{title}, #{postContent}, 1, 'USER'
+			#{postId}, #{title}, #{postContent}, 1, #{userId}
 		)
 	</insert>
 	
@@ -141,28 +139,52 @@
 			SELECT reply_seq.NEXTVAL FROM dual
 		</selectKey>
 		INSERT INTO reply(
-			REPLY_ID, REPLY_CONTENT, REPLY_CLASS, REPLY_GROUP, REPLY_ORDER, USER_ID
+			REPLY_ID, REPLY_CONTENT, REPLY_CLASS, REPLY_GROUP, REPLY_ORDER, USER_ID, POST_ID, PARENT_REPLY_ID, REG_DATE
 		)VALUES(
-			#{replyId}, #{replyContent}, #{replyClass}, #{replyGroup}, #{replyOrder}, 'USER' 
+			#{replyId}, #{replyContent}, #{replyClass, jdbcType=INTEGER}, #{replyGroup, jdbcType=INTEGER}, #{replyOrder, jdbcType=INTEGER}, #{userId}, #{postId}, #{parentReplyId}, SYSDATE
 		)	
 	</insert>
 	
 	<!-- 댓글 보기 -->
-	<select id="replySelect" resultMap="detailVO">
+	<select id="replySelect" resultMap="detailVO" parameterType="int">
 		SELECT
-			LEVEL AS replyClass, R.*
-		FROM (
-			SELECT * FROM REPLY R 
-			LEFT JOIN POST P ON(R.POST_ID = P.POST_ID) 
-			LEFT JOIN MEMBER M ON(R.USER_ID = M.USER_ID) 
-			WHERE P.DEL_YN = 'N' and post_id = #{postId}
-		) R
-		start with parent_reply_id IS NULL
-		CONNECT BY PRIOR reply_id = parent_reply_id
-		ORDER SIBLINGS BY reply_group, reply_order
+			LEVEL AS reply_class
+			r.reply_id,
+			r.reply_content,
+			r.reg_dt,
+			r.mdf_dt,
+			r.reply_group,
+			r.reply_order,
+			r.user_id,
+			r.post_id,
+		FROM reply r
+		WHERE r.post_id = #{value}
+		START WITH r.parent_reply_id IS NULL
+		CONNECT BY PRIOR r.reply_id = r.parent_reply_id
+		ORDER SIBLINGS BY r.reply_order
+	</select>
+
+	<!-- 특정 댓글 조회 -->
+	<select id="selectReplyById" parameterType="int" resultType="com.project.page.board1.model.Reply">
+		SELECT * FROM reply WHERE reply_id = #{replyId}
 	</select>
 	
-    <select id="getNextGroupId" resultType="java.lang.Long">
+    <!-- 다음 reply_group 값 가져오기 -->
+    <select id="getNextGroupId" resultType="int">
         SELECT NVL(MAX(reply_group), 0) + 1 FROM reply
     </select>
+    
+    <!-- 특정 그룹 내 주어진 replyOrder 이후의 최대 replyOrder 값 가져오기 -->
+    <select id="getMaxReplyOrderInGroupAfter" parameterType="map" resultType="int">
+    	SELECT NVL(MAX(reply_order), #{replyOrder}) FROM reply
+    	WHERE reply_group = #{replyGroup} AND reply_order > #{replyOrder}
+    </select>
+    
+    <!-- 특정 그룹 내 주어진 replyOrder 이후 replyOrder 값 증가 -->
+    <update id="updateReplyOrder" parameterType="map">
+    	UPDATE reply
+    	SET reply_order = reply_order + 1
+    	WHERE reply_group = #{replyGroup} AND reply_order > #{fromOrder}
+    </update>
+
 </mapper>

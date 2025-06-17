@@ -3,15 +3,14 @@ package com.project.page.board1.web;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 
 import com.project.page.board1.model.Reply;
 import com.project.page.board1.service.ReplyService;
@@ -23,8 +22,8 @@ public class Board1ReplyController {
 	@Autowired
 	ReplyService replyService;
 
-	@GetMapping(value = "/list", produces = "text/html")
-	public String list(@PathVariable("postId") int postId, Model model){
+	@GetMapping(value = "/list")
+	public String list(@RequestParam("postId") int postId, Model model){
 		List<Reply> replyList = replyService.list(postId);
 		model.addAttribute("replyList", replyList);
 		
@@ -33,9 +32,12 @@ public class Board1ReplyController {
 
 	@PostMapping("/write")
 	@ResponseBody
-	public ResponseEntity<Void> replyWrite(@ModelAttribute Reply reply){
+	public String insertReply(Reply reply){
+		
+		reply.setUserId("USER");
 		replyService.add(reply);
-		return ResponseEntity.ok().build();
+		
+		return "success";
 	}
 
 }

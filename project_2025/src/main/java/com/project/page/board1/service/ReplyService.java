@@ -10,8 +10,10 @@ public interface ReplyService {
 
 	void add(Reply reply);
 
-	
+	Integer getNextGroupId();
 
+	int getMaxReplyOrderInGroupAfter(Integer replyGroup, Integer replyOrder);
 
+	Reply getReplyById(Integer replyId);
 	
 }

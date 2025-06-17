@@ -24,7 +24,7 @@
 	      <h1>${post.title}</h1>
 	    </section>
 		<!-- 유저, 메일, 작성일 및 수정일 -->
-	      <section class="row g-5">
+	    <section class="row g-5">
 	        <aside class="col-md-3 col-lg-4 order-md-last">
 	          <p><span id="nickname">${post.userId}</span></p>
 	          <p><a id="email" href="mailto:${post.member.email}">${post.member.email}</a></p>
@@ -36,12 +36,11 @@
 	          <p><span id="hashtag" class="badge text-bg-secondary mx-1"><a class="text-reset">#java</a></span></p>
 	        </aside>
 	        
-      	      <!-- 내용 -->	
-		      <article id="article-content" class="col-md-9 col-lg-8">
+	        <!-- 내용 -->	
+		    <article id="article-content" class="col-md-9 col-lg-8">
 		        <pre>${post.postContent}</pre>
-		      </article>
-	      </section>
-	
+		    </article>
+	    </section>
 
 		<!-- 버튼 -->
 	    <section class="row g-5" id="article-buttons">
@@ -54,34 +53,56 @@
 	      </form>
 	    </section>
 
-	     <section class="row g-5">
+	    <section class="row g-5">
 	     	<!-- 댓글 쓰기 및 버튼 -->
 	       <form class="row g-3" id="comment-form" method="post">
 	         <input type="hidden" name="postId" value="${post.postId}" />
 	         <input type="hidden" name="userId" value="${post.userId}" />
+	         <input type="hidden" id="parentReplyId" name="parentReplyId" value="" />
 	         
 	         <div class="col-md-9 col-lg-8">
-	           <label for="comment-textbox" class="visually-hidden">댓글</label>
+	           <label for="replyContent" class="visually-hidden">댓글</label>
 	           <textarea 
-	           		id="comment-textbox"
+	           		id="replyContent"
 	           		name="replyContent"
 	           		class="form-control" 
 	           		placeholder="댓글 쓰기.." 
 	           		rows="3" 
-	           		required 
+	           		required
 	       		></textarea>
 	         </div>
-	         <div class="col-md-3 col-lg-4">
+	         <div class="col-md-3 col-lg-4 d-flex align-items-start gap-2">
 	           <button class="btn btn-primary" id="comment-submit" type="submit">쓰기</button>
+	           <button type="button" id="cancel-reply" class="btn btn-secondary" style="display:none;">취소</button>
 	         </div>
 	       </form>
 	       
-		<!-- 댓글 목록 보여주기 -->
+			<!-- 댓글 목록 보여주기 -->
 	       <ul id="article-comments" class="row col-md-10 col-lg-8 pt-3 list-unstyled">
-				<li>댓글 로딩 중</li>
+	       		<c:choose>
+	       			<c:when test="${empty replyList}">
+	       				<li>댓글이 없습니다.</li>
+	       			</c:when>
+	       			<c:otherwise>
+	       				<c:forEach var="reply" items="${replyList}">
+	       					<li class="list-group-item"
+	       						style="padding-left: ${reply.replyClass * 20}px;"
+	       						data-reply-id="${reply.replyId}"
+	       						data-parent-reply-id="${reply.parentReplyId}">
+	       						<strong>${reply.userId}</strong>
+	       						<small class="text-muted ms-2">
+	       							<fmt:formatDate value="${reply.regDt}" pattern="yyyy-MM-dd"/>
+	       						</small>
+	       						<p style="white-space: pre-wrap;">${reply.replyContent}</p>
+	       						<button type="button" class="btn btn-link btn-sm btn-reply" data-reply-id="${reply.replyId}">답글</button>
+	       					</li>
+	       				</c:forEach>
+	       			</c:otherwise>
+	       		</c:choose>
 	       </ul>
 	     </section>
-		<!-- 댓글 먼기기 버튼 -->
+
+		<!-- 댓글 페이징 (필요시 확장) -->
 	    <section class="row g-5">
 	      <nav id="pagination" aria-label="Page navigation">
 	        <ul class="pagination">
@@ -103,13 +124,8 @@
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>
-	
-<script 
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-	crossorigin="anonymous"
-></script>
-<script>
 
+<script>
 	const contextPath = "${pageContext.request.contextPath}";
 	const postId = "${post.postId}";
 	
@@ -132,14 +148,26 @@
 	$("#comment-form").on("submit", function(e){
 		e.preventDefault();
 		
-		const formData = $(this).serialize();
+		const replyContent = $("#replyContent").val().trim();
+		if(!replyContent){
+			alert("댓글 내용을 입력해주세요.");
+			return;
+		}
+		
+		const formData = {
+			postId: postId,
+			replyContent: replyContent,
+			parentReplyId: $("#parentReplyId").val() || null
+		};
 		
 		$.ajax({
 			url: `${contextPath}/reply/write`,
 			type: "POST",
 			data: formData,
-			success: function() {
-				$("#comment-textbox").val("");
+			success: function(response) {
+				$("#replyContent").val("");
+				$("#parentReplyId").val("");
+				$("#cancel-reply").hide();
 				loadComments();
 			},
 			error: function () {
@@ -147,8 +175,30 @@
 			}
 		});
 	});
-	
-	$(document).ready(loadComments);
-</script>	
+
+	// 답글 버튼 클릭 시 부모 댓글 id 설정 및 textarea에 포커스
+	$(document).on("click", ".btn-reply", function(){
+		const parentReplyId = $(this).data("reply-id");
+		$("#parentReplyId").val(parentReplyId);
+		$("#replyContent").focus();
+		$("#cancel-reply").show();
+	});
+
+	// 답글 작성 취소 버튼 동작
+	$("#cancel-reply").on("click", function(){
+		$("#parentReplyId").val("");
+		$("#replyContent").val("");
+		$(this).hide();
+	});
+
+	$(document).ready(function() {
+		loadComments();
+	});
+</script>
+
+<script 
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+	crossorigin="anonymous"
+></script>	
 </body>
 </html>

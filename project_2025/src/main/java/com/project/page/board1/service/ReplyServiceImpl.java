@@ -20,14 +20,40 @@ public class ReplyServiceImpl implements ReplyService {
 	
 	@Override
 	public void add(Reply reply) {
-		if(reply.getReplyOrder() == 0) {
-			long groupId = replydao.getNextGroupId();
-			reply.setReplyGroup(groupId);
-			reply.setReplyClass(0);
-		}else {
-			reply.setReplyClass(1);
+		if(reply.getParentReplyId() == null) {	// 최상위 댓글
+			Integer groupId = replydao.getNextGroupId();
+			if(groupId == null) {
+				groupId = 1;
+			}
+			reply.setReplyGroup(groupId.intValue());
+			reply.setReplyOrder(0);
+		} else {
+			Reply parent = replydao.selectReplyById(reply.getParentReplyId());
+			
+			replydao.updateReplyOrder(parent.getReplyGroup(), parent.getReplyOrder());
+			
+			reply.setReplyGroup(parent.getReplyGroup());
+			reply.setReplyOrder(parent.getReplyOrder() + 1);
 		}
+		
+		// 댓글 삽입
 		replydao.insertReply(reply);
+	}
+
+	@Override
+	public Integer getNextGroupId() {
+		return replydao.getNextGroupId();
+	}
+
+	@Override
+	public int getMaxReplyOrderInGroupAfter(Integer replyGroup, Integer replyOrder) {
+		Integer maxOrder = replydao.getMaxReplyOrderInGroupAfter(replyGroup, replyOrder);
+		return maxOrder != null ? maxOrder : replyOrder;
+	}
+
+	@Override
+	public Reply getReplyById(Integer replyId) {
+		return replydao.selectReplyById(replyId);
 	}
 
 }

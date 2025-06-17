@@ -3,23 +3,30 @@ package com.project.page.board1.model;
 import java.util.Date;
 
 public class Reply {
-	private int replyId;
+	private Integer replyId;
 	private String replyContent;
 	private Date regDt;
 	private Date mdfDt;
-	private int replyClass;
-	private Long replyGroup;
-	private int replyOrder;
+	private Integer replyClass;
+	private Integer replyGroup;
+	private Integer replyOrder;
 	private String userId;
 	private int postId;
+	private Integer parentReplyId;
 	private Member member;
 	private Post post;
 	
-	public int getReplyId() {
+	public Integer getReplyId() {
 		return replyId;
 	}
-	public void setReplyId(int replyId) {
+	public void setReplyId(Integer replyId) {
 		this.replyId = replyId;
+	}
+	public Integer getParentReplyId() {
+		return parentReplyId;
+	}
+	public void setParentReplyId(Integer parentReplyId) {
+		this.parentReplyId = parentReplyId;
 	}
 	public String getReplyContent() {
 		return replyContent;
@@ -39,22 +46,22 @@ public class Reply {
 	public void setMdfDt(Date mdfDt) {
 		this.mdfDt = mdfDt;
 	}
-	public int getReplyClass() {
+	public Integer getReplyClass() {
 		return replyClass;
 	}
-	public void setReplyClass(int replyClass) {
+	public void setReplyClass(Integer replyClass) {
 		this.replyClass = replyClass;
 	}
-	public Long getReplyGroup() {
+	public Integer getReplyGroup() {
 		return replyGroup;
 	}
-	public void setReplyGroup(Long replyGroup) {
+	public void setReplyGroup(Integer replyGroup) {
 		this.replyGroup = replyGroup;
 	}
-	public int getReplyOrder() {
+	public Integer getReplyOrder() {
 		return replyOrder;
 	}
-	public void setReplyOrder(int replyOrder) {
+	public void setReplyOrder(Integer replyOrder) {
 		this.replyOrder = replyOrder;
 	}
 	public String getUserId() {
@@ -81,5 +88,7 @@ public class Reply {
 	public void setPost(Post post) {
 		this.post = post;
 	}
+	
+	
 	
 }
