@@ -31,14 +31,14 @@
 	                        <div class="col-12">
 	                            <div class="row no-gutters">
 	                                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-	                                    <select class="form-control" id="exampleFormControlSelect1">
-	                                        <option>제목</option>
-	                                        <option>내용</option>
-	                                        <option>작성자</option>
+	                                    <select class="form-control" id="exampleFormControlSelect1" name="search">
+	                                        <option value="1" <c:if test="${pager.search eq 1 }">selected="selected"</c:if> >전체</option>
+	                                        <option value="2" <c:if test="${pager.search eq 2 }">selected="selected"</c:if> >제목</option>
+	                                        <option value="3" <c:if test="${pager.search eq 3 }">selected="selected"</c:if> >작성자</option>
 	                                    </select>
 	                                </div>
 	                                <div class="col-lg-8 col-md-6 col-sm-12 p-0">
-	                                    <input type="text" placeholder="검색" class="form-control" id="search" name="search">
+	                                    <input type="text" placeholder="검색" class="form-control" id="search" name="keyword" value="${pager.keyword }">
 	                                </div>
 	                                <div class="col-lg-1 col-md-3 col-sm-12 p-0">
 	                                    <button type="submit" class="btn btn-base">
@@ -58,7 +58,7 @@
 	    <tr>
 	      <th scope="col">#</th>
 	      <th scope="col">제목</th>
-	      <th scope="col">내용</th>
+<!-- 	      <th scope="col">내용</th> -->
 	      <th scope="col">작성자</th>
 	      <th scope="col">조회수</th>
 	    </tr>
@@ -68,8 +68,8 @@
 	  		<c:if test="${fn:trim(list.delYn) eq 'N' }">
 			    <tr>
 			      <th scope="row">${list.rnum }</th>
-			      <td><a href="/board4/detail?postId=${list.postId}">${list.title}</a></td>
-			      <td>${list.postContent}</td>
+			      <td><a href="/board4/detail?postId=${list.postId}&page=${pager.page }${pager.query }">${list.title}<span style="color: red;">(${list.replyCnt })</span> </a></td>
+<%-- 			      <td>${list.postContent}</td> --%>
 			      <td>${list.userId}</td>
 			      <td>${list.viewCnt}</td>
 			    </tr>
@@ -80,15 +80,15 @@
 	<nav aria-label="Page navigation example">
 	  <ul class="pagination justify-content-center">
 	    <li class="page-item">
-	      <a class="page-link" href="#" aria-label="Previous">
+	      <a class="page-link" href="/board4/list?page=${pager.prev}${pager.query }" aria-label="Previous">
 	        <span aria-hidden="true">&laquo;</span>
 	      </a>
 	    </li>
-	    <li class="page-item"><a class="page-link" href="#">1</a></li>
-	    <li class="page-item"><a class="page-link" href="#">2</a></li>
-	    <li class="page-item"><a class="page-link" href="#">3</a></li>
+	  	<c:forEach var="page" items="${pager.list }">
+	  		<li class="page-item"><a class="page-link" href="/board4/list?page=${page}${pager.query }">${page }</a></li>
+	  	</c:forEach>
 	    <li class="page-item">
-	      <a class="page-link" href="#" aria-label="Next">
+	      <a class="page-link" href="/board4/list?page=${pager.next}${pager.query }" aria-label="Next">
 	        <span aria-hidden="true">&raquo;</span>
 	      </a>
 	    </li>

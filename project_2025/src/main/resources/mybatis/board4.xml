@@ -12,7 +12,7 @@
 		    <result property="mdfDt" column="MDF_DT"/>
 	</resultMap>
 	
-	<resultMap id="postVO" type="Post" >
+	<resultMap id="postVO" type="com.project.page.board4.model.Post" >
 			<result property="rnum" column="RNUM"/>
 			<result property="postId" column="POST_ID"/>
 		    <result property="title" column="TITLE"/>
@@ -23,34 +23,85 @@
 		    <result property="mdfDt" column="MDF_DT"/>
 		    <result property="boardId" column="BOARD_ID"/>
 		    <result property="userId" column="USER_ID"/>
+		    <result property="nextPostId" column="NEXT_POST_ID"/>
+		    <result property="prevPostId" column="PREV_POST_ID"/>
+		    <result property="nextPostContent" column="NEXT_POST_CONTENT"/>
+		    <result property="prevPostContent" column="PREV_POST_CONTENT"/>
 		    <collection property="member" resultMap="memberVO"/>
 	</resultMap>
 	
+	<resultMap id="replyVO" type="com.project.page.model.Reply"  >
+			<result property="replyId" column="REPLY_ID"/>
+		    <result property="replyContent" column="REPLY_CONTENT"/>
+		    <result property="regDt" column="REG_DT"/>
+		    <result property="mdfDt" column="MDF_DT"/>
+		    <result property="replyClass" column="REPLY_CLASS"/>
+		    <result property="replyGroup" column="REPLY_GROUP"/>
+		    <result property="replyOrder" column="REPLY_ORDER"/>
+		    <result property="userId" column="USER_ID"/>
+		    <result property="postId" column="POST_ID"/>
+	</resultMap>
+	
+	<sql id="search">
+		SELECT *
+			FROM post
+		         WHERE board_id = 4
+		           AND del_yn = 'N'
+			<if test="search == 1">
+				AND (title LIKE '%'|| #{keyword}|| '%'
+				  OR user_id LIKE '%'|| #{keyword}|| '%')
+			</if>
+			<if test="search == 2">
+				AND title LIKE '%'|| #{keyword}|| '%'
+			</if>
+			<if test="search == 3">
+				AND user_id LIKE '%'|| #{keyword}|| '%'
+			</if>
+		ORDER BY REG_DT asc      
+	</sql>
 	
 	<select id= "list" resultMap="postVO">
-		select * from 
-		(select ROWNUM rnum, t1.* from
-		   (SELECT *
-			FROM post
-		         WHERE BOARD_ID = 4
-		ORDER BY REG_DT asc) t1 )
-		ORDER BY rnum desc
+	SELECT * FROM 
+	 (SELECT * FROM 
+		(
+		SELECT * FROM 
+		(SELECT ROWNUM rnum, t1.* from
+		   (<include refid="search"/>) t1 )
+		ORDER BY rnum DESC 
+		) 
+	  WHERE rnum  <![CDATA[ <= ]]>  (#{total} - ((#{page}-1)*#{perPage}))
+	  )	WHERE  ROWNUM  <![CDATA[ <= ]]>  #{perPage}
 	</select>
-	<select id= "searchList" resultType="Post">
-		SELECT * FROM post
-		         WHERE BOARD_ID = 4
+	
+	<select id= "total" resultType="Integer">
+		SELECT COUNT(*) FROM (<include refid="search"/>) 
 	</select>
 	
 	<select id= "detail" resultMap="postVO">
-		SELECT p.*,m.email 
+		<!-- SELECT p.*,m.email 
 		  FROM post p
 		   INNER JOIN member m
 		           ON p.user_id = m.user_id
 		         WHERE p.board_id = 4
-		           AND p.post_id = #{postId}
+		           AND p.post_id = #{postId} -->
+	 SELECT * FROM 
+	    (SELECT p.*
+	          ,m.email 
+	          ,LEAD(P.post_id,1,9999)OVER(ORDER BY POST_ID) AS NEXT_POST_ID
+	          ,lag(P.post_id,1,9999)OVER(ORDER BY POST_ID) AS PREV_POST_ID
+	          ,LEAD(P.title,1,9999)OVER(ORDER BY POST_ID) AS NEXT_POST_CONTENT
+	          ,lag(P.title,1,9999)OVER(ORDER BY POST_ID) AS PREV_POST_CONTENT
+			  FROM POST p
+			   INNER JOIN member m
+			           ON p.user_id = m.user_id
+			         WHERE p.board_id = 4
+	               AND p.del_yn = 'N'
+	               ORDER BY post_id desc)
+      WHERE post_id = #{postId}           
+		           
 	</select>
 	
-	<insert id="insert" parameterType="Post">
+	<insert id="insert" parameterType="com.project.page.board4.model.Post">
 		INSERT INTO POST 
 		(   POST_ID
 			,TITLE
@@ -71,7 +122,38 @@
 			,#{boardId}
 			,'limbh')	
 	</insert>
-	<update id="update" parameterType="Post">
+	
+	<insert id="dummy" parameterType="java.util.Map">
+		<selectKey  keyProperty="postId" resultType="int" order="BEFORE">
+			SELECT post_seq.nextval FROM dual
+		</selectKey>
+		
+		INSERT ALL		
+		<foreach item="dummySeq" collection="dummySeqList">
+		 INTO POST 
+		(   POST_ID
+			,TITLE
+			,POST_CONTENT
+			,DEL_YN
+			,REG_DT
+			,MDF_DT
+			,BOARD_ID
+			,USER_ID)
+		VALUES
+		(
+			#{postId}+#{dummySeq}
+			,#{postId}+#{dummySeq}
+			,#{postId}+#{dummySeq}
+			,'N'
+			,sysdate
+			,sysdate
+			,4
+			,'limbh')	
+		</foreach>
+		SELECT * FROM DUAL
+		
+	</insert>
+	<update id="update" parameterType="com.project.page.board4.model.Post">
 		UPDATE POST SET TITLE = #{title}
 						,POST_CONTENT = #{postContent}
 						,MDF_DT = sysdate
@@ -92,4 +174,54 @@
 			 WHERE BOARD_ID = 4
 			   AND POST_ID = #{postId}		
 	</update>
+	
+<!-- 	댓글 -->
+	<select id= "replyList" resultMap="replyVO">
+		SELECT  reply_id
+				,reply_content
+				,reg_dt
+				,mdf_dt
+				,reply_class
+				,reply_group
+				,reply_order
+				,user_id
+				,post_id
+				,level
+ 		 FROM (SELECT * FROM reply 
+ 		 			   WHERE post_id = #{postId})
+ connect by PRIOR reply_id = reply_group
+   START WITH reply_group = 0    
+   ORDER SIBLINGS BY reg_Dt DESC
+	</select>
+	
+	
+	<insert id="replyInsert" parameterType="com.project.page.model.Reply">
+		<selectKey keyProperty="replyId" resultType="int" order="BEFORE">
+			SELECT REPLY_SEQ.nextval FROM dual
+		</selectKey>
+		INSERT INTO reply (reply_id
+							,reply_content
+							,reg_dt
+							,reply_class
+							,reply_group
+							,reply_order
+							,user_id
+							,post_id)
+				    VALUES (#{replyId}
+							,#{replyContent}
+							,sysdate
+							,#{replyClass}
+							,#{replyGroup}
+							,#{replyOrder}
+							,#{userId}
+							,#{postId}
+				    )			
+							
+	</insert>
+	<delete id="replyDelete" parameterType="com.project.page.model.Reply">
+		DELETE FROM reply WHERE reply_id = #{replyId}	
+	</delete>
+	
+	
+	
 </mapper>
