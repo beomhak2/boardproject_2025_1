@@ -6,7 +6,7 @@
 <mapper namespace="board1">
 	
 	<!-- 유저 정보 -->
-	<resultMap id="memberVO" type="com.project.page.model.Member">
+	<resultMap id="memberVO" type="com.project.page.board1.model.Member">
 		<result property="userId" column="USER_ID"/>
 		<result property="pwd" column="PWD"/>
 		<result property="name" column="NAME"/>
@@ -17,7 +17,7 @@
 	</resultMap>
 	
 	<!-- 게시판 정보 -->
-	<resultMap id="postResultMap" type="Post">
+	<resultMap id="postResultMap" type="com.project.page.board1.model.Post">
 		<result property="rnum" column="RNUM"/>
 		<result property="postId" column="POST_ID"/>
 		<result property="title" column="TITLE"/>
@@ -35,16 +35,14 @@
 	<resultMap id="detailVO" type="com.project.page.board1.model.Reply">
 		<result property="replyId" column="REPLY_ID"/>
 		<result property="replyContent" column="REPLY_CONTENT"/>
-		<result property="regDt" column="REG_DATE"/>
+		<result property="regDt" column="REG_DT"/>
 		<result property="mdfDt" column="MDF_DT"/>
 		<result property="replyClass" column="REPLY_CLASS"/>
 		<result property="replyGroup" column="REPLY_GROUP"/>
 		<result property="replyOrder" column="REPLY_ORDER"/>
 		<result property="userId" column="USER_ID"/>
 		<result property="postId" column="POST_ID"/>
-		<result property="parentReplyId" column="PARENT_REPLY_ID"/>
-		<collection property="postMap" resultMap="postResultMap"/>
-		<collection property="member" resultMap="memberVO"/>
+		<result property="parentId" column="PARENT_ID"/>
 	</resultMap>
 	
 	<!-- 검색 기능 -->
@@ -92,7 +90,7 @@
 	</select>
 
 	<!-- 게시판 입력 -->
-	<insert id="insertPost" parameterType="Post">
+	<insert id="insertPost" parameterType="com.project.page.board1.model.Post">
 		<selectKey keyProperty="postId" resultType="int" order="BEFORE">
 			SELECT seq_post_id.NEXTVAL FROM dual
 		</selectKey>
@@ -120,7 +118,7 @@
 	</update>
 	
 	<!-- 게시판 수정 -->
-	<update id="updatePost" parameterType="Post">
+	<update id="updatePost" parameterType="com.project.page.board1.model.Post">
 		UPDATE POST 
 		SET TITLE = #{title}, POST_CONTENT = #{postContent}, MDF_DT = SYSDATE
 		WHERE POST_ID = #{postId} and BOARD_ID = 1
@@ -139,16 +137,16 @@
 			SELECT reply_seq.NEXTVAL FROM dual
 		</selectKey>
 		INSERT INTO reply(
-			REPLY_ID, REPLY_CONTENT, REPLY_CLASS, REPLY_GROUP, REPLY_ORDER, USER_ID, POST_ID, PARENT_REPLY_ID, REG_DATE
+			REPLY_ID, REPLY_CONTENT, REPLY_GROUP, REPLY_ORDER, USER_ID, POST_ID, PARENT_ID, REG_DT
 		)VALUES(
-			#{replyId}, #{replyContent}, #{replyClass, jdbcType=INTEGER}, #{replyGroup, jdbcType=INTEGER}, #{replyOrder, jdbcType=INTEGER}, #{userId}, #{postId}, #{parentReplyId}, SYSDATE
+			#{replyId}, #{replyContent}, #{replyGroup, jdbcType=INTEGER}, #{replyOrder, jdbcType=INTEGER}, #{userId}, #{postId}, #{parentId, jdbcType=INTEGER}, SYSDATE
 		)	
 	</insert>
 	
 	<!-- 댓글 보기 -->
 	<select id="replySelect" resultMap="detailVO" parameterType="int">
 		SELECT
-			LEVEL AS reply_class
+			LEVEL AS reply_class,
 			r.reply_id,
 			r.reply_content,
 			r.reg_dt,
@@ -157,34 +155,28 @@
 			r.reply_order,
 			r.user_id,
 			r.post_id,
+			r.parent_id
 		FROM reply r
-		WHERE r.post_id = #{value}
-		START WITH r.parent_reply_id IS NULL
-		CONNECT BY PRIOR r.reply_id = r.parent_reply_id
+		WHERE r.post_id = #{postId}
+		START WITH r.parent_id IS NULL
+		CONNECT BY PRIOR r.reply_id = r.parent_id
 		ORDER SIBLINGS BY r.reply_order
 	</select>
 
-	<!-- 특정 댓글 조회 -->
-	<select id="selectReplyById" parameterType="int" resultType="com.project.page.board1.model.Reply">
+	<select id="getNextReplyId" resultType="int">
+		SELECT reply_seq.NEXTVAL FROM dual
+	</select>
+	
+	<select id="selectReplyById" parameterType="int" resultMap="detailVO">
 		SELECT * FROM reply WHERE reply_id = #{replyId}
 	</select>
 	
-    <!-- 다음 reply_group 값 가져오기 -->
-    <select id="getNextGroupId" resultType="int">
-        SELECT NVL(MAX(reply_group), 0) + 1 FROM reply
-    </select>
-    
-    <!-- 특정 그룹 내 주어진 replyOrder 이후의 최대 replyOrder 값 가져오기 -->
-    <select id="getMaxReplyOrderInGroupAfter" parameterType="map" resultType="int">
-    	SELECT NVL(MAX(reply_order), #{replyOrder}) FROM reply
-    	WHERE reply_group = #{replyGroup} AND reply_order > #{replyOrder}
-    </select>
-    
-    <!-- 특정 그룹 내 주어진 replyOrder 이후 replyOrder 값 증가 -->
-    <update id="updateReplyOrder" parameterType="map">
-    	UPDATE reply
-    	SET reply_order = reply_order + 1
-    	WHERE reply_group = #{replyGroup} AND reply_order > #{fromOrder}
-    </update>
+	<update id="updateReplyOrderAfter" parameterType="map">
+		UPDATE reply
+		SET reply_order = reply_order + 1
+		WHERE reply_group = #{replyGroup}
+		AND reply_order > #{replyOrder}
+	</update>
+
 
 </mapper>

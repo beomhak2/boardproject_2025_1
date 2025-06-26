@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.page.board1.model.Pager;
+import com.project.page.board1.model.Post;
 import com.project.page.board1.service.Board1Service;
-import com.project.page.model.Post; 
+
 
 @Controller
 @RequestMapping("/board1")//board1이라는 주소로 들어왔을때의 처리

@@ -27,8 +27,8 @@ public class ReplyDaoOracle implements ReplyDao {
 	}
 
 	@Override
-	public Integer getNextGroupId() {
-		return sql.selectOne("board1.getNextGroupId");
+	public int getNextReplyId() {
+		return sql.selectOne("board1.getNextReplyId");
 	}
 
 	@Override
@@ -37,22 +37,11 @@ public class ReplyDaoOracle implements ReplyDao {
 	}
 
 	@Override
-	public void updateReplyOrder(Integer replyGroup, Integer replyOrder) {
-		Map<String, Object> param = new HashMap<>();
-		param.put("replyGroup", replyGroup);
-		param.put("fromOrder", replyOrder);
-		sql.update("board1.updateReplyOrder", param);
-	}
-
-	@Override
-	public int getMaxReplyOrderInGroupAfter(Integer replyGroup, Integer replyOrder) {
+	public void updateReplyOrderAfter(int replyGroup, int replyOrder) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("replyGroup", replyGroup);
 		param.put("replyOrder", replyOrder);
-		Integer result = sql.selectOne("board1/getMaxReplyOrderInGroupAfter", param);
-		return result != null ? result : replyOrder;
+		sql.update("board1.updateReplyOrderAfter", param);
 	}
-	
-	
 
 }

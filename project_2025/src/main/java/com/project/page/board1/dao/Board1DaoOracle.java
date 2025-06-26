@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.project.page.board1.model.Pager;
-import com.project.page.model.Post;
+import com.project.page.board1.model.Post;
+
 
 @Repository 
 public class Board1DaoOracle implements Board1Dao{

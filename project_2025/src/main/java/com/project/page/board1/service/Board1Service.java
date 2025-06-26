@@ -3,7 +3,8 @@ package com.project.page.board1.service;
 import java.util.List;
 
 import com.project.page.board1.model.Pager;
-import com.project.page.model.Post;
+import com.project.page.board1.model.Post;
+
 
 public interface Board1Service {
 	// 게시판 목록

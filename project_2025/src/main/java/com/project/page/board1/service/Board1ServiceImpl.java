@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.project.page.board1.dao.Board1Dao;
 import com.project.page.board1.model.Pager;
-import com.project.page.model.Post;
+import com.project.page.board1.model.Post;
+
 
 @Service
 public class Board1ServiceImpl implements Board1Service {

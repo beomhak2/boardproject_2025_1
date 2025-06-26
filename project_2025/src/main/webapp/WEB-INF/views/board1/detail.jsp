@@ -21,13 +21,15 @@
 	<!-- 제목 -->
 	<main id="article-main" class="container">
 	    <section id="article-header" class="py-5 text-center">
-	      <h1>${post.title}</h1>
+	      <h1><c:out value="${post.title}" /></h1>
 	    </section>
 		<!-- 유저, 메일, 작성일 및 수정일 -->
 	    <section class="row g-5">
 	        <aside class="col-md-3 col-lg-4 order-md-last">
-	          <p><span id="nickname">${post.userId}</span></p>
-	          <p><a id="email" href="mailto:${post.member.email}">${post.member.email}</a></p>
+	          <span id="nickname"><c:out value="${post.userId}" /></span>
+				<a href="mailto:<c:out value="${post.member.email}" />">
+				  <c:out value="${post.member.email}" />
+				</a>
 	          <c:set var="displayDate" value="${not empty post.mdfDt ? post.mdfDt : post.regDt}" />
 	          <c:set var="formattedDate">
 	          	<fmt:formatDate value="${displayDate}" pattern="yyyy-MM-dd"/>
@@ -38,7 +40,7 @@
 	        
 	        <!-- 내용 -->	
 		    <article id="article-content" class="col-md-9 col-lg-8">
-		        <pre>${post.postContent}</pre>
+		        <pre><c:out value="${post.postContent}" /></pre>
 		    </article>
 	    </section>
 
@@ -57,7 +59,6 @@
 	     	<!-- 댓글 쓰기 및 버튼 -->
 	       <form class="row g-3" id="comment-form" method="post">
 	         <input type="hidden" name="postId" value="${post.postId}" />
-	         <input type="hidden" name="userId" value="${post.userId}" />
 	         <input type="hidden" id="parentReplyId" name="parentReplyId" value="" />
 	         
 	         <div class="col-md-9 col-lg-8">
@@ -79,26 +80,7 @@
 	       
 			<!-- 댓글 목록 보여주기 -->
 	       <ul id="article-comments" class="row col-md-10 col-lg-8 pt-3 list-unstyled">
-	       		<c:choose>
-	       			<c:when test="${empty replyList}">
-	       				<li>댓글이 없습니다.</li>
-	       			</c:when>
-	       			<c:otherwise>
-	       				<c:forEach var="reply" items="${replyList}">
-	       					<li class="list-group-item"
-	       						style="padding-left: ${reply.replyClass * 20}px;"
-	       						data-reply-id="${reply.replyId}"
-	       						data-parent-reply-id="${reply.parentReplyId}">
-	       						<strong>${reply.userId}</strong>
-	       						<small class="text-muted ms-2">
-	       							<fmt:formatDate value="${reply.regDt}" pattern="yyyy-MM-dd"/>
-	       						</small>
-	       						<p style="white-space: pre-wrap;">${reply.replyContent}</p>
-	       						<button type="button" class="btn btn-link btn-sm btn-reply" data-reply-id="${reply.replyId}">답글</button>
-	       					</li>
-	       				</c:forEach>
-	       			</c:otherwise>
-	       		</c:choose>
+   				<!-- 댓글 조회 ajax -->
 	       </ul>
 	     </section>
 
@@ -124,77 +106,132 @@
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>
+<script id="reply-template" type="text/x-handlebars-template">
+	<li class="list-group-item" style="margin-left: {{indent}}px">
+		<div>
+			<strong>{{userId}}</strong>
+			<small class="text-muted">{{regDt}}</small>
+			<p style="white-space: pre-wrap;">{{replyContent}}</p>
+
+			{{#if canReply}}
+			<button class="replyBtn btn btn-link btn-sm" data-reply-id="{{replyId}}">답글</button>
+			<div class="replyForm mt-2" id="form-{{replyId}}" style="display:none;">
+				<textarea class="form-control childContent mb-1" rows="2"></textarea>
+				<button class="submitReply btn btn-sm btn-primary" data-parent="{{replyId}}">등록</button>
+			</div>
+			{{/if}}
+		</div>
+	</li>
+</script>
 
 <script>
-	const contextPath = "${pageContext.request.contextPath}";
-	const postId = "${post.postId}";
-	
-	function loadComments(){
-		$.ajax({
-			url: `${contextPath}/reply/list`,
-			type: 'GET',
-			data: { postId },
-			dataType: "html",
-			success: function(html) {
-				const $list = $("#article-comments");
-				$list.html(html.trim() ? html : "<li>댓글이 없습니다.</li>");	
-			},
-			error: function() {
-				alert("댓글 조회 실패");
-			}
-		});
-	}
-	
-	$("#comment-form").on("submit", function(e){
-		e.preventDefault();
-		
-		const replyContent = $("#replyContent").val().trim();
-		if(!replyContent){
-			alert("댓글 내용을 입력해주세요.");
-			return;
-		}
-		
-		const formData = {
-			postId: postId,
-			replyContent: replyContent,
-			parentReplyId: $("#parentReplyId").val() || null
-		};
-		
-		$.ajax({
-			url: `${contextPath}/reply/write`,
-			type: "POST",
-			data: formData,
-			success: function(response) {
-				$("#replyContent").val("");
-				$("#parentReplyId").val("");
-				$("#cancel-reply").hide();
-				loadComments();
-			},
-			error: function () {
-				alert("댓글 작성에 실패했습니다.");
-			}
-		});
-	});
+$(function() {
+  const postId = <c:out value="${post.postId}"/>;
+  const contextPath = '<c:out value="${pageContext.request.contextPath}"/>';
+  const baseUrl = contextPath + '/' + postId + '/reply';
 
-	// 답글 버튼 클릭 시 부모 댓글 id 설정 및 textarea에 포커스
-	$(document).on("click", ".btn-reply", function(){
-		const parentReplyId = $(this).data("reply-id");
-		$("#parentReplyId").val(parentReplyId);
-		$("#replyContent").focus();
-		$("#cancel-reply").show();
-	});
+  const source = $("#reply-template").html();
+  const template = Handlebars.compile(source);
 
-	// 답글 작성 취소 버튼 동작
-	$("#cancel-reply").on("click", function(){
-		$("#parentReplyId").val("");
-		$("#replyContent").val("");
-		$(this).hide();
-	});
+  function loadReplies() {
+    $.ajax({
+      url: baseUrl + "/list",
+      method: 'GET',
+      success: function(data) {
+        const container = $("#article-comments");
+        container.empty();
 
-	$(document).ready(function() {
-		loadComments();
-	});
+        if (!data || data.length === 0) {
+          container.append('<p>댓글이 없습니다.</p>');
+          return;
+        }
+        renderReplies(data, container);
+      },
+      error: function() {
+        alert("댓글 목록 불러오기 실패");
+      }
+    });
+  }
+
+  // 재귀 렌더링 함수
+  function renderReplies(replies, container) {
+    replies.forEach(reply => {
+      // indent : replyClass * 20px 들여쓰기 (replyClass = replyDTO.getReplyClass())
+      reply.indent = reply.replyClass * 20;
+
+      // 답글 버튼 노출 조건 : replyClass가 0 이상 (최상위도 답글 가능하면 0 이상으로 수정 가능)
+      reply.canReply = reply.replyClass >= 0;
+
+      const html = template(reply);
+      container.append(html);
+
+      if (reply.childReplies && reply.childReplies.length > 0) {
+        renderReplies(reply.childReplies, container);
+      }
+    });
+  }
+
+  function submitReply(replyContent, parentId = null, callback) {
+    if (!replyContent.trim()) {
+      alert("댓글 내용을 입력해주세요.");
+      return;
+    }
+    $.ajax({
+      url: baseUrl + "/write",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify({
+        postId: postId,
+        replyContent: replyContent,
+        parentId: parentId
+      }),
+      success: function(res) {
+        if (res.status === "success") {
+          if (callback) callback();
+        } else {
+          showAlert("등록에 실패했습니다.");
+        }
+      },
+      error: function() {
+       	  showAlert("댓글 등록에 실패했습니다. 다시 시도해주세요.");
+      }
+    });
+  }
+
+  $("#comment-form").submit(function() {
+    const content = $("#replyContent").val();
+    const $btn = $("#comment-submit");
+    $btn.prop("disabled", true);
+
+    submitReply(content, null, function() {
+      $("#replyContent").val('').focus();
+      $btn.prop("disabled", false);
+      loadReplies();
+    });
+  });
+
+  $(document).on("click", ".replyBtn", function() {
+    $(".replyForm").hide();
+    const id = $(this).data("reply-id");
+    $(`#form-${id}`).toggle();
+  });
+
+  $(document).on("click", ".submitReply", function() {
+    const parentId = $(this).data("parent");
+    const $textarea = $(this).siblings("textarea");
+    const content = $textarea.val();
+
+    submitReply(content, parentId, function() {
+      $textarea.val('');
+      $(".replyForm").hide();
+      loadReplies();
+    });
+  });
+
+  loadReplies();
+});
 </script>
+
 
 <script 
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"

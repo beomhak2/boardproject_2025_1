@@ -3,17 +3,12 @@ package com.project.page.board1.service;
 import java.util.List;
 
 import com.project.page.board1.model.Reply;
+import com.project.page.board1.model.ReplyDTO;
 
 public interface ReplyService {
 
-	List<Reply> list(int postId);
+	List<ReplyDTO> getCommentTreeByPostId(int postId) throws Exception;
 
-	void add(Reply reply);
-
-	Integer getNextGroupId();
-
-	int getMaxReplyOrderInGroupAfter(Integer replyGroup, Integer replyOrder);
-
-	Reply getReplyById(Integer replyId);
+	Reply writeReply(Reply reply) throws Exception;
 	
 }
