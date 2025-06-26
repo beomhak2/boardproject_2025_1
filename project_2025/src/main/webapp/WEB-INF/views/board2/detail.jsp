@@ -11,7 +11,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 	<link href="/resources/static/css/search_bar.css" rel="stylesheet">
 	<link href="/resources/static/css/header.css" rel="stylesheet"> 
-	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 </head>
 <body>
 	<header class="p-3 text-bg-dark">
@@ -42,7 +41,7 @@
         <div class="pb-5 d-grid gap-2 d-md-block">
           <a href="update/${item.postId}" class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
           <a href="delete/${item.postId}"><button class="btn btn-danger me-md-2" type="button" id="btn-del">삭제</button></a>
-          <button class="btn btn-primary" type="button" onclick="history.back();">목록</button>
+          <button class="btn btn-primary" type="button" id="list-btn">목록</button>
         </div>
       </form>
     </div>
@@ -51,8 +50,11 @@
     <div class="row g-5">
       <section>
         <form class="row g-3 comment-form">
-			<input type="hidden" name="postId" value="${item.postId}">
-			<input type="hidden" name="userId" value="${item.userId}">
+		  <input type="hidden" id="postId" name="postId" value="${item.postId}">
+		  <input type="hidden" name="userId" value="${item.userId}">
+		  <input type="hidden"  name="replyClass" value="0">
+          <input type="hidden"  name="replyGroup" value="0">
+          <input type="hidden"  name="replyOrder" value="0">
           <div class="col-md-9 col-lg-8">
             <label for="comment-textbox" hidden>댓글</label>
             <textarea class="form-control comment-textbox" id="comment-textbox" name="replyContent" placeholder="댓글 쓰기.." rows="3" required></textarea>
@@ -63,9 +65,8 @@
           </div>
         </form>
 
-        <ul id="article-comments" class="row col-md-10 col-lg-8 pt-3">
-			<!-- 댓글 조회 ajax -->
-        </ul>
+        <div id="replyArea"></div>
+        
       </section>
     </div>
     <!-- 댓글 끝 -->
@@ -92,13 +93,20 @@
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>	
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script type="text/javascript">
+// 삭제버튼 알림창
 $(function(){
 	$("#btn-del").click(function(){
 		if (!confirm("삭제하시겠습니까?")) {
 			return false;
 		}
 	});
+});
+
+// 목록버튼 클릭시 이전페이지로 이동
+$("#list-btn").on("click", function(){
+	history.back();
 });
 
 // 댓글 조회
@@ -119,50 +127,111 @@ function selectReplyList() {
         return;
       }
 
-      let repliesHtml = "";
-
+      console.log(result);
+      
       for (let reply of result) {
-        //console.log("단일 댓글:", reply);
-        repliesHtml += `
-        	<li class="parent-comment">
-            <form class="comment-delete-form">
-              <input type="hidden" class="article-id" value="\${reply.replyId}">
-              <div class="row">
-                <div class="col-md-10 col-lg-9">
-                  <strong>\${reply.userId}</strong>
-                  <small><time>\${reply.regDt}</time></small>
-                  <p class="mb-1">\${reply.replyContent}</p>
-                </div>
-                <div class="col-2 mb-3 align-self-center">
-                  <button type="submit" class="btn btn-outline-danger">삭제</button>
-                </div>
-              </div>
-            </form>
-          </li>`;
+        console.log("단일 댓글:", reply);
+        if (reply.replyClass === 0) {
+        	let repliesHtml = '';
+	        repliesHtml += `
+	        	<ul id="article-comments" class="row col-md-10 col-lg-8 pt-3">
+	        	<li class="parent-comment" id="parent-comment\${reply.replyId}">
+	            <form class="comment-delete-form">
+	              <input type="hidden" class="article-id" name="replyId" value="\${reply.replyId}">
+	              <div class="row">
+	                <div class="col-md-10 col-lg-9">
+	                  <strong>\${reply.userId}</strong>
+	                  <small><time>\${reply.regDt}</time></small>
+	                  <p class="mb-1">\${reply.replyContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')}</p>
+	                </div>
+	                <div class="col-2 mb-3 align-self-center">
+	                  <button type="submit" class="reply-del btn btn-outline-danger">삭제</button>
+	                </div>
+	              </div>
+	            </form>
+	            
+	            <div class="row">
+	              <details class="col-md-10 col-lg-9 mb-4">
+	                <summary>댓글 달기</summary>
+	                <form class="comment-form">
+	                <input type="hidden"  id="postId" name="postId" value="\${reply.postId}">
+	                <input type="hidden" class="parent-comment-id" name="replyGroup" value="\${reply.replyId}">
+	                <input type="hidden" class="parent-comment-id" name="replyClass" value="\${reply.replyClass + 1}">
+	                <input type="hidden" class="parent-comment-id" name="replyOrder" value="\${reply.replyOrder}">
+	                <input type="hidden"  name="userId">
+	                  <textarea class="form-control comment-textbox" name="replyContent" placeholder="댓글 쓰기.." rows="2" required></textarea>
+	                  <button class="form-control btn btn-primary mt-2" type="button" onclick="fnc_Chiled_Reply_Insert(this)">쓰기</button>
+	                </form>
+	              </details>
+	            </div>
+	            </li>
+	            </ul>`;
+	        $("#replyArea").append(repliesHtml);
+        }else if(reply.replyClass === 1){
+        	let replyParentHtml = '';
+        	replyParentHtml += `        
+        	<ul class="row me-0">
+              <li class="child-comment">
+                <form class="comment-delete-form">
+                  <input type="hidden" class="article-id" value="\${reply.replyId}">
+                  <div class="row">
+                    <div class="col-md-10 col-lg-9">
+                      <strong>\${reply.userId}</strong>
+                      <small><time>\${reply.regDt}</time></small>
+                      <p class="mb-1">\${reply.replyContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')}</p>
+                    </div>
+                    <div class="col-2 mb-3 align-self-center">
+                      <button type="button" class="reply-del btn btn-outline-danger">삭제</button>
+                    </div>
+                  </div>
+                </form>
+              </li>
+            </ul>`;
+            
+        	$('#parent-comment'+reply.replyGroup).append(replyParentHtml); 
+        }
       }
-
-      //console.log("HTML:", repliesHtml);
-      $("#article-comments").html(repliesHtml);
-    },
-    error: function() {
+        
+        /* for (let reply of result) {
+          if (reply.replyClass === 1) {
+        	let replyParentHtml = '';
+        	replyParentHtml += `        
+        	<ul class="row me-0">
+              <li class="child-comment">
+                <form class="comment-delete-form">
+                  <input type="hidden" class="article-id" value="${reply.replyId}">
+                  <div class="row">
+                    <div class="col-md-10 col-lg-9">
+                      <strong>\${reply.userId}</strong>
+                      <small><time>\${reply.regDt}</time></small>
+                      <p class="mb-1">\${reply.replyContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')}</p>
+                    </div>
+                    <div class="col-2 mb-3 align-self-center">
+                      <button type="submit" class="reply-del btn btn-outline-danger">삭제</button>
+                    </div>
+                  </div>
+                </form>
+              </li>
+            </ul>`;
+        	
+           $("#parent-comment" + reply.replyGroup).append(replyParentHtml); */
+//         }
+//       }
+    },error: function() {
       alert("댓글 조회 실패");
-    }
+    } 
   });
 }
 
 $(function() {
-  selectReplyList();
+  selectReplyList(); //함수 호출
 });
 
-//댓글 등록
-$(".comment-form").on("submit", function(e){
-	e.preventDefault();
+// 댓글 등록
+$(".comment-form").on("submit", function(ev){
+	ev.preventDefault();
 	
 	let replyContent = $("#comment-textbox").val();
-	if (!replyContent.trim()){
-		alert("댓글 내용을 입력하세요.");
-		return;
-	}
 	
 	let formData = {
 			postId: $("input[name='postId']").val(),
@@ -184,11 +253,56 @@ $(".comment-form").on("submit", function(e){
 			}
 		},
 		error: function(){
-			alert("서버 오류로 댓글 등록 실패");
+			alert("서버 오류");
 		}
 	});
 });
 
+// 댓글 삭제
+$(document).on("click", ".reply-del", function(ev){
+	ev.preventDefault();
+	
+	let replyId = $(this).closest("form").find(".article-id").val();
+	
+	$.ajax({
+		url: contextPath + "/reply/deleteReply",
+		type: "POST",
+		data: { replyId: replyId },
+		success: function(result){
+			if (result === "success") {
+				selectReplyList();				
+			} else {
+				alert("댓글 삭제 실패");
+			}
+		},
+		error: function(error){
+			alert("에러: " + error.status);
+		}
+	});
+});
+
+function fnc_Chiled_Reply_Insert(_that){
+	
+	if(!confirm("댓글을 작성하시겠습니까?")){
+		return false;
+	}
+	
+	var reply_add = $(_that.closest('form')).serialize();
+	
+	$.ajax({
+	    type:"post",
+	    url: contextPath + "/reply/insertReplyAnswer",
+	    data: reply_add,
+	    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+	    success:function(data){
+	  	  console.log(data);
+	  	  selectReplyList();
+	    },
+	    error:function(a,b,c){ // ajax실패시 원인
+	 	   alert(c);
+	    }
+	}); 
+}
 </script>
 </body>
 </html>

@@ -135,9 +135,20 @@
 	
 	<!-- 댓글 조회 -->
 	<select id="selectReplyList" parameterType="int" resultMap="replyVO">
-		SELECT * FROM reply
-		WHERE POST_ID = #{postId}
-		ORDER BY REG_DT DESC
+		SELECT  reply_id
+				,reply_content
+				,reg_dt
+				,mdf_dt
+				,reply_class
+				,reply_group
+				,reply_order
+				,user_id
+				,post_id
+	 		 FROM (SELECT * FROM reply 
+	 		 			   WHERE post_id = #{postId})
+	 connect by PRIOR reply_id = reply_group
+	   START WITH reply_group = 0    
+	   ORDER SIBLINGS BY reg_Dt DESC
 	</select>
 	
 	<!-- 댓글 등록 -->
@@ -159,7 +170,7 @@
 		 	, SYSDATE
 		 	, SYSDATE
 		 	, 0
-		 	, REPLY_SEQ.CURRVAL
+		 	, 0
 		 	, 0
 		 	, 'abc123'
 		 	, #{postId}
@@ -168,11 +179,10 @@
 	
 	<!-- 답글 등록 -->
 	<insert id="insertReplyAnswer" parameterType="com.project.page.board2.model.Reply">
-		UPDATE reply
+		<!-- UPDATE reply
         SET reply_order = reply_order + 1
         WHERE reply_group = #{replyGroup}
-          AND reply_order > #{replyOrder};
-          
+          AND reply_order > #{replyOrder}; -->
           
 		INSERT INTO reply (
 			REPLY_ID
@@ -192,7 +202,7 @@
 		 	, SYSDATE
 		 	, 1
 		 	, #{replyGroup}
-		 	, #{replyOrder} + 1
+		 	, #{replyOrder}
 		 	, 'abc123'
 		 	, #{postId}
 		 )

@@ -67,7 +67,7 @@ public class Board2ReplyController {
 	}
 	
 	@PostMapping("/insertReplyAnswer")
-	public ResponseEntity<String> insertReplyAnswer(@RequestBody Reply reply) {
+	public ResponseEntity<String> insertReplyAnswer(Reply reply) {
 	    try {
 	    	reply.setReplyClass(1);
 	        service.insertReplyAnswer(reply);

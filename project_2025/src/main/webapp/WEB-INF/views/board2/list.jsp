@@ -10,7 +10,16 @@
     <title>일상공유 커뮤니티</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 	<link href="/resources/static/css/search_bar.css" rel="stylesheet">
-	<link href="/resources/static/css/header.css" rel="stylesheet"> 
+	<link href="/resources/static/css/header.css" rel="stylesheet">
+	<script type="text/javascript">
+	// 목록버튼 클릭시 페이지 새로고침 (JavaScript)
+	// pageshow 이벤트 발생할 때, 캐시 데이터를 가져오지 않고 강제로 페이지 리로딩
+	window.onpageshow = function(ev){
+		if (ev.persisted || (window.performance && window.performance.navigation.type == 2)){
+			document.location.reload();
+		}
+	};
+</script>
 </head>
 <body>
 	<header class="p-3 text-bg-dark">
@@ -101,8 +110,6 @@
 		<div>
 			<div>
 				<a href="add"><button type="button" class="btn btn-primary">등록</button></a>
-				<a href="dummy">대량등록</a>
-				<a href="init">초기화</a>
 			</div>
 		</div>
 	</div>
@@ -110,6 +117,6 @@
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>	
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 </body>
 </html>
