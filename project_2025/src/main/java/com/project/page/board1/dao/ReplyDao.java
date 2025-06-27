@@ -9,11 +9,13 @@ public interface ReplyDao {
 	List<Reply> selectReply(int postId);
 
 	void insertReply(Reply reply);
-
+	
 	int getNextReplyId();
 
 	Reply selectReplyById(int replyId);
 
 	void updateReplyOrderAfter(int replyGroup, int replyOrder);
+
+
 
 }

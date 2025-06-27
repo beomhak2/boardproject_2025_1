@@ -1,5 +1,6 @@
 package com.project.page.board1.model;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,31 +9,37 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.web.util.HtmlUtils;
 
-// 읽기 전용
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ReplyDTO implements Serializable{
+public class ReplyDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private int replyId;
+
+	@NotBlank(message = "댓글 내용을 입력해주세요.")
 	private String replyContent;
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone="Asia/Seoul")
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private Date regDt;
+
 	private String userId;
-	private Integer parentId;
-	private int replyClass;
-	
+
+	/** 
+	 * 부모 댓글 ID (null이면 최상위 댓글)
+	 */
+	private Integer replyClass;
+
 	private List<ReplyDTO> childReplies = new ArrayList<>();
-	
+
 	public ReplyDTO() {}
-	
-	public ReplyDTO(int replyId, String replyContent, Date regDt, String userId, Integer parentId, int replyClass) {
+
+	public ReplyDTO(int replyId, String replyContent, Date regDt, String userId, Integer replyClass) {
 		this.replyId = replyId;
-		this.replyContent = replyContent;
+		this.setReplyContent(replyContent); // escape 적용
 		this.regDt = regDt;
 		this.userId = userId;
-		this.parentId = parentId;
 		this.replyClass = replyClass;
 	}
 
@@ -49,7 +56,8 @@ public class ReplyDTO implements Serializable{
 	}
 
 	public void setReplyContent(String replyContent) {
-		this.replyContent = replyContent;
+		// XSS 방지용 HTML Escape
+		this.replyContent = HtmlUtils.htmlEscape(replyContent);
 	}
 
 	public Date getRegDt() {
@@ -68,19 +76,11 @@ public class ReplyDTO implements Serializable{
 		this.userId = userId;
 	}
 
-	public Integer getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
-	}
-	
-	public int getReplyClass() {
+	public Integer getReplyClass() {
 		return replyClass;
 	}
 
-	public void setReplyClass(int replyClass) {
+	public void setReplyClass(Integer replyClass) {
 		this.replyClass = replyClass;
 	}
 
@@ -91,5 +91,4 @@ public class ReplyDTO implements Serializable{
 	public void setChildReplies(List<ReplyDTO> childReplies) {
 		this.childReplies = childReplies;
 	}
-	
 }

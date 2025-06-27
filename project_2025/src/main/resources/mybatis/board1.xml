@@ -137,30 +137,19 @@
 			SELECT reply_seq.NEXTVAL FROM dual
 		</selectKey>
 		INSERT INTO reply(
-			REPLY_ID, REPLY_CONTENT, REPLY_GROUP, REPLY_ORDER, USER_ID, POST_ID, PARENT_ID, REG_DT
+			REPLY_ID, REPLY_CONTENT, REPLY_GROUP, REPLY_ORDER, USER_ID, POST_ID, REPLY_CLASS, REG_DT
 		)VALUES(
-			#{replyId}, #{replyContent}, #{replyGroup, jdbcType=INTEGER}, #{replyOrder, jdbcType=INTEGER}, #{userId}, #{postId}, #{parentId, jdbcType=INTEGER}, SYSDATE
+			#{replyId}, #{replyContent}, #{replyGroup, jdbcType=INTEGER}, #{replyOrder, jdbcType=INTEGER}, #{userId}, #{postId}, NVL(#{replyClass}, 0), SYSDATE
 		)	
 	</insert>
 	
 	<!-- 댓글 보기 -->
 	<select id="replySelect" resultMap="detailVO" parameterType="int">
 		SELECT
-			LEVEL AS reply_class,
-			r.reply_id,
-			r.reply_content,
-			r.reg_dt,
-			r.mdf_dt,
-			r.reply_group,
-			r.reply_order,
-			r.user_id,
-			r.post_id,
-			r.parent_id
-		FROM reply r
-		WHERE r.post_id = #{postId}
-		START WITH r.parent_id IS NULL
-		CONNECT BY PRIOR r.reply_id = r.parent_id
-		ORDER SIBLINGS BY r.reply_order
+			reply_class, reply_id, reply_content, reg_dt, mdf_dt, reply_group, reply_order, user_id, post_id
+		FROM reply
+		WHERE post_id = #{postId}
+		ORDER BY reply_group DESC, reply_order ASC
 	</select>
 
 	<select id="getNextReplyId" resultType="int">
@@ -173,7 +162,7 @@
 	
 	<update id="updateReplyOrderAfter" parameterType="map">
 		UPDATE reply
-		SET reply_order = reply_order + 1
+		SET reply_order = reply_order
 		WHERE reply_group = #{replyGroup}
 		AND reply_order > #{replyOrder}
 	</update>

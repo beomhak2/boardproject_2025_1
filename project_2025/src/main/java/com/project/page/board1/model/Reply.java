@@ -12,11 +12,10 @@ public class Reply {
 
 	private String userId;
 	private int postId;
-	private Integer parentId;
 	
 	private int replyGroup;
 	private int replyOrder;
-	private int replyClass;
+	private Integer replyClass;
 	
 	private Member member;
 	private List<Reply> childReplies = new ArrayList<>();
@@ -57,12 +56,6 @@ public class Reply {
 	public void setPostId(int postId) {
 		this.postId = postId;
 	}
-	public Integer getParentId() {
-		return parentId;
-	}
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
-	}
 	public int getReplyGroup() {
 		return replyGroup;
 	}
@@ -75,10 +68,10 @@ public class Reply {
 	public void setReplyOrder(int replyOrder) {
 		this.replyOrder = replyOrder;
 	}
-	public int getReplyClass() {
+	public Integer getReplyClass() {
 		return replyClass;
 	}
-	public void setReplyClass(int replyClass) {
+	public void setReplyClass(Integer replyClass) {
 		this.replyClass = replyClass;
 	}
 	public Member getMember() {
