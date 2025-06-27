@@ -188,37 +188,37 @@
 		 )
 	</insert>
 	
-		<!-- 답글 등록 -->
+	<!-- 답글 등록 -->
 	<insert id="insertReplyAnswer" parameterType="com.project.page.board2.model.Reply">
-		<!-- UPDATE reply
-        SET reply_order = reply_order + 1
-        WHERE reply_group = #{replyGroup}
-          AND reply_order > #{replyOrder}; -->
-          
-		INSERT INTO reply (
-			REPLY_ID
-			, REPLY_CONTENT
-		 	, REG_DT
-		 	, MDF_DT
-		 	, REPLY_CLASS
-		 	, REPLY_GROUP
-		 	, REPLY_ORDER
-		 	, USER_ID
-		 	, POST_ID
-		 	, DEL_YN
-		 )
-		 VALUES (
-		 	REPLY_SEQ.NEXTVAL
-		 	, #{replyContent}
-		 	, SYSDATE
-		 	, SYSDATE
-		 	, 1
-		 	, #{replyGroup}
-		 	, #{replyOrder}
-		 	, 'abc123'
-		 	, #{postId}
-		 	, 'N'
-		 )
+	<!-- UPDATE reply
+       SET reply_order = reply_order + 1
+       WHERE reply_group = #{replyGroup}
+         AND reply_order > #{replyOrder}; -->
+         
+	INSERT INTO reply (
+		REPLY_ID
+		, REPLY_CONTENT
+	 	, REG_DT
+	 	, MDF_DT
+	 	, REPLY_CLASS
+	 	, REPLY_GROUP
+	 	, REPLY_ORDER
+	 	, USER_ID
+	 	, POST_ID
+	 	, DEL_YN
+	 )
+	 VALUES (
+	 	REPLY_SEQ.NEXTVAL
+	 	, #{replyContent}
+	 	, SYSDATE
+	 	, SYSDATE
+	 	, 1
+	 	, #{replyGroup}
+	 	, #{replyOrder}
+	 	, 'abc123'
+	 	, #{postId}
+	 	, 'N'
+	 )
 	</insert>
 	
 	<!-- 댓글 삭제 -->
