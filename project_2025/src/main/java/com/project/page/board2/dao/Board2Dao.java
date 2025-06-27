@@ -21,4 +21,6 @@ public interface Board2Dao {
 
 	int total(Pager pager);
 
+	int replyCount(int postId);
+
 }

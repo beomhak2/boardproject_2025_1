@@ -35,6 +35,7 @@
 		<result property="replyOrder" column="REPLY_ORDER"/>
 		<result property="userId" column="USER_ID"/>
 		<result property="postId" column="POST_ID"/>
+		<result property="delYn" column="DEL_YN"/>
 	</resultMap>
 	
 	<sql id="search">
@@ -61,6 +62,13 @@
 	<select id="total" resultType="Integer">
 		SELECT COUNT(*)
 		FROM (<include refid="search"></include>) P1
+	</select>
+	
+	<select id="replyCount" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(*)
+		FROM reply
+		WHERE POST_ID = #{postId}
+			AND DEL_YN = 'N'
 	</select>
 
 	<select id= "list" resultMap="postVO">
@@ -144,11 +152,12 @@
 				,reply_order
 				,user_id
 				,post_id
-	 		 FROM (SELECT * FROM reply 
-	 		 			   WHERE post_id = #{postId})
-	 connect by PRIOR reply_id = reply_group
-	   START WITH reply_group = 0    
-	   ORDER SIBLINGS BY reg_Dt DESC
+		FROM (SELECT * FROM reply
+				WHERE post_id = #{postId}
+					AND DEL_YN = 'N')
+		connect by PRIOR reply_id = reply_group
+	   	START WITH reply_group = 0    
+	   	ORDER SIBLINGS BY reg_Dt DESC
 	</select>
 	
 	<!-- 댓글 등록 -->
@@ -163,6 +172,7 @@
 		 	, REPLY_ORDER
 		 	, USER_ID
 		 	, POST_ID
+		 	, DEL_YN
 		 )
 		 VALUES (
 		 	REPLY_SEQ.NEXTVAL
@@ -174,10 +184,11 @@
 		 	, 0
 		 	, 'abc123'
 		 	, #{postId}
+		 	, 'N'
 		 )
 	</insert>
 	
-	<!-- 답글 등록 -->
+		<!-- 답글 등록 -->
 	<insert id="insertReplyAnswer" parameterType="com.project.page.board2.model.Reply">
 		<!-- UPDATE reply
         SET reply_order = reply_order + 1
@@ -194,6 +205,7 @@
 		 	, REPLY_ORDER
 		 	, USER_ID
 		 	, POST_ID
+		 	, DEL_YN
 		 )
 		 VALUES (
 		 	REPLY_SEQ.NEXTVAL
@@ -205,13 +217,15 @@
 		 	, #{replyOrder}
 		 	, 'abc123'
 		 	, #{postId}
+		 	, 'N'
 		 )
 	</insert>
 	
 	<!-- 댓글 삭제 -->
-	<delete id="deleteReply" parameterType="com.project.page.board2.model.Reply">
-		DELETE FROM reply
+	<update id="deleteReply" parameterType="com.project.page.board2.model.Reply">
+		UPDATE reply SET
+			DEL_YN = 'Y'
 		WHERE REPLY_ID = #{replyId}
-	</delete>
+	</update>
 
 </mapper>

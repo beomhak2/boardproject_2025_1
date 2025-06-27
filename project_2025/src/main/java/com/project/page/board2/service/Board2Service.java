@@ -17,4 +17,5 @@ public interface Board2Service {
 
 	void delete(int postId);
 
+	int getReplyCount(int postId);
 }

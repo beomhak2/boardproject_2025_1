@@ -14,7 +14,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 		reply_group	number(10)		NULL,
 		reply_order	number(10)		NULL,
 		user_id	varchar2(30)		NOT NULL,
-		post_id	number(10)		NOT NULL
+		post_id	number(10)		NOT NULL,
+		del_yn  char(3)         NOT NULL
 	);
  */
 
@@ -34,6 +35,9 @@ public class Reply {
 	private int replyOrder;
 	private String userId;
 	private int postId;
+	
+	private String delYn;
+	
 	public int getReplyId() {
 		return replyId;
 	}
@@ -87,6 +91,12 @@ public class Reply {
 	}
 	public void setPostId(int postId) {
 		this.postId = postId;
+	}
+	public String getDelYn() {
+		return delYn;
+	}
+	public void setDelYn(String delYn) {
+		this.delYn = delYn;
 	}
 	
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +23,7 @@ public class Board2ReplyController {
 	Board2ReplyService service;
 	
 	/**
-	 * ajax 댓글 조회
+	 * 댓글 조회
 	 * @param postId
 	 * @return 댓글 조회
 	 */
@@ -35,7 +34,7 @@ public class Board2ReplyController {
     }
 	
 	/**
-	 * ajax 댓글 등록
+	 * 댓글 등록
 	 * @param reply
 	 * @return
 	 */
@@ -51,7 +50,7 @@ public class Board2ReplyController {
 	}
 	
 	/**
-	 * ajax 댓글 삭제
+	 * 댓글 삭제
 	 * @param replyId
 	 * @return
 	 */
@@ -66,6 +65,11 @@ public class Board2ReplyController {
 		}
 	}
 	
+	/**
+	 * 답글 등록
+	 * @param reply
+	 * @return
+	 */
 	@PostMapping("/insertReplyAnswer")
 	public ResponseEntity<String> insertReplyAnswer(Reply reply) {
 	    try {

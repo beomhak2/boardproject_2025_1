@@ -50,4 +50,9 @@ public class Board2DaoOracle implements Board2Dao{
 		return sql.selectOne("board2.total", pager);
 	}
 
+	@Override
+	public int replyCount(int postId) {
+		return sql.selectOne("board2.replyCount", postId);
+	}
+
 }

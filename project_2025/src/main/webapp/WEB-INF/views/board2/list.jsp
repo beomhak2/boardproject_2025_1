@@ -31,35 +31,35 @@
 	      <h1>취미 게시판</h1>
     	</div>
 		<div class="row">
-		    <div class="col-lg-12 card-margin">
-		        <div class="card search-form">
-		            <div class="card-body p-0">
-		                <form id="search-form">
-		                    <div class="row">
-		                        <div class="col-12">
-		                            <div class="row no-gutters">
-		                                <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-		                                    <select class="form-control" id="exampleFormControlSelect1" name="condition">
-		                                        <option value="1" <c:if test="${pager.condition eq '1'}">selected="selected"</c:if>>제목</option>
-		                                        <option value="2" <c:if test="${pager.condition eq '2'}">selected="selected"</c:if>>내용</option>
-		                                        <option value="3" <c:if test="${pager.condition eq '3'}">selected="selected"</c:if>>작성자</option>
-		                                    </select>
-		                                </div>
-		                                <div class="col-lg-8 col-md-6 col-sm-12 p-0">
-		                                    <input type="text" placeholder="검색" class="form-control" id="search" name="search" value="${pager.search}">
-		                                </div>
-		                                <div class="col-lg-1 col-md-3 col-sm-12 p-0">
-		                                    <button type="submit" class="btn btn-base">
-		                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-		                                    </button>
-		                                </div>
-		                            </div>
-		                        </div>
-		                    </div>
-		                </form>
+		  <div class="col-lg-12 card-margin">
+		    <div class="card search-form">
+		      <div class="card-body p-0">
+		        <form id="search-form">
+		        <div class="row">
+		          <div class="col-12">
+		            <div class="row no-gutters">
+		              <div class="col-lg-3 col-md-3 col-sm-12 p-0">
+		                <select class="form-control" id="exampleFormControlSelect1" name="condition">
+		                  <option value="1" <c:if test="${pager.condition eq '1'}">selected="selected"</c:if>>제목</option>
+		                  <option value="2" <c:if test="${pager.condition eq '2'}">selected="selected"</c:if>>내용</option>
+		                  <option value="3" <c:if test="${pager.condition eq '3'}">selected="selected"</c:if>>작성자</option>
+		                </select>
+		              </div>
+		              <div class="col-lg-8 col-md-6 col-sm-12 p-0">
+		                <input type="text" placeholder="검색" class="form-control" id="search" name="search" value="${pager.search}">
+		              </div>
+		              <div class="col-lg-1 col-md-3 col-sm-12 p-0">
+		                <button type="submit" class="btn btn-base">
+		                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+		                </button>
+		              </div>
 		            </div>
+		          </div>
 		        </div>
+		        </form>
+		      </div>
 		    </div>
+		  </div>
 		</div>
 		<table class="table search-body">
 		  <thead>
@@ -73,18 +73,18 @@
 		  </thead>
 		  <tbody>
 			<c:if test="${list.size() < 1}">
-				<tr><td colspan="5">검색 된 게시물이 없습니다</td></tr>
+			  <tr><td colspan="5">검색 된 게시물이 없습니다</td></tr>
 			</c:if>
 			<c:forEach var="item" items="${list}">
-				<tr>
-					<td>${item.rnum}</td>
-					<td>
-						<a href="detail/${item.postId}">${item.title}</a>
-					</td>
-					<td>${item.userId}</td>
-					<td><fmt:formatDate value="${item.regDt}" pattern="yyyy-MM-dd"/></td>
-					<td>${item.viewCnt}</td>
-				</tr>
+			  <tr>
+			    <td>${item.rnum}</td>
+			    <td>
+				  <a href="detail/${item.postId}">${item.title} (${replyCount[item.postId]})</a>
+				</td>
+				<td>${item.userId}</td>
+				<td><fmt:formatDate value="${item.regDt}" pattern="yyyy-MM-dd"/></td>
+				<td>${item.viewCnt}</td>
+			  </tr>
 			</c:forEach>
 		  </tbody>
 		</table>
@@ -108,9 +108,9 @@
 		  </ul>
 		</nav>
 		<div>
-			<div>
-				<a href="add"><button type="button" class="btn btn-primary">등록</button></a>
-			</div>
+		  <div>
+		    <a href="add"><button type="button" class="btn btn-primary">등록</button></a>
+		  </div>
 		</div>
 	</div>
 	

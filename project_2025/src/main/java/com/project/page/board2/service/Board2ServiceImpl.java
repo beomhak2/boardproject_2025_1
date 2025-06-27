@@ -48,5 +48,9 @@ public class Board2ServiceImpl implements Board2Service {
 	public void delete(int postId) {
 		dao.delete(postId);
 	}
+	
+	public int getReplyCount(int postId) {
+		return dao.replyCount(postId);
+	}
 
 }

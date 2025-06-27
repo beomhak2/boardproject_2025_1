@@ -1,18 +1,16 @@
 package com.project.page.board2.web;
 
+import java.util.HashMap;
 import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.page.board2.model.Pager;
 import com.project.page.board2.model.Post;
@@ -29,7 +27,14 @@ public class Board2Controller {
 	String list(Pager pager, Model model) {
 		List<Post> list = service.list(pager);
 		
+		Map<Integer, Integer> replyCount = new HashMap<>();
+		for (Post post : list) {
+			int count = service.getReplyCount(post.getPostId());
+			replyCount.put(post.getPostId(), count);
+		}
+		
 		model.addAttribute("list", list);
+		model.addAttribute("replyCount", replyCount);
 		
 		return "board2/list";
 	}
