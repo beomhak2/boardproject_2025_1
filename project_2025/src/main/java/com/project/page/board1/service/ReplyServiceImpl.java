@@ -19,7 +19,8 @@ import com.project.page.board1.model.ReplyDTO;
 @Service
 public class ReplyServiceImpl implements ReplyService {
 
-    @Autowired private ReplyDao replydao;
+    @Autowired
+    private ReplyDao replydao;
 
     private static final Logger logger = LoggerFactory.getLogger(ReplyServiceImpl.class);
 
@@ -41,9 +42,9 @@ public class ReplyServiceImpl implements ReplyService {
             int newReplyId = replydao.getNextReplyId();
             reply.setReplyId(newReplyId);
 
-            if (reply.getReplyClass() == 0) {
+            if (reply.getParentId() == null || reply.getParentId() == 0) { // 부모 댓글인 경우
                 initRootReply(reply);
-            } else {
+            } else { // 대댓글인 경우
                 initChildReply(reply);
             }
 
@@ -54,53 +55,67 @@ public class ReplyServiceImpl implements ReplyService {
         }
     }
 
+    /**
+     * 최상위 댓글 초기화
+     */
     private void initRootReply(Reply reply) {
-        reply.setReplyGroup(reply.getReplyId());
-        reply.setReplyOrder(1);
-        reply.setReplyClass(0); // 댓글 (루트)
+        reply.setReplyGroup(reply.getReplyId()); // 그룹은 자기 ID로
+        reply.setReplyOrder(1);                   // 최상위 댓글 순서는 1
+        reply.setReplyClass(0);                   // 레벨 0 (부모)
     }
 
+    /**
+     * 대댓글 초기화
+     */
     private void initChildReply(Reply reply) throws ReplyServiceException {
-        int parentId = reply.getReplyClass(); // 부모 ID를 replyClass로 사용
+        int parentId = reply.getParentId(); // 부모 댓글 ID 정확히 사용
         Reply parentReply = replydao.selectReplyById(parentId);
 
         if (parentReply == null) {
-            logger.error("부모 댓글을 찾을 수 없습니다. replyClass (parentId): {}", parentId);
+            logger.error("부모 댓글을 찾을 수 없습니다. parentId: {}", parentId);
             throw new ReplyServiceException("부모 댓글을 찾을 수 없습니다.");
         }
 
+        reply.setReplyClass(parentReply.getReplyClass() + 1); // 부모 레벨 + 1
         replydao.updateReplyOrderAfter(parentReply.getReplyGroup(), parentReply.getReplyOrder());
 
-        reply.setReplyGroup(parentReply.getReplyGroup());
-        reply.setReplyOrder(parentReply.getReplyOrder() + 1);
+        reply.setReplyGroup(parentReply.getReplyGroup()); // 부모 그룹과 동일
+        reply.setReplyOrder(parentReply.getReplyOrder() + 1); // 부모 댓글 다음 순서
     }
 
+    /**
+     * 댓글 리스트를 트리 형태의 DTO 리스트로 변환
+     */
     private List<ReplyDTO> buildReplyTreeDTO(List<Reply> replies) {
         Map<Integer, ReplyDTO> map = new HashMap<>();
         List<ReplyDTO> rootReplies = new ArrayList<>();
 
+        // 모든 댓글 DTO 생성 및 map 저장
         for (Reply reply : replies) {
             ReplyDTO dto = new ReplyDTO(
                 reply.getReplyId(),
                 reply.getReplyContent(),
                 reply.getRegDt(),
                 reply.getUserId(),
-                reply.getReplyClass() // 부모 ID로 사용됨
+                reply.getParentId(),  // 부모 댓글 ID
+                reply.getReplyClass() // 레벨(깊이)
             );
             map.put(reply.getReplyId(), dto);
         }
 
+        // 부모-자식 관계 설정
         for (Reply reply : replies) {
             ReplyDTO dto = map.get(reply.getReplyId());
-            Integer parentId = reply.getReplyClass();
+            Integer parentId = reply.getParentId();
 
-            if (parentId == null || parentId == 0 || parentId.equals(reply.getReplyId())) {
+            if (parentId == null || parentId == 0) {
+                // 최상위 댓글이면 rootReplies에 추가
                 rootReplies.add(dto);
             } else {
+                // 자식 댓글이면 부모 DTO의 childReplies에 추가
                 ReplyDTO parentDTO = map.get(parentId);
                 if (parentDTO != null) {
                     parentDTO.getChildReplies().add(dto);
-                    logger.info("부모 댓글 ID {}에 해당하는 DTO를 찾았습니다", parentId);
                 } else {
                     logger.warn("부모 댓글 ID {}에 해당하는 DTO를 찾을 수 없습니다.", parentId);
                 }

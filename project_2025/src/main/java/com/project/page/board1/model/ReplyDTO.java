@@ -25,21 +25,28 @@ public class ReplyDTO implements Serializable {
 	private Date regDt;
 
 	private String userId;
-
+	
 	/** 
 	 * 부모 댓글 ID (null이면 최상위 댓글)
 	 */
+	private Integer parentId;
+
 	private Integer replyClass;
+	
+	private Integer replyOrder;
 
 	private List<ReplyDTO> childReplies = new ArrayList<>();
 
+
+
 	public ReplyDTO() {}
 
-	public ReplyDTO(int replyId, String replyContent, Date regDt, String userId, Integer replyClass) {
+	public ReplyDTO(int replyId, String replyContent, Date regDt, String userId, Integer parentId ,Integer replyClass) {
 		this.replyId = replyId;
 		this.setReplyContent(replyContent); // escape 적용
 		this.regDt = regDt;
 		this.userId = userId;
+		this.parentId = parentId;
 		this.replyClass = replyClass;
 	}
 
@@ -57,7 +64,7 @@ public class ReplyDTO implements Serializable {
 
 	public void setReplyContent(String replyContent) {
 		// XSS 방지용 HTML Escape
-		this.replyContent = HtmlUtils.htmlEscape(replyContent);
+		this.replyContent = replyContent == null ? null : HtmlUtils.htmlEscape(replyContent);
 	}
 
 	public Date getRegDt() {
@@ -72,6 +79,14 @@ public class ReplyDTO implements Serializable {
 		return userId;
 	}
 
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
@@ -82,6 +97,14 @@ public class ReplyDTO implements Serializable {
 
 	public void setReplyClass(Integer replyClass) {
 		this.replyClass = replyClass;
+	}
+
+	public Integer getReplyOrder() {
+		return replyOrder;
+	}
+
+	public void setReplyOrder(Integer replyOrder) {
+		this.replyOrder = replyOrder;
 	}
 
 	public List<ReplyDTO> getChildReplies() {

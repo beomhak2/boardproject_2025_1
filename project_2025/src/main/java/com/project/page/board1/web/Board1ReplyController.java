@@ -46,17 +46,17 @@ public class Board1ReplyController {
             BindingResult bindingResult,
             HttpSession session) {
 
-        String userId = (String) session.getAttribute("USER");
-
-        if (userId == null) {
-            // 테스트용 하드코딩 유저 (실제 사용 시 제거할 것)
-            userId = "USER";
+        String loginUserId = (String) session.getAttribute("USER");
+        if (loginUserId == null) {
+            loginUserId = "USER"; // 테스트용 fallback
         }
 
         if (bindingResult.hasErrors()) {
-            String errorMessage = bindingResult.getAllErrors()
-                .stream().map(e -> e.getDefaultMessage())
-                .collect(Collectors.joining(", "));
+            String errorMessage = bindingResult.getAllErrors().stream()
+                    .map(e -> e.getDefaultMessage())
+                    .collect(Collectors.joining(", "));
+            logger.warn("댓글 유효성 검증 실패: {}", errorMessage);
+
             return ResponseEntity.badRequest().body(Map.of(
                 "status", "fail",
                 "message", errorMessage
@@ -67,23 +67,26 @@ public class Board1ReplyController {
             Reply reply = new Reply();
             reply.setPostId(postId);
             reply.setReplyContent(replyDTO.getReplyContent());
-            reply.setReplyClass(replyDTO.getReplyClass() != null ? replyDTO.getReplyClass() : 0);  // 부모 ID
-            reply.setUserId(userId);
+            reply.setParentId(replyDTO.getParentId() != null ? replyDTO.getParentId() : 0); // 부모 댓글 ID 설정
+            // replyClass는 서비스 레이어에서 설정하므로 여기서는 생략
+            reply.setUserId(loginUserId);
 
             Reply savedReply = replyService.writeReply(reply);
 
             ReplyDTO responseDTO = new ReplyDTO(
-                    savedReply.getReplyId(),
-                    savedReply.getReplyContent(),
-                    savedReply.getRegDt(),
-                    savedReply.getUserId(),
-                    savedReply.getReplyClass() // 부모 댓글 ID
+                savedReply.getReplyId(),
+                savedReply.getReplyContent(),
+                savedReply.getRegDt(),
+                savedReply.getUserId(),
+                savedReply.getParentId(),
+                savedReply.getReplyClass()
             );
 
             return ResponseEntity.ok(Map.of(
                 "status", "success",
                 "reply", responseDTO
             ));
+
         } catch (Exception e) {
             logger.error("댓글 등록 실패", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
@@ -92,4 +95,5 @@ public class Board1ReplyController {
             ));
         }
     }
+
 }

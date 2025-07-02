@@ -134,22 +134,22 @@
 	<!-- 댓글 달기 -->
 	<insert id="replyInsert" parameterType="com.project.page.board1.model.Reply">
 		<selectKey keyProperty="replyId" resultType="int" order="BEFORE">
-			SELECT reply_seq.NEXTVAL FROM dual
-		</selectKey>
+	        SELECT reply_seq.NEXTVAL FROM dual
+	    </selectKey>
 		INSERT INTO reply(
-			REPLY_ID, REPLY_CONTENT, REPLY_GROUP, REPLY_ORDER, USER_ID, POST_ID, REPLY_CLASS, REG_DT
+			REPLY_ID, REPLY_CONTENT, REPLY_GROUP, REPLY_ORDER, USER_ID, POST_ID, PARENT_ID ,REPLY_CLASS, REG_DT
 		)VALUES(
-			#{replyId}, #{replyContent}, #{replyGroup, jdbcType=INTEGER}, #{replyOrder, jdbcType=INTEGER}, #{userId}, #{postId}, NVL(#{replyClass}, 0), SYSDATE
+			 #{replyId}, #{replyContent}, #{replyGroup, jdbcType=INTEGER}, #{replyOrder, jdbcType=INTEGER}, #{userId}, #{postId}, #{parentId, jdbcType=INTEGER}, NVL(#{replyClass}, 0), SYSDATE
 		)	
 	</insert>
 	
 	<!-- 댓글 보기 -->
 	<select id="replySelect" resultMap="detailVO" parameterType="int">
 		SELECT
-			reply_class, reply_id, reply_content, reg_dt, mdf_dt, reply_group, reply_order, user_id, post_id
+			reply_class, reply_id, reply_content, reg_dt, mdf_dt, reply_group, reply_order, user_id, post_id, parent_id
 		FROM reply
 		WHERE post_id = #{postId}
-		ORDER BY reply_group DESC, reply_order ASC
+		ORDER BY reply_group DESC, reply_order DESC
 	</select>
 
 	<select id="getNextReplyId" resultType="int">
@@ -162,7 +162,7 @@
 	
 	<update id="updateReplyOrderAfter" parameterType="map">
 		UPDATE reply
-		SET reply_order = reply_order
+		SET reply_order = reply_order + 1
 		WHERE reply_group = #{replyGroup}
 		AND reply_order > #{replyOrder}
 	</update>
