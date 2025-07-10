@@ -17,11 +17,6 @@ public class Board2ReplyServiceImpl implements Board2ReplyService {
 	//댓글 조회
 	@Override
 	public List<Reply> selectReplyList(int postId) {
-//		List<Reply> replies = dao.selectReplyList(postId);
-//		for (Reply item : replies) {
-//        	System.out.println("데이터:" + item.getDelYn());
-//        	System.out.println("ddd:" + item.getReplyContent());
-//        }
 		return dao.selectReplyList(postId);
 	}
 

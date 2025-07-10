@@ -75,8 +75,8 @@
         <ul class="pagination">
           <li class="page-item">
           	<c:choose>
-          	  <c:when test="${item.prevPostId != 9999}">
-          		<a class="page-link" href="${item.prevPostId}?page=${param.page}&condition=${param.condition}&search=${param.search}" aria-label="Previous">
+          	  <c:when test="${item.prevPostId > 0}">
+          		<a class="page-link" href="${item.prevPostId}" aria-label="Previous">
 	              <span aria-hidden="true">&laquo; prev</span>
 	            </a>
           	  </c:when>
@@ -87,8 +87,8 @@
           </li>
           <li class="page-item">
             <c:choose>
-          	  <c:when test="${item.nextPostId != 9999}">
-          		<a class="page-link" href="${item.nextPostId}?page=${pager.page}${pager.query}" aria-label="Next">
+          	  <c:when test="${item.nextPostId > 0}">
+          		<a class="page-link" href="${item.nextPostId}" aria-label="Next">
 	              <span aria-hidden="true">next &raquo;</span>
 	            </a>
           	  </c:when>
