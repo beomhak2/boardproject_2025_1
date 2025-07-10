@@ -32,7 +32,7 @@
       </section>
 
       <article id="article-content" class="col-md-9 col-lg-8">
-        <pre>${item.postContent}</pre>
+        <pre>${item.postContent} postId = ${item.postId}</pre>
       </article>
     </div>
 
@@ -74,14 +74,28 @@
       <nav id="pagination" aria-label="Page navigation">
         <ul class="pagination">
           <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
-              <span aria-hidden="true">&laquo; prev</span>
-            </a>
+          	<c:choose>
+          	  <c:when test="${item.prevPostId != 9999}">
+          		<a class="page-link" href="${item.prevPostId}?page=${param.page}&condition=${param.condition}&search=${param.search}" aria-label="Previous">
+	              <span aria-hidden="true">&laquo; prev</span>
+	            </a>
+          	  </c:when>
+          	  <c:otherwise>
+          		이전글이 없습니다.
+          	  </c:otherwise>
+          	</c:choose>
           </li>
           <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-              <span aria-hidden="true">next &raquo;</span>
-            </a>
+            <c:choose>
+          	  <c:when test="${item.nextPostId != 9999}">
+          		<a class="page-link" href="${item.nextPostId}?page=${pager.page}${pager.query}" aria-label="Next">
+	              <span aria-hidden="true">next &raquo;</span>
+	            </a>
+          	  </c:when>
+          	  <c:otherwise>
+          		다음글이 없습니다.
+          	  </c:otherwise>
+          	</c:choose>
           </li>
         </ul>
       </nav>
@@ -91,6 +105,7 @@
 	<footer class="py-3 my-4">
 		<jsp:include page="../includes/footer.jsp" />
 	</footer>
+	
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>	
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script type="text/javascript">
@@ -118,8 +133,8 @@ function selectReplyList() {
     data: { postId: postId },
     dataType: "json",
     success: function(data) {
-      //console.log("result is array:", Array.isArray(result));
-      //console.log("댓글 데이터:", result);
+      //console.log("data is array:", Array.isArray(data));
+      console.log("댓글 데이터:", data);
     	
       $("#replyArea").empty();
 
@@ -138,12 +153,24 @@ function selectReplyList() {
 	        	<li class="parent-comment" id="parent-comment\${reply.replyId}">
 	            <form class="comment-delete-form">
 	              <input type="hidden" class="article-id" name="replyId" value="\${reply.replyId}">
-	              <div class="row">
-	                <div class="col-md-10 col-lg-9">
-	                  <strong>\${reply.userId}</strong>
-	                  <small><time>\${reply.regDt}</time></small>
-	                  <p class="mb-1">\${reply.replyContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')}</p>
-	                </div>
+	              <div class="row">`
+	                if (reply.delYn.trim() === 'N') {
+	        		repliesHtml += `
+	              	  <div class="col-md-10 col-lg-9">
+	                    <strong>\${reply.userId}</strong>
+	                    <small><time>\${reply.regDt}</time></small>
+	                    <p class="mb-1">\${reply.replyContent.replace(/(?:\r\n|\r|\n)/g, '<br/>')}</p>
+	                  </div>`
+	              	}
+	                  if (reply.delYn.trim() === 'Y') {
+		        		repliesHtml += `
+		              	  <div class="col-md-10 col-lg-9">
+		        			<strong>\${reply.userId}</strong>
+		                    <small><time>\${reply.regDt}</time></small>
+		                    <p class="mb-1" style="color:red">삭제된 댓글입니다.</p>
+		                  </div>`
+		              	}
+	              	repliesHtml += `
 	                <div class="col-2 mb-3 align-self-center">
 	                  <button type="button" class="reply-del btn btn-outline-danger">삭제</button>
 	                </div>

@@ -15,6 +15,9 @@ public class Post {
 	private String userId;
 	private Member member;
 	
+	private int prevPostId;
+	private int nextPostId;
+	
 	public int getRnum() {
 		return rnum;
 	}
@@ -81,4 +84,17 @@ public class Post {
 	public void setMember(Member member) {
 		this.member = member;
 	}
+	public int getPrevPostId() {
+		return prevPostId;
+	}
+	public void setPrevPostId(int prevPostId) {
+		this.prevPostId = prevPostId;
+	}
+	public int getNextPostId() {
+		return nextPostId;
+	}
+	public void setNextPostId(int nextPostId) {
+		this.nextPostId = nextPostId;
+	}
+
 }

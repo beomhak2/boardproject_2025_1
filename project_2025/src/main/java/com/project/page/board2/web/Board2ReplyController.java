@@ -30,6 +30,10 @@ public class Board2ReplyController {
 	@GetMapping("/selectReplyList")
 	public ResponseEntity<List<Reply>> selectReplyList(@RequestParam int postId) {
         List<Reply> replies = service.selectReplyList(postId);
+//        for (Reply item : replies) {
+//        	System.out.println("데이터:" + item.getDelYn());
+//        	System.out.println("ddd:" + item.getReplyContent());
+//        }
         return ResponseEntity.ok().body(replies);
     }
 	

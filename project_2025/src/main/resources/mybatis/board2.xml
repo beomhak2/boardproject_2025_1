@@ -22,6 +22,8 @@
 	    <result property="mdfDt" column="MDF_DT"/>
 	    <result property="boardId" column="BOARD_ID"/>
 	    <result property="userId" column="USER_ID"/>
+	    <result property="prevPostId" column="PREV_POST_ID"/>
+	    <result property="nextPostId" column="NEXT_POST_ID"/>
 	    <collection property="member" resultMap="memberVO"/>
 	</resultMap>
 	
@@ -110,12 +112,20 @@
 	</insert>
 	
 	<select id="item" resultMap="postVO">
-		SELECT P.*, m.email
-		FROM post P
-			INNER JOIN member M ON
-				P.USER_ID = M.USER_ID
-		WHERE P.POST_ID = #{postId}
-			AND P.BOARD_ID = 2
+		SELECT *
+		FROM (
+			SELECT
+				P.*,
+				M.EMAIL,
+				LAG(P.POST_ID, 1, 9999) OVER(ORDER BY POST_ID) AS PREV_POST_ID,
+				LEAD(P.POST_ID, 1, 9999) OVER(ORDER BY POST_ID) AS NEXT_POST_ID
+			FROM post P
+				INNER JOIN member M ON P.USER_ID = M.USER_ID
+			WHERE P.BOARD_ID = 2
+	               AND P.DEL_YN = 'N'
+			ORDER BY P.POST_ID DESC
+		)
+		WHERE POST_ID = #{postId}
 	</select>
 	
 	<update id="updateViewCnt" parameterType="com.project.page.board2.model.Post">
@@ -152,9 +162,11 @@
 				,reply_order
 				,user_id
 				,post_id
-		FROM (SELECT * FROM reply
-				WHERE post_id = #{postId}
-					AND DEL_YN = 'N')
+				,del_yn
+		FROM (
+			SELECT * FROM reply
+			WHERE post_id = #{postId}
+			)
 		connect by PRIOR reply_id = reply_group
 	   	START WITH reply_group = 0    
 	   	ORDER SIBLINGS BY reg_Dt DESC

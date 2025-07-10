@@ -79,7 +79,7 @@
 			  <tr>
 			    <td>${item.rnum}</td>
 			    <td>
-				  <a href="detail/${item.postId}">${item.title} (${replyCount[item.postId]})</a>
+				  <a href="detail/${item.postId}?page=${pager.page}${pager.query}">${item.title} (${replyCount[item.postId]})</a>
 				</td>
 				<td>${item.userId}</td>
 				<td><fmt:formatDate value="${item.regDt}" pattern="yyyy-MM-dd"/></td>

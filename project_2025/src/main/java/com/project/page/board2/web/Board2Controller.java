@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.page.board2.model.Pager;
 import com.project.page.board2.model.Post;
@@ -27,6 +28,7 @@ public class Board2Controller {
 	String list(Pager pager, Model model) {
 		List<Post> list = service.list(pager);
 		
+		//댓글 개수 표시
 		Map<Integer, Integer> replyCount = new HashMap<>();
 		for (Post post : list) {
 			int count = service.getReplyCount(post.getPostId());
@@ -34,6 +36,7 @@ public class Board2Controller {
 		}
 		
 		model.addAttribute("list", list);
+		model.addAttribute("pager", pager);
 		model.addAttribute("replyCount", replyCount);
 		
 		return "board2/list";
@@ -57,7 +60,6 @@ public class Board2Controller {
 		Post item = service.item(postId);
 		
 		model.addAttribute("item", item);
-		//model.addAttribute("page", page);
 		
 		return "board2/detail";
 	}
