@@ -4,13 +4,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+//import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.project.page.board1.model.Reply;
@@ -42,7 +43,7 @@ public class Board1ReplyController {
     @PostMapping
     public ResponseEntity<Map<String, Object>> addReply(
             @PathVariable("postId") int postId,
-            @Valid @RequestBody ReplyDTO replyDTO,
+            @Validated @RequestBody ReplyDTO replyDTO,
             BindingResult bindingResult,
             HttpSession session) {
 

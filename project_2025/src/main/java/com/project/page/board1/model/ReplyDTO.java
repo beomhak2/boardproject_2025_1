@@ -1,6 +1,6 @@
 package com.project.page.board1.model;
 
-import javax.validation.constraints.NotBlank;
+//import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,7 +18,7 @@ public class ReplyDTO implements Serializable {
 
 	private int replyId;
 
-	@NotBlank(message = "댓글 내용을 입력해주세요.")
+	//@NotBlank(message = "댓글 내용을 입력해주세요.")
 	private String replyContent;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
